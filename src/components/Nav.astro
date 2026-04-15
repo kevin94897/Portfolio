@@ -1,0 +1,283 @@
+---
+// Nav.astro — Fixed navigation with language toggle, scroll effect and container
+import logo from "../assets/images/logo-kevin.png";
+---
+
+<header>
+  <nav
+    id="nav"
+    aria-label="Navegación principal"
+    class="fixed top-0 left-0 right-0 z-[900] transition-[background,backdrop-filter] duration-400"
+  >
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+      <div
+        id="nav-inner"
+        class="flex items-center justify-between py-4 lg:py-[22px] transition-[padding] duration-400"
+      >
+        <!-- Logo -->
+        <a
+          href="#hero"
+          aria-label="Kevin Gómez — Inicio"
+          class="nav-logo z-10 relative"
+        >
+          <img src={logo.src} alt="Logo KG" class="h-12 w-auto" />
+        </a>
+
+        <!-- Desktop links -->
+        <ul class="hidden lg:flex gap-8 list-none" role="list">
+          <li>
+            <a href="#about" data-i18n="nav.about" class="nav-link">About</a>
+          </li>
+          <li>
+            <a href="#experience" data-i18n="nav.experience" class="nav-link"
+              >Experiencia</a
+            >
+          </li>
+          <li>
+            <a href="#projects" data-i18n="nav.projects" class="nav-link"
+              >Proyectos</a
+            >
+          </li>
+          <!-- <li>
+            <a href="#pricing" data-i18n="nav.pricing" class="nav-link"
+              >Precios</a
+            >
+          </li> -->
+          <li>
+            <a href="#workflow" data-i18n="nav.workflow" class="nav-link"
+              >Workflow</a
+            >
+          </li>
+          <li>
+            <a href="#contact" data-i18n="nav.contact" class="nav-link"
+              >Contacto</a
+            >
+          </li>
+        </ul>
+
+        <!-- Actions (desktop) + hamburger (mobile) -->
+        <div class="flex items-center gap-2">
+          <!-- Lang toggle — hidden on smallest screens -->
+          <div
+            class="hidden sm:flex items-center bg-surface2 border border-border rounded-[6px] overflow-hidden h-9"
+            role="group"
+            aria-label="Cambiar idioma"
+          >
+            <button
+              id="btnES"
+              aria-pressed="true"
+              lang="es"
+              class="lang-btn text-white">ES</button
+            >
+            <button
+              id="btnEN"
+              aria-pressed="false"
+              lang="en"
+              class="lang-btn text-white">EN</button
+            >
+          </div>
+
+          <!-- CV button — desktop only -->
+          <a
+            href="/files/KevinGomezLazaroCV_2026.pdf"
+            download
+            aria-label="Descargar CV 2026"
+            class="hidden lg:flex border border-border text-white px-4 h-9 rounded-[6px] font-mono text-[10px] no-underline tracking-[0.08em] items-center gap-[7px] transition-all duration-300 hover:border-lime hover:text-lime"
+          >
+            <i class="ph ph-download-simple" aria-hidden="true"></i>
+            <span data-i18n="nav.cv">CV 2026</span>
+          </a>
+
+          <!-- CTA — desktop only -->
+          <a
+            href="#contact"
+            data-i18n="nav.hire"
+            class="hidden lg:flex bg-lime text-black px-5 h-9 rounded-[6px] font-mono text-[10px] font-medium no-underline tracking-[0.08em] items-center transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
+            >Contrátame</a
+          >
+
+          <!-- Hamburger — mobile/tablet only -->
+          <button
+            id="menuBtn"
+            type="button"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            class="lg:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px] bg-transparent border-none cursor-pointer"
+          >
+            <span
+              class="ham-line block w-5 h-px bg-text transition-all duration-300 origin-center"
+            ></span>
+            <span
+              class="ham-line block w-5 h-px bg-text transition-all duration-300 origin-center"
+            ></span>
+            <span
+              class="ham-line block w-5 h-px bg-text transition-all duration-300 origin-center"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div
+      id="mobile-menu"
+      aria-hidden="true"
+      class="lg:hidden overflow-hidden max-h-0 transition-[max-height] duration-500 ease-in-out bg-black/95 backdrop-blur-[24px] border-t border-border"
+    >
+      <nav
+        class="max-w-[1400px] mx-auto px-6 py-6 flex flex-col gap-1"
+        aria-label="Menú móvil"
+      >
+        <a
+          href="#about"
+          data-i18n="nav.about"
+          class="mobile-link"
+          onclick="closeMobileMenu()">About</a
+        >
+        <a
+          href="#experience"
+          data-i18n="nav.experience"
+          class="mobile-link"
+          onclick="closeMobileMenu()">Experiencia</a
+        >
+        <a
+          href="#projects"
+          data-i18n="nav.projects"
+          class="mobile-link"
+          onclick="closeMobileMenu()">Proyectos</a
+        >
+        <!-- <a
+          href="#pricing"
+          data-i18n="nav.pricing"
+          class="mobile-link"
+          onclick="closeMobileMenu()">Precios</a
+        > -->
+        <a
+          href="#contact"
+          data-i18n="nav.contact"
+          class="mobile-link"
+          onclick="closeMobileMenu()">Contacto</a
+        >
+        <div class="flex gap-3 mt-4 pt-4 border-t border-border">
+          <a
+            href="/files/KevinGomezLazaroCV_2026.pdf"
+            download
+            class="flex-1 flex items-center justify-center gap-2 h-10 border border-border rounded-[6px] font-mono text-[10px] text-muted no-underline tracking-[0.08em] hover:border-lime hover:text-lime transition-all duration-300"
+          >
+            <i class="ph ph-download-simple" aria-hidden="true"></i>
+            <span data-i18n="nav.cv">CV 2026</span>
+          </a>
+          <a
+            href="#contact"
+            class="flex-1 flex items-center justify-center bg-lime text-black h-10 rounded-[6px] font-mono text-[10px] font-medium no-underline tracking-[0.08em]"
+            data-i18n="nav.hire">Contrátame</a
+          >
+        </div>
+      </nav>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .nav-link {
+    @apply font-mono text-[11px] text-white no-underline tracking-[0.12em] uppercase
+           transition-colors duration-200 relative;
+  }
+  .nav-link::after {
+    content: "";
+    @apply absolute -bottom-1 left-0 w-0 h-px bg-lime transition-[width] duration-300;
+  }
+  .nav-link:hover {
+    @apply text-lime;
+  }
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+  .nav-link:focus-visible {
+    @apply outline outline-2 outline-lime outline-offset-4 rounded-sm;
+  }
+
+  .mobile-link {
+    @apply font-mono text-[13px] text-muted no-underline tracking-[0.1em] uppercase
+           py-3 border-b border-border/50 transition-colors duration-200 hover:text-lime;
+  }
+
+  .lang-btn {
+    @apply font-mono text-[10px] tracking-[0.1em] font-medium px-3 h-full
+           text-muted bg-transparent border-none cursor-none uppercase transition-all duration-[250ms];
+  }
+  .lang-btn[aria-pressed="true"] {
+    @apply bg-lime text-black;
+  }
+  .lang-btn:hover:not([aria-pressed="true"]) {
+    @apply text-white;
+  }
+
+  #nav.scrolled {
+    background: rgba(3, 3, 3, 0.9);
+    backdrop-filter: blur(24px);
+    @apply border-b border-border;
+  }
+  #nav.scrolled #nav-inner {
+    @apply py-3 lg:py-[13px];
+  }
+
+  /* Hamburger open state — all lines same width + centered origin */
+  #menuBtn[aria-expanded="true"] .ham-line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  #menuBtn[aria-expanded="true"] .ham-line:nth-child(2) {
+    @apply opacity-0 scale-x-0;
+  }
+  #menuBtn[aria-expanded="true"] .ham-line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+</style>
+
+<script>
+  const nav = document.getElementById("nav")!;
+  const menuBtn = document.getElementById("menuBtn")!;
+  const mobileMenu = document.getElementById("mobile-menu")!;
+
+  // Scroll shrink
+  const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 40);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Close helper
+  function closeMobileMenu() {
+    menuBtn.setAttribute("aria-expanded", "false");
+    menuBtn.setAttribute("aria-label", "Abrir menú");
+    mobileMenu.setAttribute("aria-hidden", "true");
+    mobileMenu.style.maxHeight = "0";
+  }
+
+  // Hamburger toggle
+  menuBtn.addEventListener("click", () => {
+    const open = menuBtn.getAttribute("aria-expanded") === "true";
+    if (open) {
+      closeMobileMenu();
+    } else {
+      menuBtn.setAttribute("aria-expanded", "true");
+      menuBtn.setAttribute("aria-label", "Cerrar menú");
+      mobileMenu.setAttribute("aria-hidden", "false");
+      mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
+    }
+  });
+
+  // Close on any mobile menu link click
+  mobileMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMobileMenu);
+  });
+
+  // Close on outside tap
+  document.addEventListener("click", (e) => {
+    if (
+      menuBtn.getAttribute("aria-expanded") === "true" &&
+      !nav.contains(e.target as Node)
+    ) {
+      closeMobileMenu();
+    }
+  });
+</script>

@@ -1,0 +1,852 @@
+---
+// ═══════════════════════════════════════════════════════════
+//  index.astro — Main page
+//  Assembles all sections + client-side scripts
+// ═══════════════════════════════════════════════════════════
+import Layout from "../layouts/Layout.astro";
+import LoadingScreen from "../components/LoadingScreen.astro";
+import CircuitBackground from "../components/CircuitBackground.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import About from "../components/About.astro";
+import Services from "../components/Services.astro";
+import Experience from "../components/Experience.astro";
+import Projects from "../components/Projects.astro";
+import SkillsBars from "../components/SkillsBars.astro";
+import Testimonials from "../components/Testimonials.astro";
+import Workflow from "../components/Workflow.astro";
+import Pricing from "../components/Pricing.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout>
+  <!-- Custom cursor -->
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Circuit background (scroll-driven PCB animation) -->
+  <CircuitBackground />
+
+  <!-- Loading screen (first paint) -->
+  <LoadingScreen />
+
+  <!-- Lang-switch loader: thin bar + page flash -->
+  <div id="lang-loader" aria-hidden="true">
+    <div id="lang-bar"></div>
+  </div>
+
+  <!-- Navigation -->
+  <Nav />
+
+  <!-- Main content -->
+  <main id="main-content">
+    <Hero />
+    <About />
+    <Services />
+    <Experience />
+    <Projects />
+    <SkillsBars />
+    <Testimonials />
+    <Workflow />
+    <!-- <Pricing /> -->
+    <Contact />
+  </main>
+
+  <Footer />
+</Layout>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CLIENT-SIDE SCRIPTS
+     All deferred — run after page is interactive
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+  /* ──────────────────────────────────────────────────────────
+   i18n TRANSLATIONS
+────────────────────────────────────────────────────────── */
+  const TRANSLATIONS: Record<string, Record<string, string>> = {
+    es: {
+      "nav.about": "Sobre mí",
+      "nav.experience": "Experiencia",
+      "nav.projects": "Proyectos",
+      "nav.pricing": "Precios",
+      "nav.workflow": "Proceso",
+      "nav.contact": "Contacto",
+      "nav.cv": "CV 2026",
+      "nav.hire": "Contrátame",
+      "hero.tag": "Full Stack Developer · Lima, Perú",
+      "hero.role1": "Frontend & Backend Development",
+      "hero.role2": "Headless CMS & Integración de APIs",
+      "hero.role3": "E-Commerce & Soluciones Web",
+      "hero.scroll": "Explorar",
+      "about.label": "01 — Perfil",
+      "about.freelance": "Freelance ✓",
+      "about.bio1":
+        "Desarrollador Full Stack con trayectoria en proyectos para <strong style='color:var(--white)'>telecomunicaciones, e-commerce y soluciones digitales a medida</strong>. He colaborado con Entel (via SrBurns), NERD, Well-Done Media y One Blush, construyendo desde landing pages de alto rendimiento hasta sistemas distribuidos con NestJS, Next.js y WordPress Headless.",
+      "about.bio2":
+        "Me destaco por mi responsabilidad, adaptación y compromiso con la entrega de productos eficientes y seguros. Trabajo en equipos ágiles con <strong style='color:var(--white)'>Scrum, Git, Jira y ClickUp</strong>. Certificado SFPC con 95 puntos.",
+      "about.stat1": "Años Exp.",
+      "about.stat2": "Proyectos",
+      "about.stack": "Tech Stack Completo",
+      "about.cv": "Descargar CV 2026",
+      "about.contact": "Contactar",
+      "about.title": "Sobre <em>Mí</em>",
+      "services.label": "02 — Servicios",
+      "services.title": "Lo Que <em>Hago</em>",
+      "services.s1.name": "Full Stack Dev",
+      "services.s1.desc":
+        "Aplicaciones web end-to-end con React, Next.js, NestJS, Laravel y Node.js. Diseño de APIs REST, autenticación y lógica de negocio.",
+      "services.s2.name": "Diseño & UX",
+      "services.s2.desc":
+        "Interfaces responsivas desde Figma hasta código. Evaluación heurística, prototipado y diseño centrado en el usuario.",
+      "services.s3.name": "E-Commerce",
+      "services.s3.desc":
+        "Tiendas con WooCommerce, Shopify y PrestaShop. Pasarelas de pago, Zoho CRM y automatizaciones con Zapier.",
+      "services.s4.name": "SEO & Analytics",
+      "services.s4.desc":
+        "SEO técnico y on-page, GTM, Google Analytics, Facebook Pixel, SEMRush, Screaming Frog y reportes de leads.",
+      "exp.label": "03 — Carrera",
+      "exp.title": "<em>Experiencia</em> &amp; Educación",
+      "exp.work": "Experiencia Laboral",
+      "exp.edu": "Educación",
+      "exp.achievements": "Logros",
+      "exp.nerd":
+        "Backend NestJS + APIs REST. Frontend Next.js y React+Vite (Liwilu, Punto Azul). Integración con ERP, Zoho, Headless WordPress y PrestaShop. Lazy loading, code splitting y optimización.",
+      "exp.srburns":
+        "Desarrollo para Entel, Urbanova, Paseo Begonias y La Rambla. WordPress Headless + Astro + Tailwind. APIs REST/JSON, SEO técnico, reportes de leads, Scrum con Jira y ClickUp.",
+      "exp.wellDone":
+        "WordPress, Shopify, PrestaShop con temas personalizados. React y Vue.js en arquitecturas modernas. GTM, Google Analytics, Facebook Pixel, Zoho CRM y Zapier.",
+      "exp.oneBlush":
+        "Laravel, CodeIgniter, Vue.js y jQuery. REST APIs con token-auth. Sistema de citas online, asistente virtual y módulos de calendario, ventas y profesionales.",
+      "exp.soft":
+        "WordPress (SOAP), SEMRush, Screaming Frog, análisis On-Page, reportes SEO y vistas responsivas.",
+      "exp.vex":
+        "WooCommerce, Shopify, WordPress. UX con evaluaciones heurísticas, prototipado y tests con usuarios.",
+      "edu.systems": "Ingeniería de Sistemas — Bachiller",
+      "edu.ai1": "Fundamentos de AI & Machine Learning",
+      "edu.ai2": "Inteligencia Artificial para Empresas",
+      "edu.oracle": "Oracle Database Administrator (48h)",
+      "edu.english": "Inglés Avanzado",
+      "ach.hack.title": "Líder de Equipo — Hackathon",
+      "ach.hack.desc":
+        "Líder de equipo — Estadio Nacional, IPD & ONPE. Sistema de seguimiento de deportistas con PHP, SQL y Bootstrap.",
+      "ach.scrum.desc":
+        "Certificación SFPC con 95 puntos. Trabajo activo en equipos ágiles con Git, Jira y ClickUp.",
+      "proj.label": "04 — Portfolio",
+      "proj.title": "Proyectos <em>Reales</em>",
+      "p.colecciones.desc":
+        "Arquitectura BaaS + Edge. React SPA con PostgreSQL vía Supabase, Cloudflare CDN (HTTP/3 + RUM) y Apache como servidor origen.",
+      "p.kgstore.desc":
+        "Dashboard administrativo SPA/PWA con React. Autenticación, métricas en tiempo real, CRUD completo y deploy en Vercel.",
+      "p.liwilu.desc":
+        "Arquitectura headless desacoplada. SSR/SSG con Next.js, API con NestJS, e-commerce PrestaShop y animaciones con Framer Motion.",
+      "p.aicon.desc":
+        "Landing SSG de alto rendimiento para plataforma de IA. Astro + Alpine.js en Vercel y AWS con integración Mailchimp.",
+      "p.gustos.desc":
+        "Tienda Shopify con frontend en Vue.js para Puerto Rico. Cloudflare CDN, pagos Apple Pay / Shop Pay y optimización de conversión.",
+      "p.whaticket.desc":
+        "WordPress optimizado para marketing y performance. Elementor, Cloudflare CDN, WP Rocket, HubSpot CRM y GTM para tracking avanzado.",
+      "p.astra.desc":
+        "Sitio corporativo WordPress + WooCommerce. PHP + MySQL, Apache, Yoast SEO y diseño responsivo desde Figma.",
+      "p.chapa.desc":
+        "WordPress Multisite para becas universitarias. Elementor, PHP + MySQL, múltiples plugins y sistema de postulación en línea.",
+      "p.segway.desc":
+        "Tienda de vehículos eléctricos con WordPress + Elementor. Apache, RankMath SEO, jQuery y pasarela de pagos para Perú.",
+      "p.view": "Ver proyecto",
+      "p.demo": "Ver demo",
+      "skills.label": "05 — Proficiency",
+      "skills.title": "Habilidades <em>Técnicas</em>",
+      "skills.dev": "Desarrollo",
+      "skills.tools": "CMS, Marketing & Tools",
+      "t.label": "06 — Testimonios",
+      "t.title": "Lo Que <em>Dicen</em>",
+      "t.t1.text":
+        "Kevin es un profesional comprometido con su labor, siempre estuvo a la altura de los proyectos encomendados. Tiene un gran talento al diseño, UX y desarrollo web. Es una persona que recomendaría para proyectos en fábrica de software.",
+      "t.t2.text":
+        "Kevin presta mucha atención a los detalles, es dinámico, muy capaz de aprender nuevas tecnologías. Cumple a tiempo sus tareas y responde al trabajo bajo presión. Muy recomendado para cualquier proyecto web.",
+      "t.t3.text":
+        "Kevin aporta energía creativa y ejecución sólida en cada proyecto. Su ojo para el diseño combinado con su experiencia en backend es una combinación poco común que lo convierte en un desarrollador excepcional.",
+      "t.t4.text":
+        "Trabajar con Kevin fue una gran experiencia. Su profundidad técnica combinada con sus habilidades de comunicación hicieron que cada entrega fuera fluida.",
+      "wf.label": "07 — Proceso",
+      "wf.title": "Cómo <em>Trabajo</em>",
+      "wf.s1.title": "Discovery Call",
+      "wf.s1.desc":
+        "Definimos ideas, objetivos y alcance del proyecto en una reunión inicial.",
+      "wf.s2.title": "Diseño & Prototipo",
+      "wf.s2.desc":
+        "Mockups en Figma y esquema de colores aprobado antes de empezar.",
+      "wf.s3.title": "Desarrollo",
+      "wf.s3.desc":
+        "Desarrollo ágil con control de versiones en Git y reuniones de avance periódicas.",
+      "wf.s4.title": "Lanzamiento & Soporte",
+      "wf.s4.desc":
+        "Deploy, QA, SEO técnico, analítica y soporte continuo para óptimo rendimiento.",
+      "price.label": "08 — Inversión",
+      "price.title": "Planes &amp; <em>Precios</em>",
+      "price.popular": "Más Popular",
+      "price.cta": "Adquirir",
+      "price.seo": "Optimización SEO incluida",
+      "price.p1.name": "Básico",
+      "price.p1.f1": "Sitio Responsive: HTML, CSS, JS & PHP",
+      "price.p1.f2": "Correo incluido (Limitado)",
+      "price.p1.f3": "5 páginas: Inicio, Nosotros, Servicios, Contacto + 1",
+      "price.p1.f5": "Entrega: 2 sem · Soporte: 3 sem",
+      "price.p2.name": "Corporativo",
+      "price.p2.f1": "Sistema administrable y escalable",
+      "price.p2.f2": "Correo ilimitado",
+      "price.p2.f3": "9 páginas incluyendo Blog",
+      "price.p2.f5": "Asesoría virtual o presencial",
+      "price.p2.f6": "Entrega: 3 sem · Soporte: 4 sem",
+      "price.p3.name": "Tienda Virtual",
+      "price.p3.f1": "Plataforma e-commerce escalable",
+      "price.p3.f3": "Carrito, login, checkout y cuenta",
+      "price.p3.f4": "Integración de pasarela de pagos",
+      "price.p3.f5": "SEO + asesoría",
+      "price.p3.f6": "Entrega: 4 sem · Soporte: 5 sem",
+      "contact.label": "09 — Contacto",
+      "contact.title": "Hablemos <em>Hoy</em>",
+      "contact.desc":
+        "¿Tienes un proyecto en mente? Estoy disponible para freelance, colaboraciones y nuevas oportunidades. Escríbeme.",
+      "contact.docs": "Documentos",
+      "contact.docsub":
+        "Descarga mi CV, carta de presentación o carta de recomendación.",
+      "contact.dlcv": "Curriculum Vitae 2026 (PDF)",
+      "contact.dlcover": "Carta de Presentación (PDF)",
+      "contact.dlrecom": "Carta de Recomendación — Burns",
+      "form.name": "Nombre",
+      "form.namePh": "Juan",
+      "form.lastname": "Apellido",
+      "form.lastnamePh": "García",
+      "form.subject": "Asunto",
+      "form.subjectPh": "Consulta de proyecto",
+      "form.message": "Mensaje",
+      "form.messagePh": "Cuéntame sobre tu proyecto...",
+      "form.send": "Enviar Mensaje",
+      "form.sent": "¡Mensaje Enviado!",
+    },
+    en: {
+      "nav.about": "About",
+      "nav.experience": "Experience",
+      "nav.projects": "Projects",
+      "nav.pricing": "Pricing",
+      "nav.workflow": "Process",
+      "nav.contact": "Contact",
+      "nav.cv": "CV 2026",
+      "nav.hire": "Hire Me",
+      "hero.tag": "Full Stack Developer · Lima, Peru",
+      "hero.role1": "Frontend & Backend Development",
+      "hero.role2": "Headless CMS & API Integration",
+      "hero.role3": "E-Commerce & Web Solutions",
+      "hero.scroll": "Scroll to explore",
+      "about.label": "01 — Profile",
+      "about.freelance": "Freelance ✓",
+      "about.bio1":
+        "Full Stack Developer with experience in projects for <strong style='color:var(--white)'>telecommunications, e-commerce, and custom digital solutions</strong>. Collaborated with Entel (via SrBurns), NERD, Well-Done Media, and One Blush, building high-performance landing pages to distributed systems with NestJS, Next.js, and Headless WordPress.",
+      "about.bio2":
+        "I stand out for responsibility, adaptability, and commitment to delivering efficient, secure products. I work in agile teams using <strong style='color:var(--white)'>Scrum, Git, Jira, and ClickUp</strong>. SFPC certified with a score of 95.",
+      "about.stat1": "Years Exp.",
+      "about.stat2": "Projects",
+      "about.stack": "Full Tech Stack",
+      "about.cv": "Download CV 2026",
+      "about.contact": "Contact Me",
+      "about.title": "About <em>Me</em>",
+      "services.label": "02 — Services",
+      "services.title": "What I <em>Do</em>",
+      "services.s1.name": "Full Stack Dev",
+      "services.s1.desc":
+        "End-to-end web apps with React, Next.js, NestJS, Laravel, and Node.js. REST API design, authentication, and business logic.",
+      "services.s2.name": "Design & UX",
+      "services.s2.desc":
+        "Responsive interfaces from Figma to code. Heuristic evaluation, prototyping, and user-centered design.",
+      "services.s3.name": "E-Commerce",
+      "services.s3.desc":
+        "Stores with WooCommerce, Shopify, and PrestaShop. Payment gateways, Zoho CRM, and Zapier automations.",
+      "services.s4.name": "SEO & Analytics",
+      "services.s4.desc":
+        "Technical and on-page SEO, GTM, Google Analytics, Facebook Pixel, SEMRush, Screaming Frog, and lead reports.",
+      "exp.label": "03 — Career",
+      "exp.title": "<em>Experience</em> &amp; Education",
+      "exp.work": "Work Experience",
+      "exp.edu": "Education",
+      "exp.achievements": "Achievements",
+      "exp.nerd":
+        "NestJS backend + REST APIs. Next.js and React+Vite frontend (Liwilu, Punto Azul). Integration with ERP, Zoho, Headless WordPress, and PrestaShop. Lazy loading, code splitting, and performance optimization.",
+      "exp.srburns":
+        "Development for Entel, Urbanova, Paseo Begonias, and La Rambla. WordPress Headless + Astro + Tailwind. REST/JSON APIs, technical SEO, lead reports, Scrum with Jira and ClickUp.",
+      "exp.wellDone":
+        "WordPress, Shopify, PrestaShop with custom themes. React and Vue.js in modern frontend architectures. GTM, Google Analytics, Facebook Pixel, Zoho CRM, and Zapier.",
+      "exp.oneBlush":
+        "Laravel, CodeIgniter, Vue.js, and jQuery. REST APIs with token auth. Online booking system, virtual assistant, and modules for calendar, sales, and professionals.",
+      "exp.soft":
+        "WordPress maintenance (SOAP), SEMRush, Screaming Frog, On-Page analysis, SEO reports, and responsive views.",
+      "exp.vex":
+        "WooCommerce, Shopify, WordPress. UX with heuristic evaluations, prototyping, and user testing.",
+      "edu.systems": "Systems Engineering — Bachelor's Degree",
+      "edu.ai1": "AI & Machine Learning Fundamentals",
+      "edu.ai2": "Artificial Intelligence for Business",
+      "edu.oracle": "Oracle Database Administrator (48h)",
+      "edu.english": "Advanced English",
+      "ach.hack.title": "Hackathon Team Leader",
+      "ach.hack.desc":
+        "Team leader — National Stadium, IPD & ONPE. Athlete tracking system built with PHP, SQL, and Bootstrap.",
+      "ach.scrum.desc":
+        "SFPC certification with a score of 95. Active work in agile teams using Git, Jira, and ClickUp.",
+      "proj.label": "04 — Portfolio",
+      "proj.title": "Real <em>Projects</em>",
+      "p.colecciones.desc":
+        "BaaS + Edge architecture. React SPA with PostgreSQL via Supabase, Cloudflare CDN (HTTP/3 + RUM), and Apache as origin server.",
+      "p.kgstore.desc":
+        "SPA/PWA admin dashboard built with React. Authentication, real-time metrics, full CRUD, and deployed on Vercel.",
+      "p.liwilu.desc":
+        "Decoupled headless architecture. SSR/SSG with Next.js, NestJS API on Railway, PrestaShop e-commerce, and Framer Motion animations.",
+      "p.aicon.desc":
+        "High-performance SSG landing for an AI platform. Astro + Alpine.js on Vercel and AWS with Mailchimp integration.",
+      "p.gustos.desc":
+        "Shopify store with Vue.js frontend for Puerto Rico. Cloudflare CDN, Apple Pay / Shop Pay, and conversion optimization.",
+      "p.whaticket.desc":
+        "WordPress optimized for marketing and performance. Elementor, Cloudflare CDN, WP Rocket, HubSpot CRM, and GTM for advanced tracking.",
+      "p.astra.desc":
+        "WordPress + WooCommerce corporate site. PHP + MySQL, Apache, Yoast SEO, and responsive design from Figma.",
+      "p.chapa.desc":
+        "WordPress Multisite for university scholarships. Elementor, PHP + MySQL, multiple plugins, and online application system.",
+      "p.segway.desc":
+        "Electric vehicle store with WordPress + Elementor. Apache, RankMath SEO, jQuery, and payment gateway for Peru.",
+      "p.view": "View Project",
+      "p.demo": "View Demo",
+      "skills.label": "05 — Proficiency",
+      "skills.title": "Technical <em>Skills</em>",
+      "skills.dev": "Development",
+      "skills.tools": "CMS, Marketing & Tools",
+      "t.label": "06 — Testimonials",
+      "t.title": "What They <em>Say</em>",
+      "t.t1.text":
+        "Kevin is a professional committed to his work, always up to the task assigned. He has great talent for design, UX, and web development. I would recommend him for any software development project.",
+      "t.t2.text":
+        "Kevin pays close attention to detail, is dynamic, and very capable of learning new technologies. He delivers on time and performs well under pressure. Highly recommended for any web project.",
+      "t.t3.text":
+        "Kevin brings creative energy and solid execution to every project. His eye for design combined with strong backend expertise is a rare combination that makes him an exceptional developer to collaborate with.",
+      "t.t4.text":
+        "Working with Kevin was a great experience. His technical depth combined with strong communication skills made every milestone smooth. He adapts quickly to new frameworks and delivers clean, performant code.",
+      "wf.label": "07 — Process",
+      "wf.title": "How I <em>Work</em>",
+      "wf.s1.title": "Discovery Call",
+      "wf.s1.desc":
+        "We define ideas, goals, and project scope in an initial meeting.",
+      "wf.s2.title": "Design & Prototype",
+      "wf.s2.desc":
+        "Figma mockups and color scheme approved by the client before development begins.",
+      "wf.s3.title": "Development",
+      "wf.s3.desc":
+        "Agile development with Git version control and regular progress check-ins.",
+      "wf.s4.title": "Launch &amp; Support",
+      "wf.s4.desc":
+        "Deploy, QA, technical SEO, analytics, and ongoing support for peak performance.",
+      "price.label": "08 — Investment",
+      "price.title": "Plans &amp; <em>Pricing</em>",
+      "price.popular": "Most Popular",
+      "price.cta": "Get Started",
+      "price.seo": "SEO optimization included",
+      "price.p1.name": "Basic",
+      "price.p1.f1": "Responsive site: HTML, CSS, JS & PHP",
+      "price.p1.f2": "Email included (Limited)",
+      "price.p1.f3": "5 pages: Home, About, Services, Contact + 1",
+      "price.p1.f5": "Delivery: 2 wks · Support: 3 wks",
+      "price.p2.name": "Corporate",
+      "price.p2.f1": "Scalable admin system",
+      "price.p2.f2": "Unlimited email",
+      "price.p2.f3": "9 pages including Blog",
+      "price.p2.f5": "Virtual or in-person consultation",
+      "price.p2.f6": "Delivery: 3 wks · Support: 4 wks",
+      "price.p3.name": "Online Store",
+      "price.p3.f1": "Scalable e-commerce platform",
+      "price.p3.f3": "Cart, login, checkout, and account",
+      "price.p3.f4": "Payment gateway integration",
+      "price.p3.f5": "SEO + consultation",
+      "price.p3.f6": "Delivery: 4 wks · Support: 5 wks",
+      "contact.label": "09 — Contact",
+      "contact.title": "Let's Talk <em>Today</em>",
+      "contact.desc":
+        "Have a project in mind? I'm available for freelance, collaborations, and new opportunities. Write to me.",
+      "contact.docs": "Documents",
+      "contact.docsub":
+        "Download my CV, cover letter, or recommendation letter.",
+      "contact.dlcv": "Curriculum Vitae 2026 (PDF)",
+      "contact.dlcover": "Cover Letter (PDF)",
+      "contact.dlrecom": "Recommendation Letter — Burns",
+      "form.name": "First Name",
+      "form.namePh": "John",
+      "form.lastname": "Last Name",
+      "form.lastnamePh": "Doe",
+      "form.subject": "Subject",
+      "form.subjectPh": "Project inquiry",
+      "form.message": "Message",
+      "form.messagePh": "Tell me about your project...",
+      "form.send": "Send Message",
+      "form.sent": "Message Sent!",
+    },
+  };
+
+  let currentLang = "es";
+
+  function applyLang(lang: string) {
+    currentLang = lang;
+    const t = TRANSLATIONS[lang];
+    document.documentElement.lang = lang;
+
+    // text content
+    document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
+      const key = el.dataset.i18n!;
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+    // innerHTML (for <em> tags)
+    document.querySelectorAll<HTMLElement>("[data-i18n-html]").forEach((el) => {
+      const key = el.dataset.i18nHtml!;
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+    // placeholders
+    document
+      .querySelectorAll<
+        HTMLInputElement | HTMLTextAreaElement
+      >("[data-i18n-ph]")
+      .forEach((el) => {
+        const key = (el as HTMLElement).dataset.i18nPh!;
+        if (t[key] !== undefined) el.placeholder = t[key];
+      });
+
+    // button state
+    const btnES = document.getElementById("btnES") as HTMLButtonElement;
+    const btnEN = document.getElementById("btnEN") as HTMLButtonElement;
+    btnES.classList.toggle("active", lang === "es");
+    btnEN.classList.toggle("active", lang === "en");
+    btnES.setAttribute("aria-pressed", String(lang === "es"));
+    btnEN.setAttribute("aria-pressed", String(lang === "en"));
+  }
+
+  function langSwitch(lang: string) {
+    if (lang === currentLang) return;
+    const loader = document.getElementById("lang-loader")!;
+    loader.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      applyLang(lang);
+      setTimeout(() => loader.classList.remove("active"), 280);
+    }, 220);
+  }
+
+  document
+    .getElementById("btnES")!
+    .addEventListener("click", () => langSwitch("es"));
+  document
+    .getElementById("btnEN")!
+    .addEventListener("click", () => langSwitch("en"));
+
+  /* ──────────────────────────────────────────────────────────
+   CUSTOM CURSOR
+────────────────────────────────────────────────────────── */
+  const cursor = document.getElementById("cursor")!;
+  const ring = document.getElementById("cursor-ring")!;
+  let mx = 0,
+    my = 0,
+    rx = 0,
+    ry = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+    cursor.style.left = mx + "px";
+    cursor.style.top = my + "px";
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    ring.style.left = rx + "px";
+    ring.style.top = ry + "px";
+    requestAnimationFrame(animRing);
+  })();
+
+  /* ──────────────────────────────────────────────────────────
+   PARTICLES CANVAS
+────────────────────────────────────────────────────────── */
+  const canvas = document.getElementById("particles") as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d")!;
+  let W: number, H: number;
+
+  function resizeCanvas() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+
+  interface Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    r: number;
+    o: number;
+  }
+  const pts: Particle[] = Array.from({ length: 55 }, () => ({
+    x: Math.random() * 1920,
+    y: Math.random() * 1080,
+    vx: (Math.random() - 0.5) * 0.28,
+    vy: (Math.random() - 0.5) * 0.28,
+    r: Math.random() * 1.4 + 0.4,
+    o: Math.random() * 0.5 + 0.1,
+  }));
+
+  (function drawPts() {
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180,223,0,${p.o})`;
+      ctx.fill();
+    });
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x;
+        const dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 110) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(180,223,0,${0.07 * (1 - d / 110)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(drawPts);
+  })();
+
+  /* ──────────────────────────────────────────────────────────
+   INTERSECTION OBSERVER — REVEAL ANIMATIONS
+────────────────────────────────────────────────────────── */
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("visible");
+      }),
+    { threshold: 0.1 },
+  );
+  document
+    .querySelectorAll(".reveal, .reveal-left, .reveal-right")
+    .forEach((el) => io.observe(el));
+
+  // Skill pills stagger
+  const skillsGridEl = document.querySelector(".skills-grid");
+  if (skillsGridEl) {
+    const sio = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            document
+              .querySelectorAll(".skill-pill")
+              .forEach((p, i) =>
+                setTimeout(() => p.classList.add("visible"), i * 40),
+              );
+          }
+        }),
+      { threshold: 0.2 },
+    );
+    sio.observe(skillsGridEl);
+  }
+
+  // Skill bars fill
+  const sbg = document.querySelector(".skills-bars-grid");
+  if (sbg) {
+    const barsIO = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            document
+              .querySelectorAll<HTMLElement>(".skill-bar-fill")
+              .forEach((b) => {
+                b.style.width = (b.dataset.pct ?? "0") + "%";
+              });
+          }
+        }),
+      { threshold: 0.2 },
+    );
+    barsIO.observe(sbg);
+  }
+
+  /* ──────────────────────────────────────────────────────────
+   HERO ROLE CYCLING
+────────────────────────────────────────────────────────── */
+  const roles = document.querySelectorAll(".hero-role");
+  let ri = 0;
+  setInterval(() => {
+    roles[ri].classList.remove("active");
+    ri = (ri + 1) % roles.length;
+    roles[ri].classList.add("active");
+  }, 2600);
+
+  /* ──────────────────────────────────────────────────────────
+   EMBLA — TESTIMONIALS CAROUSEL
+────────────────────────────────────────────────────────── */
+  const tViewport = document.getElementById("emblaTestimonials")!;
+  // @ts-ignore
+  const tAutoplay = EmblaCarouselAutoplay({
+    delay: 5500,
+    stopOnInteraction: true,
+  });
+  // @ts-ignore
+  const emblaT = EmblaCarousel(
+    tViewport,
+    { loop: true, align: "start", slidesToScroll: 1 },
+    [tAutoplay],
+  );
+
+  const tDotsEl = document.getElementById("emblaTDots")!;
+
+  // ── Dot helpers ───────────────────────────────────────────
+  function buildDots(container: HTMLElement, embla: any) {
+    const count = embla.scrollSnapList().length;
+    container.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+      const btn = document.createElement("button");
+      btn.className =
+        "w-2 h-2 rounded-full border border-white/20 bg-transparent transition-all duration-300 cursor-none";
+      btn.setAttribute("aria-label", `Testimonio ${i + 1}`);
+      btn.setAttribute("role", "tab");
+      btn.addEventListener("click", () => embla.scrollTo(i));
+      container.appendChild(btn);
+    }
+    updateDots(container, embla);
+  }
+
+  function updateDots(container: HTMLElement, embla: any) {
+    const idx = embla.selectedScrollSnap();
+    Array.from(container.children).forEach((dot, i) => {
+      const el = dot as HTMLElement;
+      const active = i === idx;
+      el.style.background = active ? "var(--lime)" : "";
+      el.style.borderColor = active ? "var(--lime)" : "";
+      el.style.width = active ? "20px" : "";
+    });
+  }
+
+  function updateActiveCard() {
+    document
+      .querySelectorAll(".testimonial-card")
+      .forEach((c, i) =>
+        c.classList.toggle("is-selected", i === emblaT.selectedScrollSnap()),
+      );
+  }
+
+  buildDots(tDotsEl, emblaT);
+  emblaT.on("select", () => {
+    updateDots(tDotsEl, emblaT);
+    updateActiveCard();
+  });
+  emblaT.on("init", () => {
+    updateDots(tDotsEl, emblaT);
+    updateActiveCard();
+  });
+
+  document
+    .getElementById("tPrev")!
+    .addEventListener("click", () => emblaT.scrollPrev());
+  document
+    .getElementById("tNext")!
+    .addEventListener("click", () => emblaT.scrollNext());
+
+  /* ──────────────────────────────────────────────────────────
+   CONTACT FORM — real validation + SMTP send
+  ────────────────────────────────────────────────────────── */
+  (function initContactForm() {
+    const form = document.getElementById(
+      "contactForm",
+    ) as HTMLFormElement | null;
+    const submitBtn = document.getElementById(
+      "submitBtn",
+    ) as HTMLButtonElement | null;
+    const submitIcon = document.getElementById(
+      "submitIcon",
+    ) as HTMLElement | null;
+    const submitLabel = document.getElementById(
+      "submitLabel",
+    ) as HTMLElement | null;
+    const toast = document.getElementById("formToast") as HTMLElement | null;
+    const toastMsg = document.getElementById(
+      "formToastMsg",
+    ) as HTMLElement | null;
+    const toastIcon = document.getElementById(
+      "formToastIcon",
+    ) as HTMLElement | null;
+
+    if (!form || !submitBtn) return;
+
+    // ── Validation rules ─────────────────────────────────────
+    interface Rule {
+      id: string;
+      test: (v: string) => boolean;
+      msgES: string;
+      msgEN: string;
+    }
+
+    const rules: Rule[] = [
+      {
+        id: "fname",
+        test: (v) => v.trim().length > 0,
+        msgES: "El nombre es requerido.",
+        msgEN: "First name is required.",
+      },
+      {
+        id: "lname",
+        test: (v) => v.trim().length > 0,
+        msgES: "El apellido es requerido.",
+        msgEN: "Last name is required.",
+      },
+      {
+        id: "email",
+        test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+        msgES: "Email inválido.",
+        msgEN: "Invalid email address.",
+      },
+      {
+        id: "subject",
+        test: (v) => v.trim().length > 0,
+        msgES: "El asunto es requerido.",
+        msgEN: "Subject is required.",
+      },
+      {
+        id: "message",
+        test: (v) => v.trim().length >= 10,
+        msgES: "Mínimo 10 caracteres.",
+        msgEN: "Minimum 10 characters.",
+      },
+    ];
+
+    function getErrorMsg(rule: Rule): string {
+      return currentLang === "en" ? rule.msgEN : rule.msgES;
+    }
+
+    function validateField(rule: Rule): boolean {
+      const el = document.getElementById(rule.id) as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | null;
+      const errEl = el
+        ?.closest(".field-group")
+        ?.querySelector(".field-error") as HTMLElement | null;
+      if (!el) return true;
+
+      const ok = rule.test(el.value);
+      el.classList.toggle("is-invalid", !ok);
+      el.classList.toggle("is-valid", ok);
+      if (errEl) errEl.textContent = ok ? "" : getErrorMsg(rule);
+      return ok;
+    }
+
+    function validateAll(): boolean {
+      return rules.map(validateField).every(Boolean);
+    }
+
+    // ── Per-field blur validation ─────────────────────────────
+    rules.forEach((rule) => {
+      const el = document.getElementById(rule.id);
+      el?.addEventListener("blur", () => validateField(rule));
+      el?.addEventListener("input", () => {
+        // re-validate only if already marked
+        if (
+          el.classList.contains("is-invalid") ||
+          el.classList.contains("is-valid")
+        ) {
+          validateField(rule);
+        }
+      });
+    });
+
+    // ── Toast helper ─────────────────────────────────────────
+    let toastTimer: ReturnType<typeof setTimeout>;
+    function showToast(type: "success" | "error", msg: string) {
+      if (!toast || !toastMsg || !toastIcon) return;
+      clearTimeout(toastTimer);
+      toast.className = `mb-5 flex items-center gap-3 px-4 py-3 rounded-[10px] border text-[13px] font-mono toast-${type}`;
+      toastMsg.textContent = msg;
+      toastIcon.className = `ph ${type === "success" ? "ph-check-circle" : "ph-warning"} text-[18px]`;
+      if (type === "success") {
+        toastTimer = setTimeout(() => toast.classList.add("hidden"), 7000);
+      }
+    }
+
+    // ── Loading state ─────────────────────────────────────────
+    function setLoading(on: boolean) {
+      submitBtn!.disabled = on;
+      if (on) {
+        if (submitIcon) {
+          submitIcon.className = "spin";
+          submitIcon.textContent = "⟳";
+        }
+        if (submitLabel)
+          submitLabel.textContent =
+            currentLang === "en" ? "Sending…" : "Enviando…";
+      } else {
+        if (submitIcon) {
+          submitIcon.className = "ph ph-paper-plane-tilt";
+          submitIcon.textContent = "";
+        }
+        const t = TRANSLATIONS[currentLang];
+        if (submitLabel)
+          submitLabel.textContent = t["form.send"] ?? "Enviar Mensaje";
+      }
+    }
+
+    // ── Form submit → Brevo via hidden iframe ─────────────────
+    const brevoFrame = document.getElementById(
+      "brevo_frame",
+    ) as HTMLIFrameElement | null;
+
+    form.addEventListener("submit", (e) => {
+      if (!validateAll()) {
+        e.preventDefault();
+        const firstInvalid = form.querySelector(
+          ".is-invalid",
+        ) as HTMLElement | null;
+        firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      // Validation passed — let the form POST natively to Brevo iframe
+      setLoading(true);
+
+      if (brevoFrame) {
+        brevoFrame.addEventListener(
+          "load",
+          () => {
+            setLoading(false);
+            showToast(
+              "success",
+              currentLang === "en"
+                ? "✓ Message sent! I'll reply within 24 hours."
+                : "✓ ¡Mensaje enviado! Te responderé en menos de 24 horas.",
+            );
+            form.reset();
+            form.querySelectorAll(".form-input").forEach((el) => {
+              el.classList.remove("is-valid", "is-invalid");
+            });
+            form.querySelectorAll(".field-error").forEach((el) => {
+              (el as HTMLElement).textContent = "";
+            });
+          },
+          { once: true },
+        );
+      }
+    });
+  })();
+
+  /* ──────────────────────────────────────────────────────────
+   INIT — default language ES
+────────────────────────────────────────────────────────── */
+  applyLang("es");
+</script>

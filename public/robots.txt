@@ -1,0 +1,8 @@
+# robots.txt — kevin.grupo-gomez.com
+# Full Stack Developer portfolio
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://kevin.grupo-gomez.com/sitemap-index.xml

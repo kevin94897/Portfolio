@@ -1,0 +1,255 @@
+---
+// About.astro — Profile section: photo, bio, stats, tech stack
+import fotoKevin from '../assets/images/foto_kevin.jpeg';
+---
+
+<section
+  id="about"
+  class="py-20 lg:py-[120px] bg-black"
+  aria-labelledby="about-heading"
+>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+    <p class="section-label" data-i18n="about.label">01 — Perfil</p>
+    <h2 id="about-heading" class="section-title" data-i18n-html="about.title">
+      Sobre <em>Mí</em>
+    </h2>
+
+    <!-- 1-col mobile → 2-col desktop -->
+    <div
+      class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-12 lg:gap-[80px] items-start"
+    >
+      <!-- Photo column -->
+      <div
+        class="reveal-left relative flex items-center justify-center min-h-[300px] lg:min-h-[390px] mb-4 lg:mb-0"
+      >
+        <div
+          class="absolute w-[280px] h-[280px] lg:w-[370px] lg:h-[370px] rounded-full border border-lime/[0.08] [animation:ringPulse_3s_ease-in-out_infinite_0.6s]"
+          aria-hidden="true"
+        >
+        </div>
+        <div
+          class="absolute w-[250px] h-[250px] lg:w-[330px] lg:h-[330px] rounded-full border border-lime/25 [animation:ringPulse_3s_ease-in-out_infinite]"
+          aria-hidden="true"
+        >
+        </div>
+
+        <div
+          class="w-[220px] h-[220px] lg:w-[290px] lg:h-[290px] rounded-full bg-surface2 border-2 border-lime/35
+                 shadow-[0_0_60px_rgba(180,223,0,0.12)] overflow-hidden
+                 transition-[transform,box-shadow] duration-400
+                 hover:scale-[1.04] hover:shadow-[0_0_80px_rgba(180,223,0,0.22)]"
+          role="img"
+          aria-label="Avatar de Kevin Gómez Lázaro"
+        >
+          <img
+            src={fotoKevin.src}
+            alt="Logo KG"
+            class="object-cover w-full h-full"
+          />
+        </div>
+
+        <div
+          class="absolute bottom-[10px] flex gap-2 flex-wrap justify-center"
+          aria-hidden="true"
+        >
+          <span
+            class="bg-surface2 border border-lime/20 rounded-[30px] px-[13px] py-[5px] font-mono text-[10px] text-lime tracking-[0.08em] backdrop-blur-[10px]"
+            >Lima, Perú</span
+          >
+          <span
+            class="bg-surface2 border border-lime/20 rounded-[30px] px-[13px] py-[5px] font-mono text-[10px] text-lime tracking-[0.08em] backdrop-blur-[10px]"
+            data-i18n="about.freelance">Freelance ✓</span
+          >
+        </div>
+      </div>
+
+      <!-- Content column -->
+      <div class="reveal-right">
+        <p
+          class="text-[14px] md:text-[15px] leading-[1.85] text-text/65 mb-7"
+          data-i18n-html="about.bio1"
+        >
+          Desarrollador Full Stack con trayectoria en proyectos para
+          <strong class="text-white"
+            >telecomunicaciones, e-commerce y soluciones digitales a medida</strong
+          >. He colaborado con Entel (via SrBurns), NERD, Well-Done Media y One
+          Blush, construyendo desde landing pages de alto rendimiento hasta
+          sistemas distribuidos con NestJS, Next.js y WordPress Headless.
+        </p>
+        <p
+          class="text-[14px] md:text-[15px] leading-[1.85] text-text/65 mb-7 -mt-3"
+          data-i18n-html="about.bio2"
+        >
+          Me destaco por mi responsabilidad, adaptación y compromiso con la
+          entrega de productos eficientes y seguros. Trabajo en equipos ágiles
+          con
+          <strong class="text-white">Scrum, Git, Jira y ClickUp</strong>.
+          Certificado SFPC con 95 puntos.
+        </p>
+
+        <!-- Stats -->
+        <div
+          class="grid grid-cols-3 gap-px bg-border border border-border rounded-[12px] overflow-hidden mb-9"
+          role="list"
+          aria-label="Estadísticas profesionales"
+        >
+          <div class="bg-surface p-4 md:p-[22px] text-center" role="listitem">
+            <div
+              class="font-syne text-[28px] md:text-[32px] font-extrabold text-lime leading-none mb-1"
+            >
+              8+
+            </div>
+            <div
+              class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] text-muted uppercase"
+              data-i18n="about.stat1"
+            >
+              Años Exp.
+            </div>
+          </div>
+          <div class="bg-surface p-4 md:p-[22px] text-center" role="listitem">
+            <div
+              class="font-syne text-[28px] md:text-[32px] font-extrabold text-lime leading-none mb-1"
+            >
+              20+
+            </div>
+            <div
+              class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] text-muted uppercase"
+              data-i18n="about.stat2"
+            >
+              Proyectos
+            </div>
+          </div>
+          <div class="bg-surface p-4 md:p-[22px] text-center" role="listitem">
+            <div
+              class="font-syne text-[28px] md:text-[32px] font-extrabold text-lime leading-none mb-1"
+            >
+              95
+            </div>
+            <div
+              class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] text-muted uppercase"
+            >
+              SFPC Score
+            </div>
+          </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <p
+          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-[14px]"
+          data-i18n="about.stack"
+        >
+          Tech Stack Completo
+        </p>
+        <div
+          class="skills-grid flex flex-wrap gap-2 mb-7"
+          role="list"
+          aria-label="Tecnologías dominadas"
+        >
+          {
+            [
+              "Next.js",
+              "React / Vite",
+              "NestJS",
+              "Astro",
+              "Vue.js",
+              "Angular",
+              "Laravel",
+              "PHP / CodeIgniter",
+              "Node.js",
+              "Tailwind CSS",
+              "SCSS / Pug",
+              "WordPress Headless",
+              "Shopify",
+              "PrestaShop",
+              "WooCommerce",
+              "SQL / MySQL",
+              "REST APIs / JSON",
+              "Figma / Zeplin",
+              "Flutter",
+              "Git / Scrum / Jira",
+            ].map((tech) => (
+              <div
+                class="skill-pill flex items-center gap-[7px] px-[11px] py-[6px] bg-surface2 border border-border rounded-[6px] font-mono text-[10px] md:text-[11px] text-text
+                     transition-[border-color,box-shadow,transform] duration-200
+                     hover:border-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] hover:-translate-y-0.5
+                     opacity-0 translate-y-2"
+                role="listitem"
+              >
+                <div
+                  class="w-[5px] h-[5px] rounded-full bg-lime flex-shrink-0"
+                  aria-hidden="true"
+                />
+                {tech}
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- CTA buttons -->
+        <div class="flex gap-3 flex-wrap">
+          <a
+            href="/files/KevinGomezLazaroCV_2026.pdf"
+            download
+            class="inline-flex items-center gap-2 px-5 md:px-[26px] py-3 md:py-[13px] bg-lime text-black font-mono text-[10px] md:text-[11px] font-medium tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:shadow-[0_0_30px_rgba(180,223,0,0.4)] hover:-translate-y-0.5"
+          >
+            <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
+            <span data-i18n="about.cv">Descargar CV 2026</span>
+          </a>
+          <a
+            href="#contact"
+            class="inline-flex items-center gap-2 px-5 md:px-[26px] py-3 md:py-[13px] border border-border text-text bg-transparent font-mono text-[10px] md:text-[11px] tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:border-lime hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.12)]"
+          >
+            <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
+            <span data-i18n="about.contact">Contactar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-label {
+    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+  }
+  .section-label::after {
+    content: "";
+    @apply block w-[40px] h-px bg-lime;
+  }
+  .section-title {
+    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
+    font-size: clamp(30px, 5vw, 50px);
+  }
+  .section-title em {
+    @apply text-lime not-italic;
+  }
+
+  .reveal-left {
+    @apply opacity-0 -translate-x-[40px] md:-translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal-left.visible {
+    @apply opacity-100 translate-x-0;
+  }
+  .reveal-right {
+    @apply opacity-0 translate-x-[40px] md:translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal-right.visible {
+    @apply opacity-100 translate-x-0;
+  }
+
+  .skill-pill.visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  @keyframes ringPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.02);
+      opacity: 1;
+    }
+  }
+</style>

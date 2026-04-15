@@ -1,0 +1,211 @@
+---
+// Pricing.astro — 3 pricing plans with features lists
+---
+
+<section
+  id="pricing"
+  class="py-20 lg:py-[120px] bg-surface"
+  aria-labelledby="pricing-heading"
+>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+    <p class="section-label" data-i18n="price.label">08 — Inversión</p>
+    <h2 id="pricing-heading" class="section-title" data-i18n-html="price.title">
+      Planes &amp; <em>Precios</em>
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <!-- Plan 1 — Básico -->
+      <article
+        class="pricing-card reveal bg-surface2 border border-border rounded-[16px] p-[34px_28px] relative overflow-hidden transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-[5px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:border-lime/25"
+        aria-labelledby="plan-basic"
+      >
+        <h3
+          id="plan-basic"
+          class="font-syne text-[20px] font-extrabold text-white mb-[7px]"
+          data-i18n="price.p1.name"
+        >
+          Básico
+        </h3>
+        <div class="flex items-baseline gap-[3px] mb-[5px]">
+          <span class="font-mono text-[13px] text-muted mt-[6px]">S/.</span>
+          <span
+            class="font-syne text-[46px] font-extrabold text-lime leading-none"
+            >850</span
+          >
+        </div>
+        <div class="h-px bg-border my-5" aria-hidden="true"></div>
+        <ul
+          class="flex flex-col gap-[10px] mb-[26px] list-none"
+          aria-label="Características del plan básico"
+        >
+          {
+            [
+              {
+                key: "price.p1.f1",
+                text: "Sitio Responsive: HTML, CSS, JS & PHP",
+              },
+              { key: "price.p1.f2", text: "Correo incluido (Limitado)" },
+              {
+                key: "price.p1.f3",
+                text: "5 páginas: Inicio, Nosotros, Servicios, Contacto + 1",
+              },
+              { key: "price.seo", text: "Optimización SEO incluida" },
+              { key: "price.p1.f5", text: "Entrega: 2 sem · Soporte: 3 sem" },
+            ].map((f) => (
+              <li class="flex items-start gap-[9px] text-[12px] text-text/65 leading-[1.5]">
+                <i
+                  class="ph-bold ph-check text-lime mt-[2px] flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span data-i18n={f.key}>{f.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href="#contact"
+          class="flex justify-center items-center gap-2 px-[26px] py-[13px] border border-border text-text bg-transparent font-mono text-[11px] tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:border-lime hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.12)]"
+          data-i18n="price.cta">Adquirir</a
+        >
+      </article>
+
+      <!-- Plan 2 — Corporativo (featured) -->
+      <article
+        class="pricing-card featured reveal relative overflow-hidden bg-surface3 border border-lime/35 rounded-[16px] p-[34px_28px] transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-[5px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)]"
+        style="transition-delay:.15s"
+        aria-labelledby="plan-corp"
+      >
+        <div
+          class="absolute inset-0 pointer-events-none"
+          style="background: radial-gradient(circle at 50% -10%, rgba(180,223,0,0.07) 0%, transparent 65%);"
+          aria-hidden="true"
+        >
+        </div>
+        <div
+          class="inline-block bg-lime text-black font-mono text-[9px] font-medium tracking-[0.1em] uppercase px-[10px] py-1 rounded-[4px] mb-4"
+          data-i18n="price.popular"
+        >
+          Más Popular
+        </div>
+        <h3
+          id="plan-corp"
+          class="font-syne text-[20px] font-extrabold text-white mb-[7px]"
+          data-i18n="price.p2.name"
+        >
+          Corporativo
+        </h3>
+        <div class="flex items-baseline gap-[3px] mb-[5px]">
+          <span class="font-mono text-[13px] text-muted mt-[6px]">S/.</span>
+          <span
+            class="font-syne text-[46px] font-extrabold text-lime leading-none"
+            >1,200</span
+          >
+        </div>
+        <div class="h-px bg-border my-5" aria-hidden="true"></div>
+        <ul
+          class="flex flex-col gap-[10px] mb-[26px] list-none"
+          aria-label="Características del plan corporativo"
+        >
+          {
+            [
+              { key: "price.p2.f1", text: "Sistema administrable y escalable" },
+              { key: "price.p2.f2", text: "Correo ilimitado" },
+              { key: "price.p2.f3", text: "9 páginas incluyendo Blog" },
+              { key: "price.seo", text: "Optimización SEO incluida" },
+              { key: "price.p2.f5", text: "Asesoría virtual o presencial" },
+              { key: "price.p2.f6", text: "Entrega: 3 sem · Soporte: 4 sem" },
+            ].map((f) => (
+              <li class="flex items-start gap-[9px] text-[12px] text-text/65 leading-[1.5]">
+                <i
+                  class="ph-bold ph-check text-lime mt-[2px] flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span data-i18n={f.key}>{f.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href="#contact"
+          class="flex justify-center items-center gap-2 px-[26px] py-[13px] bg-lime text-black font-mono text-[11px] font-medium tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:shadow-[0_0_30px_rgba(180,223,0,0.4)] hover:-translate-y-0.5"
+          data-i18n="price.cta">Adquirir</a
+        >
+      </article>
+
+      <!-- Plan 3 — Tienda Virtual -->
+      <article
+        class="pricing-card reveal bg-surface2 border border-border rounded-[16px] p-[34px_28px] relative overflow-hidden transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-[5px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:border-lime/25"
+        style="transition-delay:.3s"
+        aria-labelledby="plan-store"
+      >
+        <h3
+          id="plan-store"
+          class="font-syne text-[20px] font-extrabold text-white mb-[7px]"
+          data-i18n="price.p3.name"
+        >
+          Tienda Virtual
+        </h3>
+        <div class="flex items-baseline gap-[3px] mb-[5px]">
+          <span class="font-mono text-[13px] text-muted mt-[6px]">S/.</span>
+          <span
+            class="font-syne text-[46px] font-extrabold text-lime leading-none"
+            >1,650</span
+          >
+        </div>
+        <div class="h-px bg-border my-5" aria-hidden="true"></div>
+        <ul
+          class="flex flex-col gap-[10px] mb-[26px] list-none"
+          aria-label="Características del plan tienda virtual"
+        >
+          {
+            [
+              { key: "price.p3.f1", text: "Plataforma e-commerce escalable" },
+              { key: "price.p2.f2", text: "Correo ilimitado" },
+              { key: "price.p3.f3", text: "Carrito, login, checkout y cuenta" },
+              { key: "price.p3.f4", text: "Integración de pasarela de pagos" },
+              { key: "price.p3.f5", text: "SEO + asesoría" },
+              { key: "price.p3.f6", text: "Entrega: 4 sem · Soporte: 5 sem" },
+            ].map((f) => (
+              <li class="flex items-start gap-[9px] text-[12px] text-text/65 leading-[1.5]">
+                <i
+                  class="ph-bold ph-check text-lime mt-[2px] flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span data-i18n={f.key}>{f.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href="#contact"
+          class="flex justify-center items-center gap-2 px-[26px] py-[13px] border border-border text-text bg-transparent font-mono text-[11px] tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:border-lime hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.12)]"
+          data-i18n="price.cta">Adquirir</a
+        >
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-label {
+    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+  }
+  .section-label::after {
+    content: "";
+    @apply block w-[40px] h-px bg-lime;
+  }
+  .section-title {
+    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
+    font-size: clamp(30px, 5vw, 50px);
+  }
+  .section-title em {
+    @apply text-lime not-italic;
+  }
+
+  .reveal {
+    @apply opacity-0 translate-y-[40px] transition-[opacity,transform] duration-[700ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal.visible {
+    @apply opacity-100 translate-y-0;
+  }
+</style>

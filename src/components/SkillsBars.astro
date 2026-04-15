@@ -1,0 +1,149 @@
+---
+// SkillsBars.astro — Animated progress bars for tech proficiency
+
+interface Skill {
+  name: string;
+  pct: number;
+}
+
+const devSkills: Skill[] = [
+  { name: "HTML5 / CSS3 / SCSS", pct: 100 },
+  { name: "PHP / Laravel / CodeIgniter", pct: 97 },
+  { name: "React / Next.js / Vite", pct: 88 },
+  { name: "Node.js / NestJS", pct: 82 },
+  { name: "Astro / Tailwind CSS", pct: 90 },
+  { name: "Vue.js / Angular", pct: 72 },
+  { name: "SQL / REST APIs", pct: 88 },
+];
+
+const toolSkills: Skill[] = [
+  { name: "WordPress Headless", pct: 97 },
+  { name: "Shopify / PrestaShop / WooC.", pct: 93 },
+  { name: "SEO Técnico / On-Page", pct: 95 },
+  { name: "Google Analytics / GTM", pct: 85 },
+  { name: "Figma / Zeplin", pct: 80 },
+  { name: "SEMRush / Screaming Frog", pct: 88 },
+  { name: "Scrum / Git / Jira / ClickUp", pct: 92 },
+];
+---
+
+<section
+  id="skills"
+  class="py-20 lg:py-[120px] bg-black"
+  aria-labelledby="skills-heading"
+>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+    <p class="section-label" data-i18n="skills.label">05 — Proficiency</p>
+    <h2 id="skills-heading" class="section-title" data-i18n-html="skills.title">
+      Habilidades <em>Técnicas</em>
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[60px]">
+      <!-- Development -->
+      <div class="reveal-left">
+        <p
+          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-5"
+          data-i18n="skills.dev"
+        >
+          Desarrollo
+        </p>
+        {
+          devSkills.map(({ name, pct }) => (
+            <div class="mb-4">
+              <div class="flex justify-between mb-[7px]">
+                <span class="text-[13px] text-text">{name}</span>
+                <span
+                  class="font-mono text-[11px] text-lime"
+                  aria-label={`${pct}%`}
+                >
+                  {pct}%
+                </span>
+              </div>
+              <div
+                class="h-[2px] bg-border rounded-[2px] overflow-hidden"
+                role="progressbar"
+                aria-valuenow={pct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={name}
+              >
+                <div
+                  class="skill-bar-fill h-full bg-lime rounded-[2px] w-0 transition-[width] duration-[1300ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_8px_rgba(180,223,0,0.4)]"
+                  data-pct={pct}
+                />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- CMS, Marketing & Tools -->
+      <div class="reveal-right">
+        <p
+          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-5"
+          data-i18n="skills.tools"
+        >
+          CMS, Marketing &amp; Tools
+        </p>
+        {
+          toolSkills.map(({ name, pct }) => (
+            <div class="mb-4">
+              <div class="flex justify-between mb-[7px]">
+                <span class="text-[13px] text-text">{name}</span>
+                <span
+                  class="font-mono text-[11px] text-lime"
+                  aria-label={`${pct}%`}
+                >
+                  {pct}%
+                </span>
+              </div>
+              <div
+                class="h-[2px] bg-border rounded-[2px] overflow-hidden"
+                role="progressbar"
+                aria-valuenow={pct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={name}
+              >
+                <div
+                  class="skill-bar-fill h-full bg-lime rounded-[2px] w-0 transition-[width] duration-[1300ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_8px_rgba(180,223,0,0.4)]"
+                  data-pct={pct}
+                />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-label {
+    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+  }
+  .section-label::after {
+    content: "";
+    @apply block w-[40px] h-px bg-lime;
+  }
+  .section-title {
+    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
+    font-size: clamp(30px, 5vw, 50px);
+  }
+  .section-title em {
+    @apply text-lime not-italic;
+  }
+
+  .reveal-left {
+    @apply opacity-0 -translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal-left.visible {
+    @apply opacity-100 translate-x-0;
+  }
+  .reveal-right {
+    @apply opacity-0 translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal-right.visible {
+    @apply opacity-100 translate-x-0;
+  }
+</style>

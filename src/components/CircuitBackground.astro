@@ -1,0 +1,265 @@
+---
+// CircuitBackground.astro
+// PCB vertical traces — 45° diagonals, scroll-driven, parallax, depth layers
+// Depth: "far" traces (blurred, dim) + "near" traces (sharp, bright) + vignette fog
+
+interface Trace {
+  d: string;
+  layer: 'far' | 'near';  // depth classification
+  stagger: number;
+}
+
+const traces: Trace[] = [
+  // ── FAR layer (blurred, receded) ── even-numbered spatially
+  { layer: 'far',  stagger: 0,  d: 'M 58,-20 L 58,180 L 98,220 L 98,520 L 58,560 L 58,920' },
+  { layer: 'far',  stagger: 2,  d: 'M 330,40 L 330,200 L 370,240 L 370,380 L 330,420 L 330,510 L 290,550 L 290,720 L 330,760 L 330,920' },
+  { layer: 'far',  stagger: 4,  d: 'M 590,20 L 590,120 L 550,160 L 550,250 L 590,290 L 590,420 L 630,460 L 630,580 L 590,620 L 590,780 L 630,820 L 630,920' },
+  { layer: 'far',  stagger: 6,  d: 'M 880,0 L 880,150 L 920,190 L 920,310 L 880,350 L 880,530 L 840,570 L 840,770 L 880,810 L 880,920' },
+  { layer: 'far',  stagger: 8,  d: 'M 1160,0 L 1160,130 L 1200,170 L 1200,360 L 1160,400 L 1160,590 L 1120,630 L 1120,800 L 1160,840 L 1160,920' },
+  { layer: 'far',  stagger: 10, d: 'M 1420,50 L 1420,190 L 1380,230 L 1380,460 L 1420,500 L 1420,720 L 1380,760 L 1380,920' },
+
+  // ── NEAR layer (sharp, bright) ── odd-numbered spatially
+  { layer: 'near', stagger: 1,  d: 'M 190,0 L 190,100 L 150,140 L 150,290 L 190,330 L 190,530 L 230,570 L 230,720 L 190,760 L 190,920' },
+  { layer: 'near', stagger: 3,  d: 'M 460,0 L 460,310 L 500,350 L 500,630 L 460,670 L 460,920' },
+  { layer: 'near', stagger: 5,  d: 'M 740,-10 L 740,160 L 700,200 L 700,390 L 740,430 L 740,600 L 780,640 L 780,810 L 740,850 L 740,920' },
+  { layer: 'near', stagger: 7,  d: 'M 1020,30 L 1020,210 L 980,250 L 980,440 L 1020,480 L 1020,660 L 1060,700 L 1060,920' },
+  { layer: 'near', stagger: 9,  d: 'M 1310,0 L 1310,330 L 1270,370 L 1270,580 L 1310,620 L 1310,920' },
+];
+
+const farTraces  = traces.filter(t => t.layer === 'far');
+const nearTraces = traces.filter(t => t.layer === 'near');
+
+// Terminal open-ring circles at key PCB junctions (near layer only for clarity)
+const nearNodes = [
+  { cx: 150, cy: 140 }, { cx: 190, cy: 330 }, { cx: 230, cy: 570 }, { cx: 190, cy: 760 },
+  { cx: 500, cy: 350 }, { cx: 460, cy: 670 },
+  { cx: 700, cy: 200 }, { cx: 740, cy: 430 }, { cx: 780, cy: 640 }, { cx: 740, cy: 850 },
+  { cx: 980, cy: 250 }, { cx: 1020, cy: 480 }, { cx: 1060, cy: 700 },
+  { cx: 1270, cy: 370 }, { cx: 1310, cy: 620 },
+];
+
+// Assign sequential IDs: far = f0…f5, near = n0…n4
+---
+
+<!-- ── Depth fog: vignette behind circuit lines ── -->
+<div id="circuit-fog" aria-hidden="true"></div>
+
+<!-- ── Circuit SVG ── -->
+<svg
+  id="circuit-bg"
+  viewBox="0 0 1440 900"
+  preserveAspectRatio="xMidYMid slice"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+  focusable="false"
+>
+  <g id="circuit-group">
+
+    <!-- ─── FAR layer: blurred glow + dim crisp lines ─── -->
+    <g id="far-glow">
+      {farTraces.map((t, i) => (
+        <path id={`fg${i}`} d={t.d}
+          fill="none" stroke="#b4df00"
+          stroke-width="4" stroke-opacity="0.03"
+          stroke-linecap="round" stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      ))}
+    </g>
+    <g id="far-lines">
+      {farTraces.map((t, i) => (
+        <path id={`f${i}`} d={t.d}
+          fill="none" stroke="#b4df00"
+          stroke-width="0.6" stroke-opacity="0.10"
+          stroke-linecap="round" stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      ))}
+    </g>
+
+    <!-- ─── NEAR layer: bright glow + sharp crisp lines ─── -->
+    <g id="near-glow">
+      {nearTraces.map((t, i) => (
+        <path id={`ng${i}`} d={t.d}
+          fill="none" stroke="#b4df00"
+          stroke-width="3" stroke-opacity="0.06"
+          stroke-linecap="round" stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      ))}
+    </g>
+    <g id="near-lines">
+      {nearTraces.map((t, i) => (
+        <path id={`n${i}`} d={t.d}
+          fill="none" stroke="#b4df00"
+          stroke-width="1.0" stroke-opacity="0.30"
+          stroke-linecap="round" stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      ))}
+    </g>
+
+    <!-- ─── Node circles on near layer only ─── -->
+    <g id="circuit-nodes">
+      {nearNodes.map(({ cx, cy }) => (
+        <>
+          <circle cx={cx} cy={cy} r="5"
+            fill="none" stroke="#b4df00"
+            stroke-width="1.0" stroke-opacity="0.22"
+            vector-effect="non-scaling-stroke"
+          />
+          <circle cx={cx} cy={cy} r="1.6"
+            fill="#b4df00" fill-opacity="0.30"
+            vector-effect="non-scaling-stroke"
+          />
+        </>
+      ))}
+    </g>
+
+  </g>
+</svg>
+
+<style>
+  /* ── Vignette fog: sits below circuit (z:0), darkens edges → depth feel ── */
+  #circuit-fog {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      /* Corner darkening */
+      radial-gradient(ellipse 90% 70% at 50% 50%,
+        transparent 20%,
+        rgba(3, 3, 3, 0.45) 65%,
+        rgba(3, 3, 3, 0.80) 100%
+      );
+  }
+
+  /* ── Circuit SVG ── */
+  #circuit-bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── FAR layer: CSS blur simulates depth-of-field ── */
+  #far-lines,
+  #far-glow {
+    filter: blur(1.2px);
+    will-change: filter;
+  }
+
+  /* Mobile: hide far outer traces, keep near central ones */
+  @media (max-width: 767px) {
+    #f0, #fg0, #f4, #fg4, #f5, #fg5 { display: none; }
+    #n3, #ng3, #n4, #ng4             { display: none; }
+  }
+
+  /* prefers-reduced-motion: full static circuit, no animation */
+  @media (prefers-reduced-motion: reduce) {
+    [id^="f"], [id^="n"], [id^="fg"], [id^="ng"] {
+      stroke-dasharray: none !important;
+      stroke-dashoffset: 0 !important;
+    }
+  }
+</style>
+
+<script>
+  // ── Bail on reduced motion ────────────────────────────────────
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    throw new Error('circuit: reduced-motion skip');
+  }
+
+  // ── Reveal config per trace ────────────────────────────────────
+  // stagger index → [start, end] scroll progress
+  const STAGGER = 0.016;
+  const WINDOW  = 0.72;
+
+  const traceData = [
+    // far traces  (stagger: 0,2,4,6,8,10)
+    { ids: ['f0','fg0'], stagger: 0  },
+    { ids: ['f1','fg1'], stagger: 2  },
+    { ids: ['f2','fg2'], stagger: 4  },
+    { ids: ['f3','fg3'], stagger: 6  },
+    { ids: ['f4','fg4'], stagger: 8  },
+    { ids: ['f5','fg5'], stagger: 10 },
+    // near traces (stagger: 1,3,5,7,9)
+    { ids: ['n0','ng0'], stagger: 1  },
+    { ids: ['n1','ng1'], stagger: 3  },
+    { ids: ['n2','ng2'], stagger: 5  },
+    { ids: ['n3','ng3'], stagger: 7  },
+    { ids: ['n4','ng4'], stagger: 9  },
+  ];
+
+  interface Cfg {
+    els: SVGPathElement[];
+    len: number;
+    start: number;
+    end: number;
+  }
+
+  const cfgs: Cfg[] = [];
+
+  for (const td of traceData) {
+    const els = td.ids
+      .map(id => document.getElementById(id) as SVGPathElement | null)
+      .filter(Boolean) as SVGPathElement[];
+    if (!els.length) continue;
+
+    const len = els[0].getTotalLength();
+    if (len <= 0) continue;
+
+    const start = td.stagger * STAGGER;
+    const end   = start + WINDOW;
+
+    for (const el of els) {
+      el.style.strokeDasharray  = String(len);
+      el.style.strokeDashoffset = String(len);
+    }
+
+    cfgs.push({ els, len, start, end });
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────
+  const easeOut = (t: number) => 1 - (1 - t) ** 2;
+
+  const group = document.getElementById('circuit-group')!;
+
+  function draw(scrollY: number) {
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    if (docH <= 0) return;
+    const scroll = Math.min(1, scrollY / docH);
+
+    // Parallax: group drifts down at 6% scroll speed, max 60px
+    group.style.transform = `translateY(${Math.min(scrollY * 0.06, 60)}px)`;
+
+    for (const cfg of cfgs) {
+      let p = 0;
+      if (scroll > cfg.start) {
+        p = scroll >= cfg.end
+          ? 1
+          : easeOut((scroll - cfg.start) / (cfg.end - cfg.start));
+      }
+      const offset = String(cfg.len * (1 - p));
+      for (const el of cfg.els) el.style.strokeDashoffset = offset;
+    }
+  }
+
+  // ── RAF-throttled scroll ──────────────────────────────────────
+  let ticking = false;
+  let lastY   = 0;
+
+  window.addEventListener('scroll', () => {
+    lastY = window.scrollY;
+    if (!ticking) {
+      requestAnimationFrame(() => { draw(lastY); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => draw(window.scrollY), { passive: true });
+  draw(window.scrollY);
+</script>

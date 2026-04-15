@@ -1,0 +1,748 @@
+---
+// Projects.astro
+// Desktop  → Bento grid (sin cambios)
+// Mobile   → Embla Carousel vertical, loop infinito, tween scale/opacity/blur
+
+import imgLiwilu       from '../assets/images/portfolio/Liwilu.png';
+import imgAstra        from '../assets/images/portfolio/Astramedical.png';
+import imgWisec        from '../assets/images/portfolio/Aiconstruye.png';
+import imgGustos       from '../assets/images/portfolio/Gustoscoffee.png';
+import imgWhaticket    from '../assets/images/portfolio/whaticket.png';
+import imgChapa        from '../assets/images/portfolio/Chapatubeca.png';
+import imgSegway       from '../assets/images/portfolio/Segwaysports.png';
+import imgColecciones  from '../assets/images/portfolio/KGFront.png';
+import imgKGStore      from '../assets/images/portfolio/KGStore.png';
+
+interface Project {
+  img: ImageMetadata;
+  category: string;
+  name: string;
+  descKey: string;
+  desc: string;
+  stack: string[];
+  url: string;
+  demo?: { user: string; pass: string };
+}
+
+const projects: Project[] = [
+  {
+    img: imgColecciones,
+    category: 'SPA',
+    name: 'Colecciones Grupo Gómez',
+    descKey: 'p.colecciones.desc',
+    desc: 'Dashboard administrativo SPA/PWA con React. Autenticación, métricas en tiempo real, CRUD completo y deploy en Vercel.',
+    stack: ['React', 'React Router', 'Lucide', 'Google Fonts', 'Vercel'],
+    url: 'https://colecciones.grupo-gomez.com/',
+  },
+  {
+    img: imgKGStore,
+    category: 'PWA',
+    name: 'KG Store Admin',
+    descKey: 'p.kgstore.desc',
+    desc: 'Arquitectura BaaS + Edge. React SPA con PostgreSQL vía Supabase, Cloudflare CDN (HTTP/3 + RUM) y Apache como servidor origen.',
+    stack: ['React', 'React Router', 'Supabase', 'PostgreSQL', 'Cloudflare', 'Optimole'],
+    url: 'https://kg-admin-delta.vercel.app/',
+    demo: { user: 'demo', pass: 'QCyJ iNW7 sFpl BPPS FoAR cka8' },
+  },
+  {
+    img: imgLiwilu,
+    category: 'Headless E-Commerce',
+    name: 'Liwilu',
+    descKey: 'p.liwilu.desc',
+    desc: 'Arquitectura headless desacoplada. SSR/SSG con Next.js, API con NestJS, e-commerce PrestaShop y animaciones con Framer Motion.',
+    stack: ['Next.js', 'NestJS', 'PrestaShop', 'Tailwind', 'Framer Motion', 'Railway'],
+    url: 'https://liwilu-staging.vercel.app/',
+  },
+  {
+    img: imgWisec,
+    category: 'SSG Landing',
+    name: 'AIcon',
+    descKey: 'p.aicon.desc',
+    desc: 'Landing SSG de alto rendimiento para plataforma de IA. Astro + Alpine.js en Vercel y AWS con integración Mailchimp.',
+    stack: ['Astro', 'Alpine.js', 'Tailwind', 'Vercel', 'AWS', 'Mailchimp'],
+    url: 'https://landing-wisec.vercel.app/',
+  },
+  {
+    img: imgGustos,
+    category: 'SaaS E-Commerce',
+    name: 'Gustos Coffee Co.',
+    descKey: 'p.gustos.desc',
+    desc: 'Tienda Shopify con frontend en Vue.js para Puerto Rico. Cloudflare CDN, pagos Apple Pay / Shop Pay y optimización de conversión.',
+    stack: ['Shopify', 'Vue.js', 'Cloudflare', 'Apple Pay', 'Shop Pay'],
+    url: 'https://www.gustoscoffeeco.com/',
+  },
+  {
+    img: imgWhaticket,
+    category: 'SaaS',
+    name: 'Whaticket',
+    descKey: 'p.whaticket.desc',
+    desc: 'WordPress optimizado para marketing y performance. Elementor, Cloudflare CDN, WP Rocket, HubSpot CRM y GTM.',
+    stack: ['WordPress', 'Elementor', 'PHP', 'MySQL', 'Cloudflare', 'WP Rocket', 'GTM'],
+    url: 'https://whaticket.com/',
+  },
+  {
+    img: imgAstra,
+    category: 'Corporate',
+    name: 'Astra Medical',
+    descKey: 'p.astra.desc',
+    desc: 'Sitio corporativo WordPress + WooCommerce. PHP + MySQL, Apache, Yoast SEO y diseño responsivo desde Figma.',
+    stack: ['WordPress', 'WooCommerce', 'PHP', 'MySQL', 'Apache', 'Yoast SEO'],
+    url: 'https://www.astra-medical.com/',
+  },
+  {
+    img: imgChapa,
+    category: 'Education',
+    name: 'Chapa Tu Beca',
+    descKey: 'p.chapa.desc',
+    desc: 'WordPress Multisite para becas universitarias. Elementor, PHP + MySQL, múltiples plugins y sistema de postulación en línea.',
+    stack: ['WordPress Multisite', 'Elementor', 'PHP', 'MySQL', 'SEO'],
+    url: 'https://www.chapatubeca.org/',
+  },
+  {
+    img: imgSegway,
+    category: 'E-Commerce',
+    name: 'Segway Powersports',
+    descKey: 'p.segway.desc',
+    desc: 'Tienda de vehículos eléctricos con WordPress + Elementor. Apache, RankMath SEO, jQuery y pasarela de pagos para Perú.',
+    stack: ['WordPress', 'Elementor', 'PHP', 'MySQL', 'RankMath', 'jQuery'],
+    url: 'https://segwaypowersports.com.pe/',
+  },
+];
+---
+
+<section id="projects" class="py-20 lg:py-[120px] bg-surface overflow-hidden" aria-labelledby="projects-heading">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+
+    <!-- Header -->
+    <div class="mb-10 lg:mb-14">
+      <p class="section-label" data-i18n="proj.label">04 — Portfolio</p>
+      <h2 id="projects-heading" class="section-title reveal !mb-0" data-i18n-html="proj.title">
+        Proyectos <em>Reales</em>
+      </h2>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         DESKTOP: Bento Grid (oculto en mobile)
+    ══════════════════════════════════════════════ -->
+    <div
+      class="hidden lg:grid grid-cols-4 auto-rows-[320px] gap-4"
+      role="list"
+      aria-label="Portfolio de proyectos"
+    >
+      {projects.map((p, i) => (
+        <button
+          role="listitem"
+          type="button"
+          aria-label={`Ver detalles de ${p.name}`}
+          data-project={JSON.stringify({
+            name: p.name, category: p.category, descKey: p.descKey,
+            desc: p.desc, stack: p.stack, url: p.url,
+            img: p.img.src, demo: p.demo ?? null,
+          })}
+          class:list={[
+            'proj-card group relative overflow-hidden rounded-[14px] border border-border cursor-none',
+            'transition-[border-color,box-shadow] duration-300',
+            'hover:border-lime/40 hover:shadow-[0_0_0_1px_rgba(180,223,0,0.15),0_20px_50px_rgba(0,0,0,0.6)]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime/50',
+            i === 0 && 'col-span-2 row-span-2',
+          ]}
+        >
+          <img
+            src={p.img.src} alt={p.name}
+            class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.06]"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-0 left-0 right-0 px-4 py-3 transition-opacity duration-300 group-hover:opacity-0 flex items-end">
+            <p class="font-syne font-bold text-white text-[14px] leading-tight truncate">{p.name}</p>
+          </div>
+          <div class="absolute inset-0 flex flex-col justify-end p-5
+                      bg-gradient-to-t from-black/95 via-black/80 to-black/40
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <p class="font-mono text-[9px] tracking-[0.14em] uppercase text-lime mb-[6px]">{p.category}</p>
+            <p class="font-syne font-bold text-white text-[16px] mb-3 leading-tight">{p.name}</p>
+            <div class="flex flex-wrap gap-[5px]">
+              {p.stack.map((t) => (
+                <span class="font-mono text-[9px] tracking-[0.06em] px-[6px] py-[3px] rounded-[3px] bg-lime/[0.12] border border-lime/[0.25] text-lime/90">{t}</span>
+              ))}
+            </div>
+            <p class="font-mono text-[9px] text-white/40 mt-3 tracking-[0.06em]">Click para ver más →</p>
+          </div>
+        </button>
+      ))}
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         MOBILE: Vertical Carousel (oculto en desktop)
+         Slides absolutamente posicionados + CSS transforms.
+         Sin librería externa — control total sobre touch y tween.
+    ══════════════════════════════════════════════ -->
+    <div class="lg:hidden" id="proj-mobile-slider">
+
+      <!-- Carousel container: overflow:hidden + fade mask -->
+      <div class="proj-carousel" id="projCarousel"
+           role="region" aria-label="Portfolio de proyectos">
+        {projects.map((p, i) => (
+          <div
+            class="proj-slide"
+            data-index={String(i)}
+            data-project={JSON.stringify({
+              name: p.name, category: p.category, descKey: p.descKey,
+              desc: p.desc, stack: p.stack, url: p.url,
+              img: p.img.src, demo: p.demo ?? null,
+            })}
+            role="button"
+            tabindex={i === 0 ? '0' : '-1'}
+            aria-label={`${p.name} — ${p.category}`}
+          >
+            <div class="proj-slide-inner">
+              <img
+                src={p.img.src} alt={p.name}
+                class="proj-slide-img"
+                loading="lazy"
+              />
+              <div class="proj-slide-overlay"></div>
+              <div class="proj-slide-content">
+                <p class="proj-slide-cat">{p.category}</p>
+                <p class="proj-slide-name">{p.name}</p>
+                <div class="proj-slide-stack">
+                  {p.stack.slice(0, 4).map((t) => (
+                    <span class="proj-stack-tag">{t}</span>
+                  ))}
+                </div>
+                <p class="proj-slide-hint">Toca para ver más →</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Dots -->
+      <div class="proj-dots-wrap" id="projDots" role="tablist" aria-label="Navegación de proyectos"></div>
+
+      <!-- Hint -->
+      <p class="proj-drag-hint">Desliza para explorar</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     Modal (compartido desktop + mobile)
+══════════════════════════════════════════════ -->
+<div
+  id="proj-modal"
+  role="dialog" aria-modal="true" aria-labelledby="modal-title"
+  class="fixed inset-0 z-[9000] flex items-center justify-center p-4 lg:p-8
+         opacity-0 invisible pointer-events-none transition-[opacity,visibility] duration-300"
+>
+  <div id="modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-[6px]"></div>
+  <div class="modal-panel relative w-full max-w-[680px] max-h-[90vh] overflow-y-auto
+              bg-surface2 border border-border rounded-[16px] lg:rounded-[20px]
+              translate-y-[30px] transition-transform duration-300
+              shadow-[0_40px_100px_rgba(0,0,0,0.7)]">
+    <button
+      id="modal-close" aria-label="Cerrar" type="button"
+      class="absolute top-3 right-3 lg:top-4 lg:right-4 w-9 h-9 flex items-center justify-center
+             rounded-full border border-border text-muted cursor-pointer
+             transition-all duration-200 hover:border-lime/30 hover:text-lime z-10"
+    >
+      <i class="ph ph-x text-[16px]" aria-hidden="true"></i>
+    </button>
+    <div class="relative h-[200px] sm:h-[280px] lg:h-[420px] overflow-hidden rounded-t-[16px] lg:rounded-t-[20px]">
+      <img id="modal-img" src="" alt="" class="w-full h-full object-cover object-top" />
+      <div class="absolute inset-0 bg-gradient-to-t from-surface2 via-surface2/20 to-transparent"></div>
+    </div>
+    <div class="px-5 sm:px-7 lg:px-9 pb-6 lg:pb-8 -mt-4 relative">
+      <p id="modal-category" class="font-mono text-[9px] tracking-[0.15em] uppercase text-lime mb-2"></p>
+      <h3 id="modal-title" class="font-syne text-[20px] lg:text-[28px] font-bold text-white mb-3 leading-tight"></h3>
+      <p id="modal-desc" class="text-[13px] leading-[1.75] text-text/65 mb-5"></p>
+      <p class="font-mono text-[9px] tracking-[0.2em] uppercase text-muted mb-3">Stack Tecnológico</p>
+      <div id="modal-stack" class="flex flex-wrap gap-[5px] lg:gap-[6px] mb-5 lg:mb-6"></div>
+      <div id="modal-demo" class="hidden mb-6 px-4 py-4 rounded-[10px] bg-lime/[0.04] border border-lime/[0.15]">
+        <p class="font-mono text-[9px] tracking-[0.14em] uppercase text-lime/70 mb-3">Demo Access</p>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-[9px] text-muted w-8">user</span>
+            <span id="modal-demo-user" class="font-mono text-[12px] text-text/90 tracking-[0.04em]"></span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-[9px] text-muted w-8">pass</span>
+            <span id="modal-demo-pass" class="font-mono text-[12px] text-text/90 tracking-[0.04em] break-all"></span>
+          </div>
+        </div>
+      </div>
+      <a
+        id="modal-link" href="#" target="_blank" rel="noopener noreferrer"
+        class="inline-flex items-center gap-[8px] px-6 py-[13px] bg-lime text-black rounded-[8px]
+               font-mono text-[11px] font-medium tracking-[0.1em] uppercase no-underline
+               transition-all duration-300 hover:shadow-[0_0_30px_rgba(180,223,0,0.4)] hover:-translate-y-0.5"
+      >
+        Ver proyecto <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Section utils ── */
+  .section-label {
+    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+  }
+  .section-label::after { content: ''; @apply block w-[40px] h-px bg-lime; }
+  .section-title {
+    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
+    font-size: clamp(30px, 5vw, 50px);
+  }
+  .section-title em { @apply text-lime not-italic; }
+  .reveal {
+    @apply opacity-0 translate-y-[40px] transition-[opacity,transform] duration-[700ms]
+           [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal.visible { @apply opacity-100 translate-y-0; }
+
+  /* ── Modal ── */
+  #proj-modal.open  { @apply opacity-100 visible pointer-events-auto; }
+  #proj-modal.open .modal-panel { @apply translate-y-0; }
+
+  /* ═══════════════════════════════════════════════
+     VERTICAL CAROUSEL — Mobile Only
+     Absolute-positioned slides. JS applies translateY +
+     scale + opacity per slide based on distance from
+     active index. No external library needed.
+  ═══════════════════════════════════════════════ */
+
+  /* ─── Container
+     overflow:hidden clips slides. touch-action:pan-x lets
+     the browser handle horizontal panning but hands vertical
+     drag to our JS — no conflict with page scroll. ─── */
+  .proj-carousel {
+    position: relative;
+    height: 488px;
+    overflow: hidden;
+    touch-action: pan-x;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent  0%,
+      black       18%,
+      black       82%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent  0%,
+      black       18%,
+      black       82%,
+      transparent 100%
+    );
+  }
+
+  /* ─── Slide
+     All slides share the same absolute position.
+     JS sets transform:translateY(n*256px) scale(s) to
+     distribute them above/below the active slide.
+     Transition is 'none' during drag for instant feedback,
+     spring curve during snap/autoplay. ─── */
+  .proj-slide {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    height: 240px;
+    top: calc(50% - 120px);   /* vertically centered in 488px container */
+    will-change: transform, opacity, filter;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+
+  /* Inner card */
+  .proj-slide-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Active slide border highlight */
+  .proj-slide[data-active="true"] .proj-slide-inner {
+    border-color: rgba(180,223,0,0.35);
+    box-shadow: 0 0 0 1px rgba(180,223,0,0.1), 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  .proj-slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s ease;
+  }
+
+  .proj-slide[data-active="true"] .proj-slide-img {
+    transform: scale(1.04);
+  }
+
+  .proj-slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+      rgba(3,3,3,0.92) 0%,
+      rgba(3,3,3,0.5)  45%,
+      transparent      100%
+    );
+  }
+
+  .proj-slide-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 14px 16px;
+  }
+
+  .proj-slide-cat {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b4df00;
+    margin-bottom: 4px;
+  }
+
+  .proj-slide-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .proj-slide-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+    /* Only visible on active slide */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .proj-slide[data-active="true"] .proj-slide-stack {
+    max-height: 60px;
+  }
+
+  .proj-stack-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.05em;
+    padding: 3px 7px;
+    border-radius: 3px;
+    background: rgba(180,223,0,0.1);
+    border: 1px solid rgba(180,223,0,0.2);
+    color: rgba(180,223,0,0.9);
+  }
+
+  .proj-slide-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.08em;
+    /* Only visible on active */
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .proj-slide[data-active="true"] .proj-slide-hint {
+    opacity: 1;
+  }
+
+  /* Dots */
+  .proj-dots-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .proj-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+
+  .proj-dot.active {
+    width: 22px;
+    background: #b4df00;
+  }
+
+  /* Drag hint */
+  .proj-drag-hint {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted, #666);
+    margin-top: 10px;
+  }
+</style>
+
+<script>
+
+  /* ══════════════════════════════════════
+     MODAL — shared desktop + mobile
+  ══════════════════════════════════════ */
+  const modal      = document.getElementById('proj-modal')!;
+  const backdrop   = document.getElementById('modal-backdrop')!;
+  const closeBtn   = document.getElementById('modal-close')!;
+  const modalImg   = document.getElementById('modal-img') as HTMLImageElement;
+  const modalCat   = document.getElementById('modal-category')!;
+  const modalTitle = document.getElementById('modal-title')!;
+  const modalDesc  = document.getElementById('modal-desc')!;
+  const modalStack = document.getElementById('modal-stack')!;
+  const modalDemo  = document.getElementById('modal-demo')!;
+  const modalDemoU = document.getElementById('modal-demo-user')!;
+  const modalDemoP = document.getElementById('modal-demo-pass')!;
+  const modalLink  = document.getElementById('modal-link') as HTMLAnchorElement;
+
+  function openModal(data: any) {
+    modalImg.src           = data.img;
+    modalImg.alt           = data.name;
+    modalCat.textContent   = data.category;
+    modalTitle.textContent = data.name;
+    modalDesc.textContent  = data.desc;
+    modalLink.href         = data.url;
+    modalStack.innerHTML   = '';
+    (data.stack as string[]).forEach((t: string) => {
+      const s = document.createElement('span');
+      s.className = 'font-mono text-[10px] tracking-[0.06em] px-[8px] py-[4px] rounded-[4px] bg-lime/[0.07] border border-lime/[0.18] text-lime/90';
+      s.textContent = t;
+      modalStack.appendChild(s);
+    });
+    if (data.demo) {
+      modalDemoU.textContent = data.demo.user;
+      modalDemoP.textContent = data.demo.pass;
+      modalDemo.classList.remove('hidden');
+    } else {
+      modalDemo.classList.add('hidden');
+    }
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Desktop bento cards
+  document.querySelectorAll<HTMLButtonElement>('.proj-card').forEach(card => {
+    card.addEventListener('click', () => openModal(JSON.parse(card.dataset.project!)));
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* ══════════════════════════════════════
+     VERTICAL CAROUSEL — Mobile only
+     Absolute-positioned slides + CSS transforms.
+     Based on the react-vertical-carousel reference:
+     each slide gets translateY(offset*STEP) scale(s) opacity(o)
+     where offset = distance from active index (loop-corrected).
+  ══════════════════════════════════════ */
+  function initMobileSlider() {
+    const carousel = document.getElementById('projCarousel') as HTMLElement | null;
+    const _dotsWrap = document.getElementById('projDots')   as HTMLElement | null;
+    if (!carousel || !_dotsWrap) return;
+    const dotsWrap = _dotsWrap;
+
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>('.proj-slide'));
+    const N    = slides.length;
+    const STEP = 256; // px between slide centers: 240px height + 16px gap
+    let   active    = 0;
+    let   autoTimer = 0;
+    let   wasDragging = false;
+
+    // ── Helpers ──────────────────────────────────────────
+    function wrap(i: number): number {
+      return ((i % N) + N) % N;
+    }
+
+    // Shortest-path integer offset from active to slide i (handles loop)
+    function getOffset(i: number, a: number): number {
+      let d = i - a;
+      const half = Math.floor(N / 2);
+      while (d >  half) d -= N;
+      while (d < -half) d += N;
+      return d;
+    }
+
+    // ── Tween ────────────────────────────────────────────
+    // dragDelta: pixels dragged so far (0 when snapped)
+    function applyTransforms(dragDelta: number = 0): void {
+      const progress = dragDelta / STEP; // fractional drag [-1 … 1]
+
+      slides.forEach((slide, i) => {
+        const intOff = getOffset(i, active);
+        const eff    = intOff + progress;  // effective fractional offset
+        const abs    = Math.abs(eff);
+
+        const ty = eff * STEP;
+
+        // Smoothstep keeps center slide near scale(1) longer, then drops sharply
+        const t  = Math.min(abs, 1);
+        const tc = t * t * (3 - 2 * t);   // smoothstep 0→0, 0.5→0.5, 1→1
+
+        const scale   = 1 - tc * 0.17;                           // 1.0 → 0.83
+        const opacity = abs <= 1
+          ? 1 - tc * 0.55                                        // 1.0 → 0.45
+          : Math.max(0, 0.45 - (abs - 1) * 0.45);               // 0.45 → 0
+        const blur    = tc * 2.5;                                 // 0 → 2.5px
+        const zIdx    = Math.max(0, 10 - Math.round(abs));
+
+        slide.style.transform = `translateY(${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+        slide.style.opacity   = Math.max(0, opacity).toFixed(4);
+        slide.style.filter    = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
+        slide.style.zIndex    = String(zIdx);
+      });
+    }
+
+    // ── State ────────────────────────────────────────────
+    const TRANSITION = 'transform 0.52s cubic-bezier(0.25,1,0.5,1), opacity 0.4s ease, filter 0.4s ease';
+
+    function markActive(): void {
+      slides.forEach((s, i) => {
+        s.dataset.active = String(i === active);
+        s.setAttribute('tabindex', i === active ? '0' : '-1');
+      });
+    }
+
+    function updateDots(): void {
+      dotsWrap.querySelectorAll<HTMLButtonElement>('.proj-dot').forEach((d, i) =>
+        d.classList.toggle('active', i === active)
+      );
+    }
+
+    function goTo(newIdx: number, animated: boolean = true): void {
+      active = wrap(newIdx);
+      slides.forEach(s => { s.style.transition = animated ? TRANSITION : 'none'; });
+      applyTransforms();
+      markActive();
+      updateDots();
+    }
+
+    // ── Dots ─────────────────────────────────────────────
+    function buildDots(): void {
+      dotsWrap.innerHTML = '';
+      slides.forEach((_: HTMLElement, i: number) => {
+        const btn = document.createElement('button');
+        btn.className = 'proj-dot';
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-label', `Proyecto ${i + 1}`);
+        btn.addEventListener('click', () => { goTo(i); startAutoplay(); });
+        dotsWrap.appendChild(btn);
+      });
+      updateDots();
+    }
+
+    // ── Autoplay ─────────────────────────────────────────
+    function startAutoplay(): void {
+      stopAutoplay();
+      autoTimer = window.setInterval(() => goTo(active + 1), 3500);
+    }
+
+    function stopAutoplay(): void {
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = 0; }
+    }
+
+    // ── Touch ─────────────────────────────────────────────
+    let touchStartY = 0;
+    let touchCurrY  = 0;
+    let isDragging  = false;
+
+    carousel.addEventListener('touchstart', (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      touchCurrY  = touchStartY;
+      isDragging  = false;
+      stopAutoplay();
+      slides.forEach(s => { s.style.transition = 'none'; });
+    }, { passive: true });
+
+    carousel.addEventListener('touchmove', (e: TouchEvent) => {
+      touchCurrY = e.touches[0].clientY;
+      isDragging = true;
+      applyTransforms(touchCurrY - touchStartY);
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', () => {
+      const delta = touchCurrY - touchStartY;
+      if (isDragging && Math.abs(delta) >= 12) {
+        wasDragging = true;
+        if      (delta < -55) goTo(active + 1);
+        else if (delta >  55) goTo(active - 1);
+        else                  goTo(active);       // small drag → snap back
+        // reset flag after click-suppression window
+        setTimeout(() => { wasDragging = false; }, 350);
+      } else {
+        wasDragging = false;
+        goTo(active); // pure tap — snap back (click handler fires next)
+      }
+      startAutoplay();
+    });
+
+    // ── Click / tap ───────────────────────────────────────
+    slides.forEach((slide, i) => {
+      slide.addEventListener('click', () => {
+        if (wasDragging) return;                          // suppress ghost click after drag
+        if (slide.dataset.active === 'true') {
+          openModal(JSON.parse(slide.dataset.project!));  // center slide → open modal
+        } else {
+          goTo(i);                                        // off-center → navigate
+          startAutoplay();
+        }
+      });
+    });
+
+    // ── Keyboard ──────────────────────────────────────────
+    carousel.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown') { goTo(active + 1); e.preventDefault(); }
+      if (e.key === 'ArrowUp')   { goTo(active - 1); e.preventDefault(); }
+    });
+
+    // ── Init ──────────────────────────────────────────────
+    buildDots();
+    goTo(0, false);   // set initial position without animation
+    startAutoplay();
+  }
+
+  // Only on mobile
+  if (window.innerWidth < 1024) {
+    initMobileSlider();
+  }
+
+  // Resize: re-init when crossing into mobile
+  let wasMobile = window.innerWidth < 1024;
+  window.addEventListener('resize', () => {
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile && !wasMobile) initMobileSlider();
+    wasMobile = isMobile;
+  });
+
+  /* ── Reveal observer ── */
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>

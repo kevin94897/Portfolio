@@ -1,0 +1,125 @@
+---
+// Services.astro — 4-column services grid
+---
+
+<section
+  id="services"
+  class="py-20 lg:py-[120px] bg-surface"
+  aria-labelledby="services-heading"
+>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+    <p class="section-label" data-i18n="services.label">02 — Servicios</p>
+    <h2
+      id="services-heading"
+      class="section-title"
+      data-i18n-html="services.title"
+    >
+      Lo Que <em>Hago</em>
+    </h2>
+
+    <!-- 1-col → 2-col tablet → 4-col desktop -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border rounded-[16px] overflow-hidden"
+      role="list"
+    >
+      {
+        [
+          {
+            icon: "ph-code",
+            nameKey: "services.s1.name",
+            name: "Full Stack Dev",
+            descKey: "services.s1.desc",
+            desc: "Aplicaciones web end-to-end con React, Next.js, NestJS, Laravel y Node.js. Diseño de APIs REST, autenticación y lógica de negocio.",
+            delay: "0s",
+          },
+          {
+            icon: "ph-monitor",
+            nameKey: "services.s2.name",
+            name: "Diseño & UX",
+            descKey: "services.s2.desc",
+            desc: "Interfaces responsivas desde Figma hasta código. Evaluación heurística, prototipado y diseño centrado en el usuario.",
+            delay: ".1s",
+          },
+          {
+            icon: "ph-shopping-cart",
+            nameKey: "services.s3.name",
+            name: "E-Commerce",
+            descKey: "services.s3.desc",
+            desc: "Tiendas con WooCommerce, Shopify y PrestaShop. Pasarelas de pago, Zoho CRM y automatizaciones con Zapier.",
+            delay: ".2s",
+          },
+          {
+            icon: "ph-magnifying-glass",
+            nameKey: "services.s4.name",
+            name: "SEO & Analytics",
+            descKey: "services.s4.desc",
+            desc: "SEO técnico y on-page, GTM, Google Analytics, Facebook Pixel, SEMRush, Screaming Frog y reportes de leads.",
+            delay: ".3s",
+          },
+        ].map((s) => (
+          <article
+            class="service-card reveal bg-surface2 p-8 md:p-[36px_28px] transition-[background] duration-300 relative overflow-hidden hover:bg-surface3"
+            style={`transition-delay:${s.delay}`}
+            role="listitem"
+          >
+            <div
+              class="w-[42px] h-[42px] md:w-[46px] md:h-[46px] bg-lime-dim border border-lime/[0.18] rounded-[10px] flex items-center justify-center mb-4 md:mb-[18px] text-[18px] md:text-[20px] text-lime transition-[box-shadow] duration-300"
+              aria-hidden="true"
+            >
+              <i class={`ph ${s.icon}`} />
+            </div>
+            <h3
+              class="font-syne text-[16px] md:text-[17px] font-bold text-white mb-[10px]"
+              data-i18n={s.nameKey}
+            >
+              {s.name}
+            </h3>
+            <p
+              class="text-[12px] leading-[1.7] text-muted"
+              data-i18n={s.descKey}
+            >
+              {s.desc}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-label {
+    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+  }
+  .section-label::after {
+    content: "";
+    @apply block w-[40px] h-px bg-lime;
+  }
+  .section-title {
+    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
+    font-size: clamp(30px, 5vw, 50px);
+  }
+  .section-title em {
+    @apply text-lime not-italic;
+  }
+
+  .service-card::before {
+    content: "";
+    @apply absolute inset-0 opacity-0 transition-opacity duration-[400ms];
+    background: radial-gradient(
+      circle at 50% 0%,
+      rgba(180, 223, 0, 0.08),
+      transparent 70%
+    );
+  }
+  .service-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .reveal {
+    @apply opacity-0 translate-y-[30px] md:translate-y-[40px] transition-[opacity,transform] duration-[700ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal.visible {
+    @apply opacity-100 translate-y-0;
+  }
+</style>

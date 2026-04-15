@@ -1,0 +1,244 @@
+---
+// ═══════════════════════════════════════════════════════════
+//  Layout.astro — SEO-optimised base layout
+//  Kevin Gómez Lázaro · Full Stack Developer · Lima, Perú
+// ═══════════════════════════════════════════════════════════
+import '../styles/global.css';
+export interface Props {
+  title?: string;
+  description?: string;
+  canonicalURL?: string;
+  ogImage?: string;
+  lang?: string;
+}
+
+const {
+  title = "Kevin Gómez | Full Stack Developer Lima, Perú — Next.js · React · NestJS",
+  description = "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y E-Commerce. Proyectos para Entel, NERD, Well-Done. Disponible para freelance.",
+  canonicalURL = "https://kevin.grupo-gomez.com",
+  ogImage = "https://kevin.grupo-gomez.com/og-image.jpg",
+  lang = "es",
+} = Astro.props;
+
+const siteURL = "https://kevin.grupo-gomez.com";
+
+// ─── JSON-LD Structured Data ───
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${siteURL}/#person`,
+      name: "Kevin Gómez Lázaro",
+      givenName: "Kevin",
+      familyName: "Gómez Lázaro",
+      jobTitle: "Full Stack Developer",
+      description:
+        "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y soluciones e-commerce.",
+      url: siteURL,
+      email: "kevin94897@gmail.com",
+      telephone: "+51947841355",
+      image: ogImage,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Lima",
+        addressRegion: "Lima",
+        addressCountry: "PE",
+      },
+      sameAs: ["https://github.com/kevin94897/"],
+      knowsAbout: [
+        "Next.js",
+        "React",
+        "NestJS",
+        "WordPress Headless",
+        "Laravel",
+        "Node.js",
+        "Astro",
+        "PHP",
+        "TypeScript",
+        "SEO Técnico",
+        "E-Commerce",
+        "Shopify",
+        "WooCommerce",
+      ],
+      hasCredential: [
+        {
+          "@type": "EducationalOccupationalCredential",
+          name: "Ingeniería de Sistemas — Bachiller",
+          recognizedBy: {
+            "@type": "Organization",
+            name: "Universidad Nacional del Callao",
+          },
+        },
+        {
+          "@type": "EducationalOccupationalCredential",
+          name: "Scrum Foundation Professional Certificate (SFPC)",
+          description: "Score: 95/100",
+        },
+      ],
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteURL}/#service`,
+      name: "Kevin Gómez — Full Stack Developer & Web Agency",
+      description:
+        "Servicios de desarrollo web Full Stack, e-commerce, SEO técnico y diseño UX en Lima, Perú. Disponible para proyectos freelance y colaboraciones remotas.",
+      url: siteURL,
+      provider: { "@id": `${siteURL}/#person` },
+      areaServed: [
+        { "@type": "City", name: "Lima" },
+        { "@type": "Country", name: "Perú" },
+        { "@type": "AdministrativeArea", name: "América Latina" },
+      ],
+      priceRange: "S/. 850 – S/. 1,650",
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Planes de Desarrollo Web",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Sitio Web Básico" },
+            price: "850",
+            priceCurrency: "PEN",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Sitio Corporativo" },
+            price: "1200",
+            priceCurrency: "PEN",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Tienda Virtual E-Commerce",
+            },
+            price: "1650",
+            priceCurrency: "PEN",
+          },
+        ],
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteURL}/#website`,
+      url: siteURL,
+      name: "Kevin Gómez — Full Stack Developer",
+      description:
+        "Portfolio profesional de Kevin Gómez Lázaro, Full Stack Developer en Lima, Perú.",
+      inLanguage: ["es-PE", "en"],
+      author: { "@id": `${siteURL}/#person` },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang={lang} dir="ltr">
+  <head>
+    <!-- ─── Charset & Viewport ─── -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ─── Primary SEO ─── -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="full stack developer lima peru, desarrollador web lima, next.js developer peru, react developer lima, nestjs developer, wordpress headless, laravel developer peru, ecommerce developer, desarrollador freelance lima, kevin gomez"
+    />
+    <meta name="author" content="Kevin Gómez Lázaro" />
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#b4df00" />
+
+    <!-- ─── Canonical ─── -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- ─── Open Graph ─── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta
+      property="og:site_name"
+      content="Kevin Gómez — Full Stack Developer"
+    />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Kevin Gómez — Full Stack Developer Lima, Perú"
+    />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- ─── Twitter Card ─── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta
+      name="twitter:image:alt"
+      content="Kevin Gómez — Full Stack Developer"
+    />
+
+    <!-- ─── Geo / Local SEO ─── -->
+    <meta name="geo.region" content="PE-LIM" />
+    <meta name="geo.placename" content="Lima, Perú" />
+    <meta name="language" content="Spanish" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- ─── Fonts: DM Mono via Google Fonts; Space Grotesk + Plus Jakarta Sans via Fontsource (self-hosted) ─── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ─── Icons ─── -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css"
+    />
+
+    <!-- ─── Favicon ─── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- ─── Sitemap ─── -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- ─── Structured Data (JSON-LD) ─── -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData, null, 2)}
+    />
+
+  </head>
+
+  <body>
+    <!-- Accessibility: skip to main content -->
+    <!-- <a href="#main-content" class="skip-link">Saltar al contenido principal</a> -->
+
+    <slot />
+
+    <!-- Embla Carousel via CDN -->
+    <script
+      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
+      is:inline></script>
+    <script
+      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
+      is:inline></script>
+  </body>
+</html>

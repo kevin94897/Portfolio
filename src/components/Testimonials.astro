@@ -1,0 +1,156 @@
+---
+// Testimonials.astro — Embla carousel with 4 testimonials
+---
+
+<section
+  id="testimonials"
+  class="py-20 lg:py-[120px] bg-surface overflow-hidden"
+  aria-labelledby="t-heading"
+>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+    <!-- Header -->
+    <div
+      class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 gap-5"
+    >
+      <div>
+        <p class="section-label" data-i18n="t.label">06 — Testimonios</p>
+        <h2
+          id="t-heading"
+          class="section-title reveal !mb-0"
+          data-i18n-html="t.title"
+        >
+          Lo Que <em>Dicen</em>
+        </h2>
+      </div>
+      <div
+        class="flex items-center gap-[10px]"
+        aria-label="Controles de testimonios"
+      >
+        <div class="flex gap-[5px] items-center" id="emblaTDots" role="tablist">
+        </div>
+        <button
+          id="tPrev"
+          aria-label="Testimonio anterior"
+          class="embla-btn w-11 h-11 border border-border rounded-full bg-transparent text-text text-[17px] flex items-center justify-center cursor-none transition-all duration-300 hover:border-lime hover:text-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] disabled:opacity-25 disabled:pointer-events-none"
+        >
+          <i class="ph ph-arrow-left" aria-hidden="true"></i>
+        </button>
+        <button
+          id="tNext"
+          aria-label="Testimonio siguiente"
+          class="embla-btn w-11 h-11 border border-border rounded-full bg-transparent text-text text-[17px] flex items-center justify-center cursor-none transition-all duration-300 hover:border-lime hover:text-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] disabled:opacity-25 disabled:pointer-events-none"
+        >
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="overflow-hidden relative z-[2]"
+      id="emblaTestimonials"
+      role="region"
+      aria-label="Carrusel de testimonios"
+    >
+      <div class="flex gap-5">
+        {
+          [
+            {
+              initials: "CU",
+              i18n: "t.t1.text",
+              text: "Kevin es un profesional comprometido con su labor, siempre estuvo a la altura de los proyectos encomendados. Tiene un gran talento al diseño, UX y desarrollo web. Es una persona que recomendaría para proyectos en fábrica de software.",
+              name: "Cristian Uscata",
+              role: "Remote Senior Java Fullstack Developer",
+            },
+            {
+              initials: "AL",
+              i18n: "t.t2.text",
+              text: "Kevin presta mucha atención a los detalles, es dinámico, muy capaz de aprender nuevas tecnologías. Cumple a tiempo sus tareas y responde al trabajo bajo presión. Muy recomendado para cualquier proyecto web.",
+              name: "Aland Steven Laines Calonge",
+              role: "Consultor TI — Desarrollador Web",
+            },
+            {
+              initials: "CG",
+              i18n: "t.t3.text",
+              text: "Kevin brings creative energy and solid execution to every project. His eye for design combined with strong backend expertise is a rare combination that makes him an exceptional developer to collaborate with.",
+              name: "Cristian Gomez",
+              role: "UI/UX Designer",
+            },
+            {
+              initials: "FH",
+              i18n: "t.t4.text",
+              text: "Working with Kevin was a great experience. His technical depth combined with strong communication skills made every milestone smooth. He adapts quickly to new frameworks and delivers clean, performant code.",
+              name: "Frank Hinojosa",
+              role: "UI/UX Designer",
+            },
+          ].map((t) => (
+            <div class="flex-[0_0_calc(90%-10px)] md:flex-[0_0_calc(50%-10px)] min-w-0">
+              <figure class="testimonial-card relative z-[2] bg-surface2 rounded-[16px] p-[34px] h-full duration-300">
+                <div
+                  class="font-syne text-[38px] text-lime leading-none mb-3"
+                  aria-hidden="true"
+                >
+                  "
+                </div>
+                <blockquote
+                  class="text-[13px] leading-[1.85] text-text/65 mb-5"
+                  data-i18n={t.i18n}
+                >
+                  {t.text}
+                </blockquote>
+                <figcaption class="flex items-center gap-3">
+                  <div
+                    class="w-[42px] h-[42px] rounded-full bg-lime-dim border border-lime/25 flex items-center justify-center font-syne font-extrabold text-[14px] text-lime flex-shrink-0"
+                    aria-hidden="true"
+                  >
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p class="font-syne text-[14px] font-bold text-white">
+                      {t.name}
+                    </p>
+                    <p class="text-[11px] text-muted">{t.role}</p>
+                  </div>
+                </figcaption>
+              </figure>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-label {
+    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+  }
+  .section-label::after {
+    content: "";
+    @apply block w-[40px] h-px bg-lime;
+  }
+  .section-title {
+    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
+    font-size: clamp(30px, 5vw, 50px);
+  }
+  .section-title em {
+    @apply text-lime not-italic;
+  }
+
+  .reveal {
+    @apply opacity-0 translate-y-[40px] transition-[opacity,transform] duration-[700ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal.visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .testimonial-card.is-selected {
+    @apply border-lime/35 shadow-[0_0_40px_rgba(180,223,0,0.07)] scale-[1.01];
+  }
+
+  :global(.embla-dot) {
+    @apply w-[6px] h-[6px] rounded-[3px] bg-border transition-[width,background] duration-300 cursor-none;
+  }
+  :global(.embla-dot.active) {
+    @apply w-[22px] bg-lime;
+  }
+</style>

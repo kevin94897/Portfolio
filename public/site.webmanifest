@@ -1,0 +1,12 @@
+{
+  "name": "Kevin Gómez — Full Stack Developer",
+  "short_name": "Kevin Gómez",
+  "description": "Full Stack Developer en Lima, Perú. Next.js, React, NestJS, WordPress Headless.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030303",
+  "theme_color": "#b4df00",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

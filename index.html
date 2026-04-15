@@ -1,0 +1,3117 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kevin Gómez — Full Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+  <!-- Embla Carousel -->
+  <link rel="stylesheet" href="https://unpkg.com/embla-carousel/embla-carousel.css">
+  <style>
+    :root {
+      --lime: #b4df00;
+      --lime-dim: rgba(180, 223, 0, 0.12);
+      --lime-glow: rgba(180, 223, 0, 0.4);
+      --black: #030303;
+      --surface: #0a0a0a;
+      --surface2: #111111;
+      --surface3: #181818;
+      --border: rgba(255, 255, 255, 0.07);
+      --text: #e8e8e8;
+      --muted: #666;
+      --white: #fff;
+      --radius: 12px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      cursor: none
+    }
+
+    /* ─── CURSOR ─── */
+    #cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--lime);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: transform .15s
+    }
+
+    #cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(180, 223, 0, .5);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform .35s cubic-bezier(.23, 1, .32, 1)
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      padding: 22px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .4s, padding .4s, backdrop-filter .4s
+    }
+
+    nav.scrolled {
+      background: rgba(3, 3, 3, .9);
+      backdrop-filter: blur(24px);
+      padding: 13px 60px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.5px
+    }
+
+    .nav-logo span {
+      color: var(--lime)
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: color .2s;
+      position: relative
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--lime);
+      transition: width .3s
+    }
+
+    .nav-links a:hover {
+      color: var(--lime)
+    }
+
+    .nav-links a:hover::after {
+      width: 100%
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    /* LANG TOGGLE */
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      height: 36px
+    }
+
+    .lang-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      font-weight: 500;
+      padding: 0 12px;
+      height: 100%;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      cursor: none;
+      transition: all .25s;
+      text-transform: uppercase
+    }
+
+    .lang-btn.active {
+      background: var(--lime);
+      color: #000
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--white)
+    }
+
+    .nav-cv {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0 16px;
+      height: 36px;
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      text-decoration: none;
+      letter-spacing: .08em;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all .3s
+    }
+
+    .nav-cv:hover {
+      border-color: var(--lime);
+      color: var(--lime)
+    }
+
+    .nav-cta {
+      background: var(--lime);
+      color: #000;
+      padding: 0 20px;
+      height: 36px;
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: .08em;
+      display: flex;
+      align-items: center;
+      transition: box-shadow .3s, transform .2s
+    }
+
+    .nav-cta:hover {
+      box-shadow: 0 0 28px var(--lime-glow);
+      transform: translateY(-1px)
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center
+    }
+
+    .hero-spline {
+      position: absolute;
+      inset: 0
+    }
+
+    .hero-spline iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: auto
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(3, 3, 3, 0) 35%, rgba(3, 3, 3, .55) 65%, var(--black) 100%), linear-gradient(to right, rgba(3, 3, 3, .6) 0%, transparent 50%, rgba(3, 3, 3, .6) 100%);
+      pointer-events: none
+    }
+
+    #particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 0 60px;
+      width: 100%;
+      pointer-events: none
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: var(--lime);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp .8s forwards .3s
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--lime)
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(56px, 9vw, 118px);
+      font-weight: 800;
+      line-height: .92;
+      color: var(--white);
+      letter-spacing: -.03em;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp .9s forwards .5s
+    }
+
+    .hero-name .accent {
+      color: var(--lime)
+    }
+
+    .hero-roles {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp .8s forwards .8s;
+      margin-bottom: 28px
+    }
+
+    .hero-role {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(13px, 1.6vw, 19px);
+      color: var(--muted);
+      letter-spacing: .05em;
+      transition: color .5s
+    }
+
+    .hero-role.active {
+      color: var(--text)
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp .8s forwards 1s;
+      pointer-events: auto
+    }
+
+    .hero-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255, 255, 255, .03)
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp .8s forwards 1.3s;
+      pointer-events: none
+    }
+
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--lime), transparent);
+      animation: scrollPulse 2s ease-in-out infinite
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        opacity: .3
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    /* ─── SECTIONS ─── */
+    section {
+      padding: 120px 60px
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .25em;
+      color: var(--lime);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px
+    }
+
+    .section-label::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--lime)
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(34px, 5vw, 50px);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--white);
+      letter-spacing: -.02em;
+      margin-bottom: 56px
+    }
+
+    .section-title em {
+      color: var(--lime);
+      font-style: normal
+    }
+
+    .section-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s cubic-bezier(.23, 1, .32, 1), transform .7s cubic-bezier(.23, 1, .32, 1)
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity .8s cubic-bezier(.23, 1, .32, 1), transform .8s cubic-bezier(.23, 1, .32, 1)
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: none
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity .8s cubic-bezier(.23, 1, .32, 1), transform .8s cubic-bezier(.23, 1, .32, 1)
+    }
+
+    .reveal-right.visible {
+      opacity: 1;
+      transform: none
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all .3s;
+      cursor: none;
+      border: none
+    }
+
+    .btn-primary {
+      background: var(--lime);
+      color: #000;
+      font-weight: 500
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 30px var(--lime-glow);
+      transform: translateY(-2px)
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: transparent
+    }
+
+    .btn-outline:hover {
+      border-color: var(--lime);
+      color: var(--lime);
+      box-shadow: 0 0 18px var(--lime-dim)
+    }
+
+    /* ─── ABOUT ─── */
+    #about {
+      background: var(--black)
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 80px;
+      align-items: start
+    }
+
+    .about-photo-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 390px
+    }
+
+    .about-photo-ring {
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      border-radius: 50%;
+      border: 1px solid rgba(180, 223, 0, .25);
+      animation: ringPulse 3s ease-in-out infinite
+    }
+
+    .about-photo-ring2 {
+      width: 370px;
+      height: 370px;
+      border: 1px solid rgba(180, 223, 0, .08);
+      animation: ringPulse 3s ease-in-out infinite .6s
+    }
+
+    @keyframes ringPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .4
+      }
+
+      50% {
+        transform: scale(1.02);
+        opacity: 1
+      }
+    }
+
+    .about-photo {
+      width: 290px;
+      height: 290px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid rgba(180, 223, 0, .35);
+      box-shadow: 0 0 60px rgba(180, 223, 0, .12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--lime);
+      transition: transform .4s, box-shadow .4s
+    }
+
+    .about-photo:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 80px rgba(180, 223, 0, .22)
+    }
+
+    .about-badges-pills {
+      position: absolute;
+      bottom: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center
+    }
+
+    .about-badge-pill {
+      background: var(--surface2);
+      border: 1px solid rgba(180, 223, 0, .2);
+      border-radius: 30px;
+      padding: 5px 13px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--lime);
+      letter-spacing: .08em;
+      backdrop-filter: blur(10px)
+    }
+
+    .about-bio {
+      font-size: 15px;
+      line-height: 1.85;
+      color: rgba(232, 232, 232, .65);
+      margin-bottom: 28px
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 36px
+    }
+
+    .stat {
+      background: var(--surface);
+      padding: 22px;
+      text-align: center
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--lime);
+      line-height: 1;
+      margin-bottom: 4px
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: var(--muted);
+      text-transform: uppercase
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px
+    }
+
+    .skill-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 13px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text);
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+      opacity: 0;
+      transform: translateY(8px)
+    }
+
+    .skill-pill.visible {
+      opacity: 1;
+      transform: none
+    }
+
+    .skill-pill:hover {
+      border-color: var(--lime);
+      box-shadow: 0 0 14px var(--lime-dim);
+      transform: translateY(-2px)
+    }
+
+    .skill-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--lime);
+      flex-shrink: 0
+    }
+
+    /* ─── SERVICES ─── */
+    #services {
+      background: var(--surface)
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .service-card {
+      background: var(--surface2);
+      padding: 36px 28px;
+      transition: background .3s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(180, 223, 0, .08), transparent 70%);
+      transition: opacity .4s
+    }
+
+    .service-card:hover::before {
+      opacity: 1
+    }
+
+    .service-card:hover {
+      background: var(--surface3)
+    }
+
+    .service-icon {
+      width: 46px;
+      height: 46px;
+      background: var(--lime-dim);
+      border: 1px solid rgba(180, 223, 0, .18);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-size: 20px;
+      color: var(--lime);
+      transition: box-shadow .3s
+    }
+
+    .service-card:hover .service-icon {
+      box-shadow: 0 0 18px var(--lime-dim)
+    }
+
+    .service-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px
+    }
+
+    .service-desc {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted)
+    }
+
+    /* ─── EXPERIENCE ─── */
+    #experience {
+      background: var(--black)
+    }
+
+    .exp-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 28px
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 0;
+      width: 1px;
+      background: var(--border)
+    }
+
+    .tl-item {
+      position: relative;
+      padding-bottom: 36px
+    }
+
+    .tl-item:last-child {
+      padding-bottom: 0
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -33px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--black);
+      transition: border-color .3s, background .3s, box-shadow .3s
+    }
+
+    .tl-item:hover .tl-dot {
+      border-color: var(--lime);
+      background: var(--lime);
+      box-shadow: 0 0 10px var(--lime-glow)
+    }
+
+    .tl-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 3px;
+      gap: 10px
+    }
+
+    .tl-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white)
+    }
+
+    .tl-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--lime);
+      letter-spacing: .08em;
+      flex-shrink: 0
+    }
+
+    .tl-company {
+      font-size: 12px;
+      color: rgba(180, 223, 0, .7);
+      margin-bottom: 7px
+    }
+
+    .tl-desc {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted)
+    }
+
+    .tl-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 9px
+    }
+
+    .tl-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .07em;
+      padding: 3px 7px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--muted)
+    }
+
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      transition: border-color .3s, box-shadow .3s;
+      display: flex;
+      align-items: center;
+      gap: 16px
+    }
+
+    .edu-card:hover {
+      border-color: rgba(180, 223, 0, .25);
+      box-shadow: 0 0 20px rgba(180, 223, 0, .04)
+    }
+
+    .edu-icon {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      background: var(--lime-dim);
+      border: 1px solid rgba(180, 223, 0, .15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--lime)
+    }
+
+    .edu-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--lime);
+      letter-spacing: .08em;
+      margin-bottom: 3px
+    }
+
+    .edu-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1px
+    }
+
+    .edu-place {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .achievements {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px
+    }
+
+    .achievement {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .3s
+    }
+
+    .achievement:hover {
+      border-color: rgba(180, 223, 0, .25)
+    }
+
+    .achievement-icon {
+      font-size: 19px;
+      color: var(--lime);
+      flex-shrink: 0;
+      margin-top: 1px
+    }
+
+    .achievement-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2px
+    }
+
+    .achievement-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5
+    }
+
+    /* ─── PROJECTS (EMBLA CAROUSEL) ─── */
+    #projects {
+      background: var(--surface);
+      overflow: hidden
+    }
+
+    .projects-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 20px
+    }
+
+    .projects-header .section-title {
+      margin-bottom: 0
+    }
+
+    .embla-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0
+    }
+
+    .embla-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text);
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+      transition: all .3s;
+      flex-shrink: 0
+    }
+
+    .embla-btn:hover {
+      border-color: var(--lime);
+      color: var(--lime);
+      box-shadow: 0 0 14px var(--lime-dim)
+    }
+
+    .embla-btn:disabled {
+      opacity: .25;
+      pointer-events: none
+    }
+
+    .embla-progress {
+      display: flex;
+      gap: 5px;
+      align-items: center
+    }
+
+    .embla-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      transition: width .3s, background .3s;
+      cursor: none
+    }
+
+    .embla-dot.active {
+      width: 22px;
+      background: var(--lime)
+    }
+
+    /* Embla viewport */
+    .embla {
+      overflow: hidden
+    }
+
+    .embla__container {
+      display: flex;
+      gap: 20px
+    }
+
+    .embla__slide {
+      flex: 0 0 calc(33.333% - 14px);
+      min-width: 0
+    }
+
+    /* project card */
+    .project-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%
+    }
+
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(180, 223, 0, .25);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .5)
+    }
+
+    .project-thumb {
+      height: 170px;
+      background: var(--surface3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: rgba(180, 223, 0, .13);
+      letter-spacing: -2px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0
+    }
+
+    .project-thumb-ov {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(180, 223, 0, .05), transparent)
+    }
+
+    .project-thumb-grid {
+      position: absolute;
+      inset: 0;
+      opacity: .05;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 24px 24px
+    }
+
+    .project-body {
+      padding: 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column
+    }
+
+    .project-category {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 7px
+    }
+
+    .project-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 7px
+    }
+
+    .project-desc {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 14px;
+      flex: 1
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 16px
+    }
+
+    .stack-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .06em;
+      padding: 3px 7px;
+      border-radius: 3px;
+      background: rgba(180, 223, 0, .06);
+      border: 1px solid rgba(180, 223, 0, .15);
+      color: rgba(180, 223, 0, .8)
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--lime);
+      text-decoration: none;
+      transition: gap .2s;
+      margin-top: auto
+    }
+
+    .project-link:hover {
+      gap: 10px
+    }
+
+    .embla-counter {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .08em;
+      min-width: 50px;
+      text-align: center
+    }
+
+    /* ─── SKILLS BARS ─── */
+    #skills {
+      background: var(--black)
+    }
+
+    .skills-bars-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px
+    }
+
+    .skill-bar-item {
+      margin-bottom: 16px
+    }
+
+    .skill-bar-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px
+    }
+
+    .skill-bar-name {
+      font-size: 13px;
+      color: var(--text)
+    }
+
+    .skill-bar-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--lime)
+    }
+
+    .skill-bar-track {
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: var(--lime);
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.3s cubic-bezier(.23, 1, .32, 1);
+      box-shadow: 0 0 8px var(--lime-glow)
+    }
+
+    /* ─── TESTIMONIALS (EMBLA) ─── */
+    #testimonials {
+      background: var(--surface);
+      overflow: hidden
+    }
+
+    .t-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 20px
+    }
+
+    .t-header .section-title {
+      margin-bottom: 0
+    }
+
+    .testimonial-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 34px;
+      height: 100%;
+      transition: border-color .3s, box-shadow .3s, transform .3s
+    }
+
+    .testimonial-card.is-selected {
+      border-color: rgba(180, 223, 0, .35);
+      box-shadow: 0 0 40px rgba(180, 223, 0, .07);
+      transform: scale(1.01)
+    }
+
+    .testimonial-quote {
+      font-size: 38px;
+      color: var(--lime);
+      font-family: 'Syne', sans-serif;
+      line-height: 1;
+      margin-bottom: 12px
+    }
+
+    .testimonial-text {
+      font-size: 13px;
+      line-height: 1.85;
+      color: rgba(232, 232, 232, .65);
+      margin-bottom: 20px
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .testimonial-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--lime-dim);
+      border: 1px solid rgba(180, 223, 0, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--lime);
+      flex-shrink: 0
+    }
+
+    .testimonial-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white)
+    }
+
+    .testimonial-role {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    /* ─── WORKFLOW ─── */
+    #workflow {
+      background: var(--black)
+    }
+
+    .workflow-steps {
+      display: flex;
+      gap: 0;
+      position: relative
+    }
+
+    .workflow-steps::before {
+      content: '';
+      position: absolute;
+      top: 27px;
+      left: 27px;
+      right: 27px;
+      height: 1px;
+      background: var(--border)
+    }
+
+    .workflow-step {
+      flex: 1;
+      text-align: center;
+      padding: 0 20px;
+      position: relative
+    }
+
+    .workflow-num {
+      width: 54px;
+      height: 54px;
+      border: 1px solid rgba(180, 223, 0, .25);
+      border-radius: 50%;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--lime);
+      position: relative;
+      z-index: 1;
+      transition: background .3s, box-shadow .3s
+    }
+
+    .workflow-step:hover .workflow-num {
+      background: var(--lime-dim);
+      box-shadow: 0 0 22px var(--lime-dim)
+    }
+
+    .workflow-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px
+    }
+
+    .workflow-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7
+    }
+
+    /* ─── PRICING ─── */
+    #pricing {
+      background: var(--surface)
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px
+    }
+
+    .pricing-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 34px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s, box-shadow .3s, border-color .3s
+    }
+
+    .pricing-card.featured {
+      border-color: rgba(180, 223, 0, .35);
+      background: var(--surface3)
+    }
+
+    .pricing-card.featured::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% -10%, rgba(180, 223, 0, .07) 0%, transparent 65%);
+      pointer-events: none
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+      border-color: rgba(180, 223, 0, .25)
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      background: var(--lime);
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px
+    }
+
+    .pricing-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 7px
+    }
+
+    .pricing-price {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+      margin-bottom: 5px
+    }
+
+    .pricing-currency {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px
+    }
+
+    .pricing-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 46px;
+      font-weight: 800;
+      color: var(--lime);
+      line-height: 1
+    }
+
+    .pricing-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 26px
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 12px;
+      color: rgba(232, 232, 232, .65);
+      line-height: 1.5
+    }
+
+    .pricing-features li i {
+      color: var(--lime);
+      margin-top: 2px;
+      flex-shrink: 0
+    }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: var(--black)
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 80px
+    }
+
+    .contact-desc {
+      font-size: 14px;
+      line-height: 1.85;
+      color: rgba(232, 232, 232, .55);
+      margin-bottom: 28px
+    }
+
+    .contact-socials {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 22px
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all .3s
+    }
+
+    .social-link i {
+      font-size: 17px;
+      color: var(--lime)
+    }
+
+    .social-link:hover {
+      border-color: rgba(180, 223, 0, .3);
+      transform: translateX(4px);
+      color: var(--lime);
+      box-shadow: 0 0 18px rgba(180, 223, 0, .05)
+    }
+
+    .download-card {
+      padding: 22px;
+      background: rgba(180, 223, 0, .04);
+      border: 1px solid rgba(180, 223, 0, .2);
+      border-radius: 12px
+    }
+
+    .download-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px
+    }
+
+    .download-card-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5
+    }
+
+    .dl-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      transition: all .3s;
+      cursor: none;
+      margin-bottom: 8px
+    }
+
+    .dl-btn:last-child {
+      margin-bottom: 0
+    }
+
+    .dl-btn-primary {
+      background: var(--lime);
+      color: #000;
+      font-weight: 500
+    }
+
+    .dl-btn-primary:hover {
+      box-shadow: 0 0 24px var(--lime-glow);
+      transform: translateY(-1px)
+    }
+
+    .dl-btn-outline {
+      border: 1px solid var(--border);
+      color: var(--muted)
+    }
+
+    .dl-btn-outline:hover {
+      border-color: rgba(180, 223, 0, .3);
+      color: var(--lime)
+    }
+
+    .contact-form {
+      background: rgba(255, 255, 255, .02);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px;
+      backdrop-filter: blur(20px)
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .form-group {
+      margin-bottom: 18px
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 15px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      transition: border-color .3s, box-shadow .3s;
+      outline: none;
+      resize: none
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: rgba(180, 223, 0, .4);
+      box-shadow: 0 0 0 3px rgba(180, 223, 0, .05)
+    }
+
+    .form-group textarea {
+      height: 110px
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--lime);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: all .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 0 36px var(--lime-glow);
+      transform: translateY(-2px)
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 34px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--white)
+    }
+
+    .footer-logo span {
+      color: var(--lime)
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .05em
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 22px
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s
+    }
+
+    .footer-links a:hover {
+      color: var(--lime)
+    }
+
+    /* NOISE */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9990;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: .022;
+      pointer-events: none
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:1200px) {
+      .embla__slide {
+        flex: 0 0 calc(50% - 10px)
+      }
+    }
+
+    @media(max-width:900px) {
+      nav {
+        padding: 16px 24px
+      }
+
+      nav.scrolled {
+        padding: 11px 24px
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      section {
+        padding: 80px 24px
+      }
+
+      .about-grid,
+      .exp-layout,
+      .skills-bars-grid,
+      .contact-grid {
+        grid-template-columns: 1fr
+      }
+
+      .about-photo-wrap {
+        margin-bottom: 60px
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr
+      }
+
+      .workflow-steps {
+        flex-direction: column;
+        gap: 24px
+      }
+
+      .workflow-steps::before {
+        display: none
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 14px;
+        text-align: center
+      }
+
+      .hero-content {
+        padding: 0 24px
+      }
+
+      .hero-scroll {
+        left: 24px
+      }
+
+      .embla__slide {
+        flex: 0 0 calc(85% - 10px)
+      }
+
+      .projects-header,
+      .t-header {
+        flex-direction: column;
+        align-items: flex-start
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ═══ NAV ═══ -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo">KG<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about" data-i18n="nav.about">About</a></li>
+      <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
+      <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
+      <li><a href="#pricing" data-i18n="nav.pricing">Pricing</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <!-- Language Toggle -->
+      <div class="lang-toggle">
+        <button class="lang-btn" id="btnES">ES</button>
+        <button class="lang-btn" id="btnEN">EN</button>
+      </div>
+      <a href="KevinGomezLazaro_CV2026.pdf" download class="nav-cv">
+        <i class="ph ph-download-simple"></i><span data-i18n="nav.cv">CV 2026</span>
+      </a>
+      <a href="#contact" class="nav-cta" data-i18n="nav.hire">Hire Me</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section id="hero">
+    <canvas id="particles"></canvas>
+    <div class="hero-spline">
+      <iframe src='https://my.spline.design/animatedshapeblend-NZa3aGqZlc4TQObjvJlEW2RU/' frameborder='0' width='100%'
+        height='100%'></iframe>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tag" data-i18n="hero.tag">Full Stack Developer · Lima, Perú</div>
+      <h1 class="hero-name">Kevin<br><span class="accent">Gómez.</span></h1>
+      <div class="hero-roles">
+        <span class="hero-role active" data-i18n="hero.role1">Frontend &amp; Backend Development</span>
+        <span class="hero-role" data-i18n="hero.role2">Headless CMS &amp; API Integration</span>
+        <span class="hero-role" data-i18n="hero.role3">E-Commerce &amp; Web Solutions</span>
+      </div>
+      <div class="hero-badges">
+        <span class="hero-badge">Next.js</span><span class="hero-badge">React</span>
+        <span class="hero-badge">NestJS</span><span class="hero-badge">Astro</span>
+        <span class="hero-badge">Laravel</span><span class="hero-badge">WordPress Headless</span>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div><span data-i18n="hero.scroll">Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section id="about">
+    <div class="section-label" data-i18n="about.label">01 — Profile</div>
+    <h2 class="section-title" data-i18n-html="about.title">About <em>Me</em></h2>
+    <div class="about-grid">
+      <div class="about-photo-wrap reveal-left">
+        <div class="about-photo-ring about-photo-ring2"></div>
+        <div class="about-photo-ring"></div>
+        <div class="about-photo">KG</div>
+        <div class="about-badges-pills">
+          <span class="about-badge-pill">Lima, Perú</span>
+          <span class="about-badge-pill" data-i18n="about.freelance">Freelance ✓</span>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <p class="about-bio" data-i18n="about.bio1">Desarrollador Full Stack con trayectoria en proyectos para <strong
+            style="color:var(--white)">telecomunicaciones, e-commerce y soluciones digitales a medida</strong>. He
+          colaborado con Entel (via SrBurns), NERD, Well-Done Media y One Blush, construyendo desde landing pages de
+          alto rendimiento hasta sistemas distribuidos con NestJS, Next.js y WordPress Headless.</p>
+        <p class="about-bio" style="margin-top:-12px" data-i18n="about.bio2">Me destaco por mi responsabilidad,
+          adaptación y compromiso con la entrega de productos eficientes y seguros. Trabajo en equipos ágiles con
+          <strong style="color:var(--white)">Scrum, Git, Jira y ClickUp</strong>. Certificado SFPC con 95 puntos.
+        </p>
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-num">8+</div>
+            <div class="stat-label" data-i18n="about.stat1">Años Exp.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">20+</div>
+            <div class="stat-label" data-i18n="about.stat2">Proyectos</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">95</div>
+            <div class="stat-label">SFPC Score</div>
+          </div>
+        </div>
+        <div class="section-sub" data-i18n="about.stack">Tech Stack</div>
+        <div class="skills-grid">
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Next.js
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>React / Vite
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>NestJS
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Astro
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Vue.js
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Angular
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Laravel
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>PHP / CodeIgniter
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Node.js
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Tailwind CSS
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>SCSS / Pug
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>WordPress Headless
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Shopify
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>PrestaShop
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>WooCommerce
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>SQL / MySQL
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>REST APIs / JSON
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Figma / Zeplin
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Flutter
+          </div>
+          <div class="skill-pill">
+            <div class="skill-dot"></div>Git / Scrum / Jira
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="KevinGomezLazaro_CV2026.pdf" download class="btn btn-primary">
+            <i class="ph-bold ph-download-simple"></i><span data-i18n="about.cv">Descargar CV 2026</span>
+          </a>
+          <a href="#contact" class="btn btn-outline">
+            <i class="ph ph-paper-plane-tilt"></i><span data-i18n="about.contact">Contactar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SERVICES ═══ -->
+  <section id="services">
+    <div class="section-label" data-i18n="services.label">02 — Servicios</div>
+    <h2 class="section-title" data-i18n-html="services.title">What I <em>Do</em></h2>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="ph ph-code"></i></div>
+        <div class="service-name" data-i18n="services.s1.name">Full Stack Dev</div>
+        <div class="service-desc" data-i18n="services.s1.desc">Aplicaciones web end-to-end con React, Next.js, NestJS,
+          Laravel y Node.js. Diseño de APIs REST, autenticación y lógica de negocio.</div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:.1s">
+        <div class="service-icon"><i class="ph ph-monitor"></i></div>
+        <div class="service-name" data-i18n="services.s2.name">Diseño &amp; UX</div>
+        <div class="service-desc" data-i18n="services.s2.desc">Interfaces responsivas desde Figma hasta código.
+          Evaluación heurística, prototipado y diseño centrado en el usuario.</div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:.2s">
+        <div class="service-icon"><i class="ph ph-shopping-cart"></i></div>
+        <div class="service-name" data-i18n="services.s3.name">E-Commerce</div>
+        <div class="service-desc" data-i18n="services.s3.desc">Tiendas con WooCommerce, Shopify y PrestaShop. Pasarelas
+          de pago, Zoho CRM y automatizaciones con Zapier.</div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:.3s">
+        <div class="service-icon"><i class="ph ph-magnifying-glass"></i></div>
+        <div class="service-name" data-i18n="services.s4.name">SEO &amp; Analytics</div>
+        <div class="service-desc" data-i18n="services.s4.desc">SEO técnico y on-page, GTM, Google Analytics, Facebook
+          Pixel, SEMRush, Screaming Frog y reportes de leads.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EXPERIENCE ═══ -->
+  <section id="experience">
+    <div class="section-label" data-i18n="exp.label">03 — Carrera</div>
+    <h2 class="section-title" data-i18n-html="exp.title"><em>Experiencia</em> &amp; Educación</h2>
+    <div class="exp-layout">
+      <div class="reveal-left">
+        <div class="section-sub" style="margin-bottom:28px" data-i18n="exp.work">Experiencia Laboral</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-header">
+              <div class="tl-title">Full Stack Developer</div>
+              <div class="tl-year">2025</div>
+            </div>
+            <div class="tl-company">NERD — Lima, Perú</div>
+            <div class="tl-desc" data-i18n="exp.nerd">Backend NestJS + APIs REST. Frontend Next.js y React+Vite (Liwilu,
+              Punto Azul). Integración con ERP, Zoho, Headless WordPress y PrestaShop. Lazy loading, code splitting y
+              optimización de rendimiento.</div>
+            <div class="tl-tags"><span class="tl-tag">Next.js</span><span class="tl-tag">NestJS</span><span
+                class="tl-tag">React+Vite</span><span class="tl-tag">Tailwind</span><span
+                class="tl-tag">Zoho</span><span class="tl-tag">Railway</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-header">
+              <div class="tl-title">Full Stack Developer</div>
+              <div class="tl-year">2021 — 2025</div>
+            </div>
+            <div class="tl-company">SrBurns — Miraflores, Lima</div>
+            <div class="tl-desc" data-i18n="exp.srburns">Desarrollo para Entel, Urbanova, Paseo Begonias y La Rambla.
+              WordPress Headless + Astro + Tailwind. APIs REST/JSON, SEO técnico, reportes de leads, Scrum con Jira y
+              ClickUp.</div>
+            <div class="tl-tags"><span class="tl-tag">Astro</span><span class="tl-tag">WP Headless</span><span
+                class="tl-tag">Pug</span><span class="tl-tag">SCSS</span><span class="tl-tag">Node.js</span><span
+                class="tl-tag">Figma</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-header">
+              <div class="tl-title">Web Developer</div>
+              <div class="tl-year">2020 — 2021</div>
+            </div>
+            <div class="tl-company">Well-Done Media — Puerto Rico</div>
+            <div class="tl-desc" data-i18n="exp.wellDone">WordPress, Shopify, PrestaShop con temas personalizados. React
+              y Vue.js en arquitecturas modernas. GTM, Google Analytics, Facebook Pixel, Zoho CRM y Zapier.</div>
+            <div class="tl-tags"><span class="tl-tag">React</span><span class="tl-tag">Vue.js</span><span
+                class="tl-tag">Tailwind</span><span class="tl-tag">Shopify</span><span class="tl-tag">GTM</span><span
+                class="tl-tag">Zapier</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-header">
+              <div class="tl-title">Full Stack Developer</div>
+              <div class="tl-year">2020</div>
+            </div>
+            <div class="tl-company">One Blush Salon S.A.C. — Miraflores</div>
+            <div class="tl-desc" data-i18n="exp.oneBlush">Laravel, CodeIgniter, Vue.js y jQuery. REST APIs con
+              token-auth. Sistema de citas online, asistente virtual y módulos de calendario, ventas y profesionales.
+            </div>
+            <div class="tl-tags"><span class="tl-tag">Laravel</span><span class="tl-tag">CodeIgniter</span><span
+                class="tl-tag">Vue.js</span><span class="tl-tag">REST API</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-header">
+              <div class="tl-title">Web Developer</div>
+              <div class="tl-year">2019 — 2020</div>
+            </div>
+            <div class="tl-company">Softbrilliance S.A.C. — San Borja</div>
+            <div class="tl-desc" data-i18n="exp.soft">WordPress (SOAP), SEMRush, Screaming Frog, análisis On-Page,
+              reportes SEO y vistas responsivas.</div>
+            <div class="tl-tags"><span class="tl-tag">WordPress</span><span class="tl-tag">SEO</span><span
+                class="tl-tag">Analytics</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-header">
+              <div class="tl-title">Freelancer</div>
+              <div class="tl-year">2017 — 2018</div>
+            </div>
+            <div class="tl-company">Vex Soluciones E.I.R.L. — Lima</div>
+            <div class="tl-desc" data-i18n="exp.vex">WooCommerce, Shopify, WordPress. UX con evaluaciones heurísticas,
+              prototipado y tests con usuarios.</div>
+            <div class="tl-tags"><span class="tl-tag">WooCommerce</span><span class="tl-tag">Shopify</span><span
+                class="tl-tag">UX</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="section-sub" style="margin-bottom:22px" data-i18n="exp.edu">Educación</div>
+        <div class="edu-list" style="margin-bottom:32px">
+          <div class="edu-card">
+            <div class="edu-icon"><i class="ph ph-graduation-cap"></i></div>
+            <div>
+              <div class="edu-year">2012 — 2019</div>
+              <div class="edu-title" data-i18n="edu.systems">Ingeniería de Sistemas — Bachiller</div>
+              <div class="edu-place">Universidad Nacional del Callao</div>
+            </div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon"><i class="ph ph-brain"></i></div>
+            <div>
+              <div class="edu-year">2025</div>
+              <div class="edu-title" data-i18n="edu.ai1">Fundamentos de AI &amp; Machine Learning</div>
+              <div class="edu-place">Platzi</div>
+            </div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon"><i class="ph ph-robot"></i></div>
+            <div>
+              <div class="edu-year">2025</div>
+              <div class="edu-title" data-i18n="edu.ai2">Inteligencia Artificial para Empresas</div>
+              <div class="edu-place">Platzi</div>
+            </div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon"><i class="ph ph-device-mobile"></i></div>
+            <div>
+              <div class="edu-year">2019</div>
+              <div class="edu-title">Android Mobile Developer 8.0 (64h)</div>
+              <div class="edu-place">Cibertec</div>
+            </div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon"><i class="ph ph-database"></i></div>
+            <div>
+              <div class="edu-year">2016</div>
+              <div class="edu-title" data-i18n="edu.oracle">Oracle Database Administrator (48h)</div>
+              <div class="edu-place">Universidad Nacional de Ingeniería</div>
+            </div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon"><i class="ph ph-globe"></i></div>
+            <div>
+              <div class="edu-year">2013 — 2016</div>
+              <div class="edu-title" data-i18n="edu.english">Advanced English</div>
+              <div class="edu-place">ICPNA</div>
+            </div>
+          </div>
+        </div>
+        <div class="section-sub" style="margin-bottom:14px" data-i18n="exp.achievements">Logros</div>
+        <div class="achievements">
+          <div class="achievement"><i class="ph ph-trophy achievement-icon"></i>
+            <div>
+              <div class="achievement-title" data-i18n="ach.hack.title">Hackathon Team Leader</div>
+              <div class="achievement-desc" data-i18n="ach.hack.desc">Líder de equipo — Estadio Nacional, IPD &amp;
+                ONPE. Sistema de seguimiento de deportistas con PHP, SQL y Bootstrap.</div>
+            </div>
+          </div>
+          <div class="achievement"><i class="ph ph-certificate achievement-icon"></i>
+            <div>
+              <div class="achievement-title">Scrum Foundation Professional — Score 95</div>
+              <div class="achievement-desc" data-i18n="ach.scrum.desc">Certificación SFPC. Trabajo activo en equipos
+                ágiles con Git, Jira y ClickUp.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROJECTS (EMBLA) ═══ -->
+  <section id="projects">
+    <div class="section-label" data-i18n="proj.label">04 — Portfolio</div>
+    <div class="projects-header">
+      <h2 class="section-title reveal" data-i18n-html="proj.title">Proyectos <em>Reales</em></h2>
+      <div class="embla-nav">
+        <div class="embla-progress" id="emblaProjectsDots"></div>
+        <span class="embla-counter" id="emblaProjectsCount">1 / 11</span>
+        <button class="embla-btn" id="projPrev"><i class="ph ph-arrow-left"></i></button>
+        <button class="embla-btn" id="projNext"><i class="ph ph-arrow-right"></i></button>
+      </div>
+    </div>
+    <div class="embla" id="emblaProjects">
+      <div class="embla__container">
+
+        <!-- 1 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">LW<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category" data-i18n="p.ecommerce">E-Commerce · NERD</div>
+              <div class="project-name">Liwilu</div>
+              <div class="project-desc" data-i18n="p.liwilu.desc">Plataforma e-commerce con arquitectura distribuida.
+                Next.js + NestJS en Railway, WordPress Headless CMS y PrestaShop integrados.</div>
+              <div class="project-stack"><span class="stack-tag">Next.js</span><span
+                  class="stack-tag">NestJS</span><span class="stack-tag">Tailwind</span><span
+                  class="stack-tag">WordPress</span><span class="stack-tag">PrestaShop</span></div>
+              <a href="https://liwilu-staging.vercel.app/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">PZ<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category" data-i18n="p.adminPanel">Admin Panel · NERD</div>
+              <div class="project-name">Panel Punto Azul</div>
+              <div class="project-desc" data-i18n="p.puntoazul.desc">Panel administrativo Headless con React+Vite.
+                WordPress REST API, reservas y sistema de citas con sincronización backend en tiempo real.</div>
+              <div class="project-stack"><span class="stack-tag">React</span><span class="stack-tag">Vite</span><span
+                  class="stack-tag">WordPress API</span><span class="stack-tag">Zoho</span></div>
+              <a href="https://staging.puntoazulrestaurante.com/" target="_blank" class="project-link"
+                data-i18n="p.view">Ver proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">AM<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">Corporate · SrBurns</div>
+              <div class="project-name">Astra Medical</div>
+              <div class="project-desc" data-i18n="p.astra.desc">Sitio corporativo con WordPress Headless y Astro. SEO
+                técnico avanzado, interfaces responsivas desde Figma y alto rendimiento.</div>
+              <div class="project-stack"><span class="stack-tag">Astro</span><span
+                  class="stack-tag">WordPress</span><span class="stack-tag">Tailwind</span><span
+                  class="stack-tag">SEO</span></div>
+              <a href="https://www.astra-medical.com/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">WS<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">AI Landing · SrBurns</div>
+              <div class="project-name">Wisec AI</div>
+              <div class="project-desc" data-i18n="p.wisec.desc">Landing page para plataforma de inteligencia
+                artificial. Diseño moderno con animaciones avanzadas y alta optimización de conversión.</div>
+              <div class="project-stack"><span class="stack-tag">Next.js</span><span
+                  class="stack-tag">Tailwind</span><span class="stack-tag">Vercel</span></div>
+              <a href="https://landing-wisec.vercel.app/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">GC<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category" data-i18n="p.ecommerce2">E-Commerce · Well-Done</div>
+              <div class="project-name">Gustos Coffee Co.</div>
+              <div class="project-desc" data-i18n="p.gustos.desc">Tienda online con WooCommerce, temas personalizados y
+                pasarelas de pago para el mercado de Puerto Rico.</div>
+              <div class="project-stack"><span class="stack-tag">WordPress</span><span
+                  class="stack-tag">WooCommerce</span><span class="stack-tag">PHP</span><span
+                  class="stack-tag">GTM</span></div>
+              <a href="https://www.gustoscoffeeco.com/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">SF<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">Marketing · Well-Done</div>
+              <div class="project-name">Sales Funnel PR</div>
+              <div class="project-desc" data-i18n="p.salesfunnel.desc">Embudo de ventas de alto rendimiento para el
+                mercado de Puerto Rico. Landing optimizada para conversión con tracking avanzado.</div>
+              <div class="project-stack"><span class="stack-tag">WordPress</span><span
+                  class="stack-tag">Elementor</span><span class="stack-tag">GTM</span><span class="stack-tag">Facebook
+                  Pixel</span></div>
+              <a href="https://salesfunnelpr.com/" target="_blank" class="project-link" data-i18n="p.view">Ver proyecto
+                <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">CP<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">Restaurant · Well-Done</div>
+              <div class="project-name">Café de la Plaza PR</div>
+              <div class="project-desc" data-i18n="p.cafe.desc">Sitio web de restaurante en Puerto Rico con menú
+                interactivo, reservas online y diseño visual de alto impacto.</div>
+              <div class="project-stack"><span class="stack-tag">WordPress</span><span
+                  class="stack-tag">Divi</span><span class="stack-tag">PHP</span><span class="stack-tag">SEO</span>
+              </div>
+              <a href="https://cafedelaplazapr.com/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">WQ<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">SaaS · SrBurns</div>
+              <div class="project-name">Whaticket</div>
+              <div class="project-desc" data-i18n="p.whaticket.desc">Plataforma SaaS de gestión de tickets y atención al
+                cliente vía WhatsApp. Desarrollo de landing y panel de usuario.</div>
+              <div class="project-stack"><span class="stack-tag">Next.js</span><span
+                  class="stack-tag">Tailwind</span><span class="stack-tag">WordPress</span><span
+                  class="stack-tag">API</span></div>
+              <a href="https://whaticket.com/" target="_blank" class="project-link" data-i18n="p.view">Ver proyecto <i
+                  class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">CB<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">Education · SrBurns</div>
+              <div class="project-name">Chapa Tu Beca</div>
+              <div class="project-desc" data-i18n="p.chapa.desc">Plataforma educativa para becas universitarias. CMS
+                administrable, buscador de becas y sistema de postulación en línea.</div>
+              <div class="project-stack"><span class="stack-tag">WordPress</span><span
+                  class="stack-tag">Astro</span><span class="stack-tag">Tailwind</span><span
+                  class="stack-tag">SEO</span></div>
+              <a href="https://www.chapatubeca.org/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">SP<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category" data-i18n="p.ecommerce3">E-Commerce · SrBurns</div>
+              <div class="project-name">Segway Powersports</div>
+              <div class="project-desc" data-i18n="p.segway.desc">Tienda de vehículos eléctricos Segway para el mercado
+                peruano. Catálogo de productos con integración de pagos y SEO local.</div>
+              <div class="project-stack"><span class="stack-tag">WordPress</span><span
+                  class="stack-tag">WooCommerce</span><span class="stack-tag">SCSS</span><span
+                  class="stack-tag">SEO</span></div>
+              <a href="https://segwaypowersports.com.pe/" target="_blank" class="project-link" data-i18n="p.view">Ver
+                proyecto <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="embla__slide">
+          <div class="project-card">
+            <div class="project-thumb">KG<div class="project-thumb-ov"></div>
+              <div class="project-thumb-grid"></div>
+            </div>
+            <div class="project-body">
+              <div class="project-category">Demo · Personal</div>
+              <div class="project-name">KG Store Admin</div>
+              <div class="project-desc" data-i18n="p.kgstore.desc">Panel administrativo de demostración. React dashboard
+                con autenticación, métricas en tiempo real y CRUD completo.</div>
+              <div class="project-stack"><span class="stack-tag">React</span><span
+                  class="stack-tag">Dashboard</span><span class="stack-tag">Auth</span><span
+                  class="stack-tag">Vercel</span></div>
+              <a href="https://kg-admin-delta.vercel.app/" target="_blank" class="project-link" data-i18n="p.demo">Ver
+                demo <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SKILLS BARS ═══ -->
+  <section id="skills">
+    <div class="section-label" data-i18n="skills.label">05 — Proficiency</div>
+    <h2 class="section-title" data-i18n-html="skills.title">Habilidades <em>Técnicas</em></h2>
+    <div class="skills-bars-grid">
+      <div class="reveal-left">
+        <div class="section-sub" style="margin-bottom:20px" data-i18n="skills.dev">Desarrollo</div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">HTML5 / CSS3 / SCSS</span><span
+              class="skill-bar-pct">100%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="100"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">PHP / Laravel / CodeIgniter</span><span
+              class="skill-bar-pct">97%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="97"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">React / Next.js / Vite</span><span
+              class="skill-bar-pct">88%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="88"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Node.js / NestJS</span><span
+              class="skill-bar-pct">82%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="82"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Astro / Tailwind CSS</span><span
+              class="skill-bar-pct">90%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="90"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Vue.js / Angular</span><span
+              class="skill-bar-pct">72%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="72"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">SQL / REST APIs</span><span
+              class="skill-bar-pct">88%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="88"></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="section-sub" style="margin-bottom:20px" data-i18n="skills.tools">CMS, Marketing &amp; Tools</div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">WordPress Headless</span><span
+              class="skill-bar-pct">97%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="97"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Shopify / PrestaShop / WooCommerce</span><span
+              class="skill-bar-pct">93%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="93"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">SEO Técnico / On-Page</span><span
+              class="skill-bar-pct">95%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="95"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Google Analytics / GTM</span><span
+              class="skill-bar-pct">85%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="85"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Figma / Zeplin</span><span
+              class="skill-bar-pct">80%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="80"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">SEMRush / Screaming Frog</span><span
+              class="skill-bar-pct">88%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="88"></div>
+          </div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header"><span class="skill-bar-name">Scrum / Git / Jira / ClickUp</span><span
+              class="skill-bar-pct">92%</span></div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="92"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TESTIMONIALS (EMBLA) ═══ -->
+  <section id="testimonials">
+    <div class="section-label" data-i18n="t.label">06 — Testimonios</div>
+    <div class="t-header">
+      <h2 class="section-title reveal" data-i18n-html="t.title">Lo Que <em>Dicen</em></h2>
+      <div class="embla-nav">
+        <div class="embla-progress" id="emblaTDots"></div>
+        <button class="embla-btn" id="tPrev"><i class="ph ph-arrow-left"></i></button>
+        <button class="embla-btn" id="tNext"><i class="ph ph-arrow-right"></i></button>
+      </div>
+    </div>
+    <div class="embla" id="emblaTestimonials">
+      <div class="embla__container">
+        <div class="embla__slide" style="flex:0 0 calc(50% - 10px)">
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text" data-i18n="t.t1.text">Kevin es un profesional comprometido con su labor, siempre
+              estuvo a la altura de los proyectos encomendados. Tiene un gran talento al diseño, UX y desarrollo web. Es
+              una persona que recomendaría para proyectos en fábrica de software.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">CU</div>
+              <div>
+                <div class="testimonial-name">Cristian Uscata</div>
+                <div class="testimonial-role">Remote Senior Java Fullstack Developer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="embla__slide" style="flex:0 0 calc(50% - 10px)">
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text" data-i18n="t.t2.text">Kevin presta mucha atención a los detalles, es dinámico,
+              muy capaz de aprender nuevas tecnologías. Cumple a tiempo sus tareas y responde al trabajo bajo presión.
+              Muy recomendado para cualquier proyecto web.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">AL</div>
+              <div>
+                <div class="testimonial-name">Aland Steven Laines Calonge</div>
+                <div class="testimonial-role">Consultor TI — Desarrollador Web</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="embla__slide" style="flex:0 0 calc(50% - 10px)">
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text" data-i18n="t.t3.text">Kevin brings creative energy and solid execution to every
+              project. His eye for design combined with strong backend expertise is a rare combination that makes him an
+              exceptional developer to collaborate with.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">CG</div>
+              <div>
+                <div class="testimonial-name">Cristian Gomez</div>
+                <div class="testimonial-role">UI/UX Designer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="embla__slide" style="flex:0 0 calc(50% - 10px)">
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text" data-i18n="t.t4.text">Working with Kevin was a great experience. His technical
+              depth combined with strong communication skills made every milestone smooth. He adapts quickly to new
+              frameworks and delivers clean, performant code.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">FH</div>
+              <div>
+                <div class="testimonial-name">Frank Hinojosa</div>
+                <div class="testimonial-role">UI/UX Designer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WORKFLOW ═══ -->
+  <section id="workflow">
+    <div class="section-label" data-i18n="wf.label">07 — Proceso</div>
+    <h2 class="section-title reveal" data-i18n-html="wf.title">Cómo <em>Trabajo</em></h2>
+    <div class="workflow-steps">
+      <div class="workflow-step reveal" style="transition-delay:0s">
+        <div class="workflow-num">01</div>
+        <div class="workflow-title" data-i18n="wf.s1.title">Discovery Call</div>
+        <div class="workflow-desc" data-i18n="wf.s1.desc">Definimos ideas, objetivos y alcance del proyecto en una
+          reunión inicial.</div>
+      </div>
+      <div class="workflow-step reveal" style="transition-delay:.15s">
+        <div class="workflow-num">02</div>
+        <div class="workflow-title" data-i18n="wf.s2.title">Design &amp; Prototype</div>
+        <div class="workflow-desc" data-i18n="wf.s2.desc">Mockups en Figma y esquema de colores aprobado por el cliente
+          antes de empezar.</div>
+      </div>
+      <div class="workflow-step reveal" style="transition-delay:.3s">
+        <div class="workflow-num">03</div>
+        <div class="workflow-title" data-i18n="wf.s3.title">Development</div>
+        <div class="workflow-desc" data-i18n="wf.s3.desc">Desarrollo ágil con control de versiones en Git y reuniones de
+          avance periódicas.</div>
+      </div>
+      <div class="workflow-step reveal" style="transition-delay:.45s">
+        <div class="workflow-num">04</div>
+        <div class="workflow-title" data-i18n="wf.s4.title">Launch &amp; Support</div>
+        <div class="workflow-desc" data-i18n="wf.s4.desc">Deploy, QA, SEO técnico, analítica y soporte continuo para
+          óptimo rendimiento.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section id="pricing">
+    <div class="section-label" data-i18n="price.label">08 — Inversión</div>
+    <h2 class="section-title" data-i18n-html="price.title">Planes &amp; <em>Precios</em></h2>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-name" data-i18n="price.p1.name">Básico</div>
+        <div class="pricing-price"><span class="pricing-currency">S/.</span><span class="pricing-amount">850</span>
+        </div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p1.f1">Sitio Responsive: HTML, CSS, JS &amp;
+              PHP</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p1.f2">Correo incluido (Limitado)</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p1.f3">5 páginas: Inicio, Nosotros, Servicios,
+              Contacto + 1</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.seo">Optimización SEO incluida</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p1.f5">Entrega: 2 sem · Soporte: 3 sem</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="display:flex;justify-content:center"
+          data-i18n="price.cta">Adquirir</a>
+      </div>
+      <div class="pricing-card featured reveal" style="transition-delay:.15s">
+        <div class="pricing-badge" data-i18n="price.popular">Más Popular</div>
+        <div class="pricing-name" data-i18n="price.p2.name">Corporativo</div>
+        <div class="pricing-price"><span class="pricing-currency">S/.</span><span class="pricing-amount">1,200</span>
+        </div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p2.f1">Sistema administrable y escalable</span>
+          </li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p2.f2">Correo ilimitado</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p2.f3">9 páginas incluyendo Blog</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.seo">Optimización SEO incluida</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p2.f5">Asesoría virtual o presencial</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p2.f6">Entrega: 3 sem · Soporte: 4 sem</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-primary" style="display:flex;justify-content:center"
+          data-i18n="price.cta">Adquirir</a>
+      </div>
+      <div class="pricing-card reveal" style="transition-delay:.3s">
+        <div class="pricing-name" data-i18n="price.p3.name">Tienda Virtual</div>
+        <div class="pricing-price"><span class="pricing-currency">S/.</span><span class="pricing-amount">1,650</span>
+        </div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p3.f1">Plataforma e-commerce escalable</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p2.f2">Correo ilimitado</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p3.f3">Carrito, login, checkout y cuenta</span>
+          </li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p3.f4">Integración de pasarela de pagos</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p3.f5">SEO + asesoría</span></li>
+          <li><i class="ph-bold ph-check"></i><span data-i18n="price.p3.f6">Entrega: 4 sem · Soporte: 5 sem</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="display:flex;justify-content:center"
+          data-i18n="price.cta">Adquirir</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT ═══ -->
+  <section id="contact">
+    <div class="section-label" data-i18n="contact.label">09 — Contacto</div>
+    <h2 class="section-title" data-i18n-html="contact.title">Hablemos <em>Hoy</em></h2>
+    <div class="contact-grid">
+      <div class="reveal-left">
+        <p class="contact-desc" data-i18n="contact.desc">¿Tienes un proyecto en mente? Estoy disponible para freelance,
+          colaboraciones y nuevas oportunidades.</p>
+        <div class="contact-socials">
+          <a href="tel:+51947841355" class="social-link"><i class="ph ph-phone"></i>+51 947 841 355</a>
+          <a href="mailto:kevin94897@gmail.com" class="social-link"><i
+              class="ph ph-envelope"></i>kevin94897@gmail.com</a>
+          <a href="https://kevin.grupo-gomez.com" target="_blank" class="social-link"><i
+              class="ph ph-globe"></i>kevin.grupo-gomez.com</a>
+          <a href="https://github.com/kevin94897/" target="_blank" class="social-link"><i
+              class="ph ph-github-logo"></i>github.com/kevin94897</a>
+        </div>
+        <div class="download-card">
+          <div class="download-card-title" data-i18n="contact.docs">📄 Documentos</div>
+          <div class="download-card-sub" data-i18n="contact.docsub">Descarga mi CV actualizado 2026 o genera mi carta de
+            presentación.</div>
+          <a href="KevinGomezLazaro_CV2026.pdf" download class="dl-btn dl-btn-primary">
+            <i class="ph-bold ph-download-simple"></i><span data-i18n="contact.dlcv">Curriculum Vitae 2026 (PDF)</span>
+          </a>
+          <a href="#" class="dl-btn dl-btn-outline" id="coverLetterBtn">
+            <i class="ph ph-file-text"></i><span data-i18n="contact.dlcover">Carta de Presentación (TXT)</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-form reveal-right">
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="form.name">Nombre</label><input type="text"
+              data-i18n-ph="form.namePh" placeholder="Juan"></div>
+          <div class="form-group"><label data-i18n="form.lastname">Apellido</label><input type="text"
+              data-i18n-ph="form.lastnamePh" placeholder="García"></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="juan@empresa.com"></div>
+        <div class="form-group"><label data-i18n="form.subject">Asunto</label><input type="text"
+            data-i18n-ph="form.subjectPh" placeholder="Consulta de proyecto"></div>
+        <div class="form-group"><label data-i18n="form.message">Mensaje</label><textarea data-i18n-ph="form.messagePh"
+            placeholder="Cuéntame sobre tu proyecto..."></textarea></div>
+        <button class="submit-btn" id="submitBtn"><i class="ph ph-paper-plane-tilt"></i><span
+            data-i18n="form.send">Enviar Mensaje</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-logo">KG<span>.</span></div>
+    <div class="footer-copy">© 2026 Kevin Gómez Lázaro — Full Stack Developer</div>
+    <div class="footer-links">
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#projects" data-i18n="nav.projects">Projects</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </div>
+  </footer>
+
+  <!-- Embla via CDN -->
+  <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+  <script src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"></script>
+
+  <script>
+    /* ══════════════════════════════════════════
+       i18n TRANSLATIONS
+    ══════════════════════════════════════════ */
+    const TRANSLATIONS = {
+      es: {
+        "nav.about": "About", "nav.experience": "Experiencia", "nav.projects": "Proyectos",
+        "nav.pricing": "Precios", "nav.contact": "Contacto", "nav.cv": "CV 2026", "nav.hire": "Contrátame",
+        "hero.tag": "Full Stack Developer · Lima, Perú",
+        "hero.role1": "Frontend &amp; Backend Development",
+        "hero.role2": "Headless CMS &amp; Integración de APIs",
+        "hero.role3": "E-Commerce &amp; Soluciones Web",
+        "hero.scroll": "Explorar",
+        "about.label": "01 — Perfil", "about.title": "Sobre <em>Mí</em>", "about.freelance": "Freelance ✓",
+        "about.bio1": "Desarrollador Full Stack con trayectoria en proyectos para <strong style='color:var(--white)'>telecomunicaciones, e-commerce y soluciones digitales a medida</strong>. He colaborado con Entel (via SrBurns), NERD, Well-Done Media y One Blush, construyendo desde landing pages de alto rendimiento hasta sistemas distribuidos con NestJS, Next.js y WordPress Headless.",
+        "about.bio2": "Me destaco por mi responsabilidad, adaptación y compromiso con la entrega de productos eficientes y seguros. Trabajo en equipos ágiles con <strong style='color:var(--white)'>Scrum, Git, Jira y ClickUp</strong>. Certificado SFPC con 95 puntos.",
+        "about.stat1": "Años Exp.", "about.stat2": "Proyectos", "about.stack": "Tech Stack Completo",
+        "about.cv": "Descargar CV 2026", "about.contact": "Contactar",
+        "services.label": "02 — Servicios", "services.title": "Lo Que <em>Hago</em>",
+        "services.s1.name": "Full Stack Dev", "services.s1.desc": "Aplicaciones web end-to-end con React, Next.js, NestJS, Laravel y Node.js. Diseño de APIs REST, autenticación y lógica de negocio.",
+        "services.s2.name": "Diseño &amp; UX", "services.s2.desc": "Interfaces responsivas desde Figma hasta código. Evaluación heurística, prototipado y diseño centrado en el usuario.",
+        "services.s3.name": "E-Commerce", "services.s3.desc": "Tiendas con WooCommerce, Shopify y PrestaShop. Pasarelas de pago, Zoho CRM y automatizaciones con Zapier.",
+        "services.s4.name": "SEO &amp; Analytics", "services.s4.desc": "SEO técnico y on-page, GTM, Google Analytics, Facebook Pixel, SEMRush, Screaming Frog y reportes de leads.",
+        "exp.label": "03 — Carrera", "exp.title": "<em>Experiencia</em> &amp; Educación", "exp.work": "Experiencia Laboral", "exp.edu": "Educación", "exp.achievements": "Logros",
+        "exp.nerd": "Backend NestJS + APIs REST. Frontend Next.js y React+Vite (Liwilu, Punto Azul). Integración con ERP, Zoho, Headless WordPress y PrestaShop. Lazy loading, code splitting y optimización.",
+        "exp.srburns": "Desarrollo para Entel, Urbanova, Paseo Begonias y La Rambla. WordPress Headless + Astro + Tailwind. APIs REST/JSON, SEO técnico, reportes de leads, Scrum con Jira y ClickUp.",
+        "exp.wellDone": "WordPress, Shopify, PrestaShop con temas personalizados. React y Vue.js en arquitecturas modernas. GTM, Google Analytics, Facebook Pixel, Zoho CRM y Zapier.",
+        "exp.oneBlush": "Laravel, CodeIgniter, Vue.js y jQuery. REST APIs con token-auth. Sistema de citas online, asistente virtual y módulos de calendario, ventas y profesionales.",
+        "exp.soft": "WordPress (SOAP), SEMRush, Screaming Frog, análisis On-Page, reportes SEO y vistas responsivas.",
+        "exp.vex": "WooCommerce, Shopify, WordPress. UX con evaluaciones heurísticas, prototipado y tests con usuarios.",
+        "edu.systems": "Ingeniería de Sistemas — Bachiller", "edu.ai1": "Fundamentos de AI &amp; Machine Learning",
+        "edu.ai2": "Inteligencia Artificial para Empresas", "edu.oracle": "Oracle Database Administrator (48h)", "edu.english": "Inglés Avanzado",
+        "ach.hack.title": "Líder de Equipo — Hackathon", "ach.hack.desc": "Líder de equipo — Estadio Nacional, IPD &amp; ONPE. Sistema de seguimiento de deportistas con PHP, SQL y Bootstrap.",
+        "ach.scrum.desc": "Certificación SFPC con 95 puntos. Trabajo activo en equipos ágiles con Git, Jira y ClickUp.",
+        "proj.label": "04 — Portfolio", "proj.title": "Proyectos <em>Reales</em>",
+        "p.ecommerce": "E-Commerce · NERD", "p.adminPanel": "Panel Admin · NERD", "p.ecommerce2": "E-Commerce · Well-Done", "p.ecommerce3": "E-Commerce · SrBurns",
+        "p.liwilu.desc": "Plataforma e-commerce con arquitectura distribuida. Next.js + NestJS en Railway, WordPress Headless CMS y PrestaShop integrados.",
+        "p.puntoazul.desc": "Panel administrativo Headless con React+Vite. WordPress REST API, reservas y citas con sincronización backend en tiempo real.",
+        "p.astra.desc": "Sitio corporativo con WordPress Headless y Astro. SEO técnico avanzado, interfaces responsivas desde Figma y alto rendimiento.",
+        "p.wisec.desc": "Landing page para plataforma de inteligencia artificial. Diseño moderno con animaciones avanzadas y alta optimización de conversión.",
+        "p.gustos.desc": "Tienda online con WooCommerce, temas personalizados y pasarelas de pago para el mercado de Puerto Rico.",
+        "p.salesfunnel.desc": "Embudo de ventas de alto rendimiento para Puerto Rico. Landing optimizada para conversión con tracking avanzado.",
+        "p.cafe.desc": "Sitio web de restaurante en Puerto Rico con menú interactivo, reservas online y diseño visual de alto impacto.",
+        "p.whaticket.desc": "Plataforma SaaS de gestión de tickets vía WhatsApp. Desarrollo de landing y panel de usuario.",
+        "p.chapa.desc": "Plataforma educativa para becas universitarias. CMS administrable, buscador de becas y postulación en línea.",
+        "p.segway.desc": "Tienda de vehículos eléctricos Segway para el mercado peruano. Catálogo con integración de pagos y SEO local.",
+        "p.kgstore.desc": "Panel administrativo de demostración. React dashboard con autenticación, métricas en tiempo real y CRUD completo.",
+        "p.view": "Ver proyecto", "p.demo": "Ver demo",
+        "skills.label": "05 — Proficiency", "skills.title": "Habilidades <em>Técnicas</em>", "skills.dev": "Desarrollo", "skills.tools": "CMS, Marketing &amp; Tools",
+        "t.label": "06 — Testimonios", "t.title": "Lo Que <em>Dicen</em>",
+        "t.t1.text": "Kevin es un profesional comprometido con su labor, siempre estuvo a la altura de los proyectos encomendados. Tiene un gran talento al diseño, UX y desarrollo web. Es una persona que recomendaría para proyectos en fábrica de software.",
+        "t.t2.text": "Kevin presta mucha atención a los detalles, es dinámico, muy capaz de aprender nuevas tecnologías. Cumple a tiempo sus tareas y responde al trabajo bajo presión. Muy recomendado para cualquier proyecto web.",
+        "t.t3.text": "Kevin brings creative energy and solid execution to every project. His eye for design combined with strong backend expertise is a rare combination that makes him an exceptional developer to collaborate with.",
+        "t.t4.text": "Working with Kevin was a great experience. His technical depth combined with strong communication skills made every milestone smooth.",
+        "wf.label": "07 — Proceso", "wf.title": "Cómo <em>Trabajo</em>",
+        "wf.s1.title": "Discovery Call", "wf.s1.desc": "Definimos ideas, objetivos y alcance del proyecto en una reunión inicial.",
+        "wf.s2.title": "Diseño &amp; Prototipo", "wf.s2.desc": "Mockups en Figma y esquema de colores aprobado antes de empezar.",
+        "wf.s3.title": "Desarrollo", "wf.s3.desc": "Desarrollo ágil con control de versiones en Git y reuniones de avance periódicas.",
+        "wf.s4.title": "Lanzamiento", "wf.s4.desc": "Deploy, QA, SEO técnico, analítica y soporte continuo para óptimo rendimiento.",
+        "price.label": "08 — Inversión", "price.title": "Planes &amp; <em>Precios</em>", "price.popular": "Más Popular", "price.cta": "Adquirir", "price.seo": "Optimización SEO incluida",
+        "price.p1.name": "Básico", "price.p1.f1": "Sitio Responsive: HTML, CSS, JS &amp; PHP", "price.p1.f2": "Correo incluido (Limitado)", "price.p1.f3": "5 páginas: Inicio, Nosotros, Servicios, Contacto + 1", "price.p1.f5": "Entrega: 2 sem · Soporte: 3 sem",
+        "price.p2.name": "Corporativo", "price.p2.f1": "Sistema administrable y escalable", "price.p2.f2": "Correo ilimitado", "price.p2.f3": "9 páginas incluyendo Blog", "price.p2.f5": "Asesoría virtual o presencial", "price.p2.f6": "Entrega: 3 sem · Soporte: 4 sem",
+        "price.p3.name": "Tienda Virtual", "price.p3.f1": "Plataforma e-commerce escalable", "price.p3.f3": "Carrito, login, checkout y cuenta", "price.p3.f4": "Integración de pasarela de pagos", "price.p3.f5": "SEO + asesoría", "price.p3.f6": "Entrega: 4 sem · Soporte: 5 sem",
+        "contact.label": "09 — Contacto", "contact.title": "Hablemos <em>Hoy</em>", "contact.desc": "¿Tienes un proyecto en mente? Estoy disponible para freelance, colaboraciones y nuevas oportunidades. Escríbeme.",
+        "contact.docs": "📄 Documentos", "contact.docsub": "Descarga mi CV actualizado 2026 o genera mi carta de presentación.",
+        "contact.dlcv": "Curriculum Vitae 2026 (PDF)", "contact.dlcover": "Carta de Presentación (TXT)",
+        "form.name": "Nombre", "form.namePh": "Juan", "form.lastname": "Apellido", "form.lastnamePh": "García",
+        "form.subject": "Asunto", "form.subjectPh": "Consulta de proyecto", "form.message": "Mensaje", "form.messagePh": "Cuéntame sobre tu proyecto...", "form.send": "Enviar Mensaje",
+        "form.sent": "¡Mensaje Enviado!"
+      },
+      en: {
+        "nav.about": "About", "nav.experience": "Experience", "nav.projects": "Projects",
+        "nav.pricing": "Pricing", "nav.contact": "Contact", "nav.cv": "CV 2026", "nav.hire": "Hire Me",
+        "hero.tag": "Full Stack Developer · Lima, Peru",
+        "hero.role1": "Frontend &amp; Backend Development",
+        "hero.role2": "Headless CMS &amp; API Integration",
+        "hero.role3": "E-Commerce &amp; Web Solutions",
+        "hero.scroll": "Scroll to explore",
+        "about.label": "01 — Profile", "about.title": "About <em>Me</em>", "about.freelance": "Freelance ✓",
+        "about.bio1": "Full Stack Developer with experience in projects for <strong style='color:var(--white)'>telecommunications, e-commerce, and custom digital solutions</strong>. I've collaborated with Entel (via SrBurns), NERD, Well-Done Media, and One Blush, building everything from high-performance landing pages to distributed systems with NestJS, Next.js, and Headless WordPress.",
+        "about.bio2": "I stand out for my responsibility, adaptability, and commitment to delivering efficient, secure, high-quality products. I work in agile teams using <strong style='color:var(--white)'>Scrum, Git, Jira, and ClickUp</strong>. SFPC certified with a score of 95.",
+        "about.stat1": "Years Exp.", "about.stat2": "Projects", "about.stack": "Full Tech Stack",
+        "about.cv": "Download CV 2026", "about.contact": "Contact Me",
+        "services.label": "02 — Services", "services.title": "What I <em>Do</em>",
+        "services.s1.name": "Full Stack Dev", "services.s1.desc": "End-to-end web apps with React, Next.js, NestJS, Laravel, and Node.js. REST API design, authentication, and business logic.",
+        "services.s2.name": "Design &amp; UX", "services.s2.desc": "Responsive interfaces from Figma to code. Heuristic evaluation, prototyping, and user-centered design.",
+        "services.s3.name": "E-Commerce", "services.s3.desc": "Stores with WooCommerce, Shopify, and PrestaShop. Payment gateways, Zoho CRM, and Zapier automations.",
+        "services.s4.name": "SEO &amp; Analytics", "services.s4.desc": "Technical and on-page SEO, GTM, Google Analytics, Facebook Pixel, SEMRush, Screaming Frog, and lead reports.",
+        "exp.label": "03 — Career", "exp.title": "<em>Experience</em> &amp; Education", "exp.work": "Work Experience", "exp.edu": "Education", "exp.achievements": "Achievements",
+        "exp.nerd": "NestJS backend + REST APIs. Next.js and React+Vite frontend (Liwilu, Punto Azul). Integration with ERP, Zoho, Headless WordPress, and PrestaShop. Lazy loading, code splitting, and performance optimization.",
+        "exp.srburns": "Development for Entel, Urbanova, Paseo Begonias, and La Rambla. WordPress Headless + Astro + Tailwind. REST/JSON APIs, technical SEO, lead reports, Scrum with Jira and ClickUp.",
+        "exp.wellDone": "WordPress, Shopify, PrestaShop with custom themes. React and Vue.js in modern frontend architectures. GTM, Google Analytics, Facebook Pixel, Zoho CRM, and Zapier.",
+        "exp.oneBlush": "Laravel, CodeIgniter, Vue.js, and jQuery. REST APIs with token auth. Online booking system, virtual assistant, and modules for calendar, sales, and professionals.",
+        "exp.soft": "WordPress maintenance (SOAP), SEMRush, Screaming Frog, On-Page analysis, SEO reports, and responsive views.",
+        "exp.vex": "WooCommerce, Shopify, WordPress. UX with heuristic evaluations, prototyping, and user testing.",
+        "edu.systems": "Systems Engineering — Bachelor's Degree", "edu.ai1": "AI &amp; Machine Learning Fundamentals",
+        "edu.ai2": "Artificial Intelligence for Business", "edu.oracle": "Oracle Database Administrator (48h)", "edu.english": "Advanced English",
+        "ach.hack.title": "Hackathon Team Leader", "ach.hack.desc": "Team leader — National Stadium, IPD &amp; ONPE. Athlete tracking system built with PHP, SQL, and Bootstrap.",
+        "ach.scrum.desc": "SFPC certification with a score of 95. Active work in agile teams using Git, Jira, and ClickUp.",
+        "proj.label": "04 — Portfolio", "proj.title": "Real <em>Projects</em>",
+        "p.ecommerce": "E-Commerce · NERD", "p.adminPanel": "Admin Panel · NERD", "p.ecommerce2": "E-Commerce · Well-Done", "p.ecommerce3": "E-Commerce · SrBurns",
+        "p.liwilu.desc": "E-commerce platform with distributed architecture. Next.js + NestJS on Railway, integrated Headless WordPress CMS and PrestaShop.",
+        "p.puntoazul.desc": "Headless admin panel with React+Vite. WordPress REST API, bookings, and real-time appointment system with backend sync.",
+        "p.astra.desc": "Corporate website with Headless WordPress and Astro. Advanced technical SEO, Figma-to-code responsive interfaces, and high performance.",
+        "p.wisec.desc": "Landing page for an AI platform. Modern design with advanced animations and high conversion rate optimization.",
+        "p.gustos.desc": "Online store with WooCommerce, custom themes, and payment gateways for the Puerto Rico market.",
+        "p.salesfunnel.desc": "High-performance sales funnel for Puerto Rico. Conversion-optimized landing with advanced tracking.",
+        "p.cafe.desc": "Restaurant website in Puerto Rico with interactive menu, online reservations, and high-impact visual design.",
+        "p.whaticket.desc": "SaaS platform for WhatsApp-based ticket management. Landing page and user panel development.",
+        "p.chapa.desc": "Educational platform for university scholarships. Manageable CMS, scholarship finder, and online application system.",
+        "p.segway.desc": "Segway electric vehicle store for the Peruvian market. Product catalog with payment integration and local SEO.",
+        "p.kgstore.desc": "Demo admin panel. React dashboard with authentication, real-time metrics, and full CRUD.",
+        "p.view": "View Project", "p.demo": "View Demo",
+        "skills.label": "05 — Proficiency", "skills.title": "Technical <em>Skills</em>", "skills.dev": "Development", "skills.tools": "CMS, Marketing &amp; Tools",
+        "t.label": "06 — Testimonials", "t.title": "What They <em>Say</em>",
+        "t.t1.text": "Kevin is a professional committed to his work, always up to the task assigned. He has a great talent for design, UX, and web development. I would recommend him for any software development project.",
+        "t.t2.text": "Kevin pays close attention to detail, is dynamic, and very capable of learning new technologies. He delivers on time and performs well under pressure. Highly recommended for any web project.",
+        "t.t3.text": "Kevin brings creative energy and solid execution to every project. His eye for design combined with strong backend expertise is a rare combination that makes him an exceptional developer to collaborate with.",
+        "t.t4.text": "Working with Kevin was a great experience. His technical depth combined with strong communication skills made every milestone smooth. He adapts quickly to new frameworks and delivers clean, performant code.",
+        "wf.label": "07 — Process", "wf.title": "How I <em>Work</em>",
+        "wf.s1.title": "Discovery Call", "wf.s1.desc": "We define ideas, goals, and project scope in an initial meeting.",
+        "wf.s2.title": "Design &amp; Prototype", "wf.s2.desc": "Figma mockups and color scheme approved by the client before development begins.",
+        "wf.s3.title": "Development", "wf.s3.desc": "Agile development with Git version control and regular progress check-ins.",
+        "wf.s4.title": "Launch &amp; Support", "wf.s4.desc": "Deploy, QA, technical SEO, analytics, and ongoing support for peak performance.",
+        "price.label": "08 — Investment", "price.title": "Plans &amp; <em>Pricing</em>", "price.popular": "Most Popular", "price.cta": "Get Started", "price.seo": "SEO optimization included",
+        "price.p1.name": "Basic", "price.p1.f1": "Responsive site: HTML, CSS, JS &amp; PHP", "price.p1.f2": "Email included (Limited)", "price.p1.f3": "5 pages: Home, About, Services, Contact + 1", "price.p1.f5": "Delivery: 2 wks · Support: 3 wks",
+        "price.p2.name": "Corporate", "price.p2.f1": "Scalable admin system", "price.p2.f2": "Unlimited email", "price.p2.f3": "9 pages including Blog", "price.p2.f5": "Virtual or in-person consultation", "price.p2.f6": "Delivery: 3 wks · Support: 4 wks",
+        "price.p3.name": "Online Store", "price.p3.f1": "Scalable e-commerce platform", "price.p3.f3": "Cart, login, checkout, and account", "price.p3.f4": "Payment gateway integration", "price.p3.f5": "SEO + consultation", "price.p3.f6": "Delivery: 4 wks · Support: 5 wks",
+        "contact.label": "09 — Contact", "contact.title": "Let's Talk <em>Today</em>", "contact.desc": "Have a project in mind? I'm available for freelance, collaborations, and new opportunities. Write to me.",
+        "contact.docs": "📄 Documents", "contact.docsub": "Download my updated CV 2026 or generate my cover letter.",
+        "contact.dlcv": "Curriculum Vitae 2026 (PDF)", "contact.dlcover": "Cover Letter (TXT)",
+        "form.name": "First Name", "form.namePh": "John", "form.lastname": "Last Name", "form.lastnamePh": "Doe",
+        "form.subject": "Subject", "form.subjectPh": "Project inquiry", "form.message": "Message", "form.messagePh": "Tell me about your project...", "form.send": "Send Message",
+        "form.sent": "Message Sent!"
+      }
+    };
+
+    let currentLang = 'es';
+
+    function applyLang(lang) {
+      currentLang = lang;
+      const t = TRANSLATIONS[lang];
+      document.documentElement.lang = lang;
+
+      // text nodes
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+      // innerHTML (for <em> tags)
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+      // placeholders
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const key = el.dataset.i18nPh;
+        if (t[key] !== undefined) el.placeholder = t[key];
+      });
+
+      // lang buttons
+      document.getElementById('btnES').classList.toggle('active', lang === 'es');
+      document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+
+      // re-render embla counters after lang switch
+      updateProjCounter();
+    }
+
+    document.getElementById('btnES').onclick = () => applyLang('es');
+    document.getElementById('btnEN').onclick = () => applyLang('en');
+
+    // ══════════════════════════════════════════
+    // CURSOR
+    // ══════════════════════════════════════════
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    });
+    (function animRing() { rx += (mx - rx) * .1; ry += (my - ry) * .1; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); })();
+
+    // ══════════════════════════════════════════
+    // NAV SCROLL
+    // ══════════════════════════════════════════
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+
+    // ══════════════════════════════════════════
+    // PARTICLES
+    // ══════════════════════════════════════════
+    const canvas = document.getElementById('particles'), ctx = canvas.getContext('2d');
+    let W, H, pts = [];
+    function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+    for (let i = 0; i < 55; i++) pts.push({ x: Math.random() * 1920, y: Math.random() * 1080, vx: (Math.random() - .5) * .28, vy: (Math.random() - .5) * .28, r: Math.random() * 1.4 + .4, o: Math.random() * .5 + .1 });
+    (function drawPts() {
+      ctx.clearRect(0, 0, W, H);
+      pts.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(180,223,0,${p.o})`; ctx.fill(); });
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) { const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.sqrt(dx * dx + dy * dy); if (d < 110) { ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.strokeStyle = `rgba(180,223,0,${.07 * (1 - d / 110)})`; ctx.lineWidth = .5; ctx.stroke(); } }
+      requestAnimationFrame(drawPts);
+    })();
+
+    // ══════════════════════════════════════════
+    // INTERSECTION OBSERVER
+    // ══════════════════════════════════════════
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => io.observe(el));
+
+    // skill pills stagger
+    const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) document.querySelectorAll('.skill-pill').forEach((p, i) => setTimeout(() => p.classList.add('visible'), i * 40)); }), { threshold: .2 });
+    const sg = document.querySelector('.skills-grid'); if (sg) sio.observe(sg);
+
+    // skill bars
+    const barsIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) document.querySelectorAll('.skill-bar-fill').forEach(b => b.style.width = b.dataset.pct + '%'); }), { threshold: .2 });
+    const sbg = document.querySelector('.skills-bars-grid'); if (sbg) barsIO.observe(sbg);
+
+    // ══════════════════════════════════════════
+    // HERO ROLE CYCLING
+    // ══════════════════════════════════════════
+    const roles = document.querySelectorAll('.hero-role');
+    let ri = 0;
+    setInterval(() => { roles[ri].classList.remove('active'); ri = (ri + 1) % roles.length; roles[ri].classList.add('active'); }, 2600);
+
+    // ══════════════════════════════════════════
+    // EMBLA — PROJECTS
+    // ══════════════════════════════════════════
+    const projViewport = document.getElementById('emblaProjects');
+    const projAutoplay = EmblaCarouselAutoplay({ delay: 4000, stopOnInteraction: true });
+    const emblaProj = EmblaCarousel(projViewport, {
+      loop: false,
+      align: 'start',
+      dragFree: true,
+      containScroll: 'trimSnaps',
+    }, [projAutoplay]);
+
+    const projDotsEl = document.getElementById('emblaProjectsDots');
+    const projCountEl = document.getElementById('emblaProjectsCount');
+    const PROJ_TOTAL = emblaProj.scrollSnapList().length;
+
+    function buildDots(container, embla) {
+      container.innerHTML = '';
+      embla.scrollSnapList().forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'embla-dot';
+        d.onclick = () => embla.scrollTo(i);
+        container.appendChild(d);
+      });
+    }
+
+    function updateDots(container, embla) {
+      container.querySelectorAll('.embla-dot').forEach((d, i) => d.classList.toggle('active', i === embla.selectedScrollSnap()));
+    }
+
+    function updateProjCounter() {
+      const t = TRANSLATIONS[currentLang];
+      const curr = emblaProj.selectedScrollSnap() + 1;
+      projCountEl.textContent = `${curr} / ${PROJ_TOTAL}`;
+    }
+
+    buildDots(projDotsEl, emblaProj);
+    emblaProj.on('select', () => { updateDots(projDotsEl, emblaProj); updateProjCounter(); });
+    emblaProj.on('init', () => { updateDots(projDotsEl, emblaProj); updateProjCounter(); });
+
+    document.getElementById('projPrev').onclick = () => emblaProj.scrollPrev();
+    document.getElementById('projNext').onclick = () => emblaProj.scrollNext();
+
+    // disable/enable nav buttons
+    function toggleProjBtns() {
+      document.getElementById('projPrev').disabled = !emblaProj.canScrollPrev();
+      document.getElementById('projNext').disabled = !emblaProj.canScrollNext();
+    }
+    emblaProj.on('select', toggleProjBtns);
+    emblaProj.on('init', toggleProjBtns);
+
+    // ══════════════════════════════════════════
+    // EMBLA — TESTIMONIALS
+    // ══════════════════════════════════════════
+    const tViewport = document.getElementById('emblaTestimonials');
+    const tAutoplay = EmblaCarouselAutoplay({ delay: 5500, stopOnInteraction: true });
+    const emblaT = EmblaCarousel(tViewport, {
+      loop: true,
+      align: 'start',
+      dragFree: false,
+      slidesToScroll: 1,
+    }, [tAutoplay]);
+
+    const tDotsEl = document.getElementById('emblaTDots');
+    buildDots(tDotsEl, emblaT);
+    emblaT.on('select', () => { updateDots(tDotsEl, emblaT); updateActiveCard(); });
+    emblaT.on('init', () => { updateDots(tDotsEl, emblaT); updateActiveCard(); });
+
+    function updateActiveCard() {
+      document.querySelectorAll('.testimonial-card').forEach((c, i) => c.classList.toggle('is-selected', i === emblaT.selectedScrollSnap()));
+    }
+
+    document.getElementById('tPrev').onclick = () => emblaT.scrollPrev();
+    document.getElementById('tNext').onclick = () => emblaT.scrollNext();
+
+    // ══════════════════════════════════════════
+    // SUBMIT BUTTON
+    // ══════════════════════════════════════════
+    document.getElementById('submitBtn').onclick = function () {
+      const t = TRANSLATIONS[currentLang];
+      const ic = '<i class="ph ph-check" style="font-size:17px"></i> ';
+      this.innerHTML = ic + (t['form.sent'] || 'Sent!');
+      this.style.background = 'rgba(180,223,0,.8)';
+      setTimeout(() => {
+        this.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> ' + (t['form.send'] || 'Send');
+        this.style.background = '';
+      }, 3000);
+    };
+
+    // ══════════════════════════════════════════
+    // COVER LETTER
+    // ══════════════════════════════════════════
+    document.getElementById('coverLetterBtn').onclick = function (e) {
+      e.preventDefault();
+      const d = new Date().toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' });
+      const isEN = currentLang === 'en';
+      const txt = isEN
+        ? `COVER LETTER\n${'─'.repeat(50)}\n\nKevin Gómez Lázaro\nFull Stack Developer\nkevin94897@gmail.com | +51 947 841 355\nhttps://kevin.grupo-gomez.com/\nLima, Peru\n\n${'─'.repeat(50)}\nLima, ${d}\n\nDear Hiring Team,\n\nI am writing to express my strong interest in joining your development team. I am a Systems Engineer with over 8 years of experience as a Full Stack Developer, specialized in designing, building, and optimizing modern web applications.\n\nI have collaborated with companies including SrBurns (projects for Entel), NERD, Well-Done Media, and One Blush Salon, building everything from high-performance landing pages to distributed systems using modern architectures (Next.js, NestJS, Headless WordPress, Astro, Laravel).\n\nKey strengths:\n• Full Stack: React, Next.js, NestJS, Astro, Laravel, Node.js, PHP\n• Architectures: Headless CMS, REST APIs, microservices, token-auth\n• E-commerce: WooCommerce, Shopify, PrestaShop, Zoho CRM, Zapier\n• Technical SEO, GTM, Google Analytics, Facebook Pixel\n• Agile teams: Scrum, Git, Jira, ClickUp\n• Design: Figma, Zeplin, UX/UI, responsive design\n\nI hold the Scrum Foundation Professional Certification (SFPC) with a score of 95, and I am currently expanding my knowledge in Artificial Intelligence and Machine Learning.\n\nI am confident my profile can bring significant value to your team. I am available for an interview at your convenience.\n\nThank you for your time and consideration.\n\nSincerely,\n\nKevin Gómez Lázaro\nFull Stack Developer\nkevin94897@gmail.com | +51 947 841 355\nhttps://kevin.grupo-gomez.com\n\n${'─'.repeat(50)}`
+        : `CARTA DE PRESENTACIÓN\n${'─'.repeat(50)}\n\nKevin Gómez Lázaro\nFull Stack Developer\nkevin94897@gmail.com | +51 947 841 355\nhttps://kevin.grupo-gomez.com/\nLima, Perú\n\n${'─'.repeat(50)}\nLima, ${d}\n\nEstimado equipo,\n\nMe dirijo a ustedes con gran interés en contribuir con su equipo de desarrollo. Soy Ingeniero de Sistemas con más de 8 años de experiencia como Full Stack Developer, especializado en el diseño, desarrollo y optimización de aplicaciones web modernas.\n\nHe colaborado con empresas como SrBurns (proyectos para Entel), NERD, Well-Done Media y One Blush Salon, construyendo desde landing pages de alto rendimiento hasta sistemas distribuidos con Next.js, NestJS, WordPress Headless, Astro y Laravel.\n\nMis principales fortalezas:\n• Full Stack: React, Next.js, NestJS, Astro, Laravel, Node.js, PHP\n• Arquitecturas: Headless CMS, REST APIs, microservicios, token-auth\n• E-commerce: WooCommerce, Shopify, PrestaShop, Zoho CRM, Zapier\n• SEO técnico, GTM, Google Analytics, Facebook Pixel\n• Equipos ágiles: Scrum, Git, Jira, ClickUp\n• Diseño: Figma, Zeplin, UX/UI, diseño responsivo\n\nCuento con la Certificación Scrum Foundation Professional (SFPC) con 95 puntos, y actualmente amplío mis conocimientos en Inteligencia Artificial y Machine Learning.\n\nEstoy convencido de que mi perfil puede aportar valor significativo a su equipo. Quedo a su disposición para una entrevista.\n\nAgradezco su tiempo y consideración.\n\nAtentamente,\n\nKevin Gómez Lázaro\nFull Stack Developer\nkevin94897@gmail.com | +51 947 841 355\nhttps://kevin.grupo-gomez.com\n\n${'─'.repeat(50)}`;
+
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = isEN ? 'Kevin_Gomez_Cover_Letter.txt' : 'Kevin_Gomez_Carta_Presentacion.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    // ══════════════════════════════════════════
+    // INIT LANG
+    // ══════════════════════════════════════════
+    applyLang('es');
+    // set ES button active initially
+    document.getElementById('btnES').classList.add('active');
+  </script>
+</body>
+
+</html>
