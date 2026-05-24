@@ -177,6 +177,10 @@
   const prevBtn  = document.getElementById('wfPrev') as HTMLButtonElement;
   const nextBtn  = document.getElementById('wfNext') as HTMLButtonElement;
 
+  // Cache vpRect — only the slides move inside the viewport, not the viewport itself
+  let vpRect = viewport.getBoundingClientRect();
+  window.addEventListener('resize', () => { vpRect = viewport.getBoundingClientRect(); }, { passive: true });
+
   const autoplay = Autoplay({
     delay: 3600,
     stopOnInteraction: false,   // resume after drag
@@ -194,7 +198,6 @@
   // Uses getBoundingClientRect so loop-cloned slides are also tweened correctly
   // (scrollProgress() jumps at the loop seam, causing a visual flash)
   function applyTweens() {
-    const vpRect   = viewport.getBoundingClientRect();
     const vpCenter = vpRect.left + vpRect.width / 2;
     embla.slideNodes().forEach((slide) => {
       const r          = slide.getBoundingClientRect();
