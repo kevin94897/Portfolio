@@ -3,15 +3,17 @@
 // Desktop  → Bento grid (sin cambios)
 // Mobile   → Embla Carousel vertical, loop infinito, tween scale/opacity/blur
 
-import imgLiwilu       from '../assets/images/portfolio/Liwilu.png';
-import imgAstra        from '../assets/images/portfolio/Astramedical.png';
-import imgWisec        from '../assets/images/portfolio/Aiconstruye.png';
-import imgGustos       from '../assets/images/portfolio/Gustoscoffee.png';
-import imgWhaticket    from '../assets/images/portfolio/whaticket.png';
-import imgChapa        from '../assets/images/portfolio/Chapatubeca.png';
-import imgSegway       from '../assets/images/portfolio/Segwaysports.png';
-import imgColecciones  from '../assets/images/portfolio/KGFront.png';
-import imgKGStore      from '../assets/images/portfolio/KGStore.png';
+import imgLiwilu       from '../assets/images/portfolio/Liwilu.webp';
+import imgAstra        from '../assets/images/portfolio/Astramedical.webp';
+import imgWisec        from '../assets/images/portfolio/Aiconstruye.webp';
+import imgGustos       from '../assets/images/portfolio/Gustoscoffee.webp';
+import imgWhaticket    from '../assets/images/portfolio/whaticket.webp';
+import imgChapa        from '../assets/images/portfolio/Chapatubeca.webp';
+import imgSegway       from '../assets/images/portfolio/Segwaysports.webp';
+import imgColecciones  from '../assets/images/portfolio/KGFront.webp';
+import imgKGStore      from '../assets/images/portfolio/KGStore.webp';
+import imgPuntoAzul    from '../assets/images/portfolio/Puntoazul.webp';
+import imgCafePlaza    from '../assets/images/portfolio/CafePlaza.webp';
 
 interface Project {
   img: ImageMetadata;
@@ -24,7 +26,12 @@ interface Project {
   demo?: { user: string; pass: string };
 }
 
+// ── Bento layout (11 projects, 4 cols):
+// Row 1-2: [0 hero 2×2] [1] [2] / [0] [3] [4]
+// Row 3:   [5] [6] [7] [8]
+// Row 4:   [9 col-span-2] [10 col-span-2]   ← fills cleanly, no gaps
 const projects: Project[] = [
+  // ── [0] HERO — 2×2 ──
   {
     img: imgColecciones,
     category: 'SPA',
@@ -33,6 +40,16 @@ const projects: Project[] = [
     desc: 'Dashboard administrativo SPA/PWA con React. Autenticación, métricas en tiempo real, CRUD completo y deploy en Vercel.',
     stack: ['React', 'React Router', 'Lucide', 'Google Fonts', 'Vercel'],
     url: 'https://colecciones.grupo-gomez.com/',
+  },
+  // ── [1–4] rows 1-2, cols 3-4 ──
+  {
+    img: imgLiwilu,
+    category: 'Headless E-Commerce',
+    name: 'Liwilu',
+    descKey: 'p.liwilu.desc',
+    desc: 'Arquitectura headless desacoplada. SSR/SSG con Next.js, API con NestJS, e-commerce PrestaShop y animaciones con Framer Motion.',
+    stack: ['Next.js', 'NestJS', 'PrestaShop', 'Tailwind', 'Framer Motion', 'Railway'],
+    url: 'https://liwilu-staging.vercel.app/',
   },
   {
     img: imgKGStore,
@@ -45,22 +62,13 @@ const projects: Project[] = [
     demo: { user: 'demo', pass: 'QCyJ iNW7 sFpl BPPS FoAR cka8' },
   },
   {
-    img: imgLiwilu,
-    category: 'Headless E-Commerce',
-    name: 'Liwilu',
-    descKey: 'p.liwilu.desc',
-    desc: 'Arquitectura headless desacoplada. SSR/SSG con Next.js, API con NestJS, e-commerce PrestaShop y animaciones con Framer Motion.',
-    stack: ['Next.js', 'NestJS', 'PrestaShop', 'Tailwind', 'Framer Motion', 'Railway'],
-    url: 'https://liwilu-staging.vercel.app/',
-  },
-  {
-    img: imgWisec,
-    category: 'SSG Landing',
-    name: 'AIcon',
-    descKey: 'p.aicon.desc',
-    desc: 'Landing SSG de alto rendimiento para plataforma de IA. Astro + Alpine.js en Vercel y AWS con integración Mailchimp.',
-    stack: ['Astro', 'Alpine.js', 'Tailwind', 'Vercel', 'AWS', 'Mailchimp'],
-    url: 'https://landing-wisec.vercel.app/',
+    img: imgCafePlaza,
+    category: 'Corporate',
+    name: 'Café de la Plaza',
+    descKey: 'p.cafeplaza.desc',
+    desc: 'Sitio corporativo para restaurante en Puerto Rico. WordPress + Elementor con animaciones GSAP, slider Swiper, Cloudflare CDN y hosting en Kinsta.',
+    stack: ['WordPress', 'Elementor', 'GSAP', 'Swiper', 'Cloudflare', 'Kinsta', 'Yoast SEO'],
+    url: 'https://cafedelaplazapr.com/',
   },
   {
     img: imgGustos,
@@ -70,6 +78,16 @@ const projects: Project[] = [
     desc: 'Tienda Shopify con frontend en Vue.js para Puerto Rico. Cloudflare CDN, pagos Apple Pay / Shop Pay y optimización de conversión.',
     stack: ['Shopify', 'Vue.js', 'Cloudflare', 'Apple Pay', 'Shop Pay'],
     url: 'https://www.gustoscoffeeco.com/',
+  },
+  // ── [5–8] row 3 ──
+  {
+    img: imgWisec,
+    category: 'SSG Landing',
+    name: 'AIcon',
+    descKey: 'p.aicon.desc',
+    desc: 'Landing SSG de alto rendimiento para plataforma de IA. Astro + Alpine.js en Vercel y AWS con integración Mailchimp.',
+    stack: ['Astro', 'Alpine.js', 'Tailwind', 'Vercel', 'AWS', 'Mailchimp'],
+    url: 'https://landing-wisec.vercel.app/',
   },
   {
     img: imgWhaticket,
@@ -98,6 +116,7 @@ const projects: Project[] = [
     stack: ['WordPress Multisite', 'Elementor', 'PHP', 'MySQL', 'SEO'],
     url: 'https://www.chapatubeca.org/',
   },
+  // ── [9–10] row 4 — col-span-2 each, fills row cleanly ──
   {
     img: imgSegway,
     category: 'E-Commerce',
@@ -106,6 +125,16 @@ const projects: Project[] = [
     desc: 'Tienda de vehículos eléctricos con WordPress + Elementor. Apache, RankMath SEO, jQuery y pasarela de pagos para Perú.',
     stack: ['WordPress', 'Elementor', 'PHP', 'MySQL', 'RankMath', 'jQuery'],
     url: 'https://segwaypowersports.com.pe/',
+  },
+  {
+    img: imgPuntoAzul,
+    category: 'SPA',
+    name: 'Panel PuntoAzul',
+    descKey: 'p.puntoazul.desc',
+    desc: 'Panel administrativo para restaurante. Bloqueo de fechas y gestión de reservas con React + Vite. Calendario interactivo con react-day-picker y date-fns.',
+    stack: ['React', 'Vite', 'Tailwind', 'react-day-picker', 'date-fns', 'Lucide'],
+    url: 'https://staging.puntoazulrestaurante.com/',
+    demo: { user: 'demo', pass: 'QCyJ iNW7 sFpl BPPS FoAR cka8' },
   },
 ];
 ---
@@ -125,7 +154,7 @@ const projects: Project[] = [
          DESKTOP: Bento Grid (oculto en mobile)
     ══════════════════════════════════════════════ -->
     <div
-      class="hidden lg:grid grid-cols-4 auto-rows-[320px] gap-4"
+      class="hidden lg:grid grid-cols-4 auto-rows-[280px] gap-4"
       role="list"
       aria-label="Portfolio de proyectos"
     >
@@ -145,6 +174,8 @@ const projects: Project[] = [
             'hover:border-lime/40 hover:shadow-[0_0_0_1px_rgba(180,223,0,0.15),0_20px_50px_rgba(0,0,0,0.6)]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime/50',
             i === 0 && 'col-span-2 row-span-2',
+            i === 9 && 'col-span-2',
+            i === 10 && 'col-span-2',
           ]}
         >
           <img

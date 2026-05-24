@@ -10,9 +10,10 @@
     </h2>
   </div>
 
-  <!-- Embla: standard pattern — no gap/padding on container -->
-  <div class="overflow-hidden relative z-[2]" id="emblaWorkflow" aria-label="Proceso de trabajo" role="region">
-    <ol class="flex" id="emblaWfContainer">
+  <!-- Embla: overlays are siblings of the viewport, not children -->
+  <div class="relative z-[2]">
+    <div class="overflow-hidden" id="emblaWorkflow" aria-label="Proceso de trabajo" role="region">
+      <ol class="flex" id="emblaWfContainer">
 
       {[
         {
@@ -95,7 +96,11 @@
         </li>
       ))}
 
-    </ol>
+      </ol>
+    </div>
+    <!-- Side fade overlays — outside the Embla viewport so Embla's container detection is not affected -->
+    <div class="pointer-events-none absolute inset-y-0 left-0 w-[10%] sm:w-[14%] bg-gradient-to-r from-black to-transparent z-10" aria-hidden="true" />
+    <div class="pointer-events-none absolute inset-y-0 right-0 w-[10%] sm:w-[14%] bg-gradient-to-l from-black to-transparent z-10" aria-hidden="true" />
   </div>
 
   <!-- Controls -->
@@ -186,17 +191,17 @@
   }, [autoplay]);
 
   // ── Scale tween ──────────────────────────────────────────────
+  // Uses getBoundingClientRect so loop-cloned slides are also tweened correctly
+  // (scrollProgress() jumps at the loop seam, causing a visual flash)
   function applyTweens() {
-    const snaps    = embla.scrollSnapList();
-    const progress = embla.scrollProgress();
-    embla.slideNodes().forEach((slide, i) => {
-      if (i >= snaps.length) return;
-      let dist = snaps[i] - progress;
-      if (dist >  0.5) dist -= 1;
-      if (dist < -0.5) dist += 1;
-      const abs     = Math.abs(dist);
-      const scale   = Math.max(1 - abs * 0.40, 0.88);
-      const opacity = Math.max(1 - abs * 1.20, 0.45);
+    const vpRect   = viewport.getBoundingClientRect();
+    const vpCenter = vpRect.left + vpRect.width / 2;
+    embla.slideNodes().forEach((slide) => {
+      const r          = slide.getBoundingClientRect();
+      const dist       = (r.left + r.width / 2 - vpCenter) / vpRect.width;
+      const abs        = Math.abs(dist);
+      const scale      = Math.max(1 - abs * 0.40, 0.88);
+      const opacity    = Math.max(1 - abs * 1.20, 0.45);
       slide.style.transform = `scale(${scale})`;
       slide.style.opacity   = String(opacity);
     });
