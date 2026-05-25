@@ -351,7 +351,7 @@ const projects: Project[] = [
     position: relative;
     height: 488px;
     overflow: hidden;
-    touch-action: pan-x;
+    touch-action: none; /* let JS own all touch axes — prevents iOS from stealing vertical scroll */
     -webkit-mask-image: linear-gradient(
       to bottom,
       transparent  0%,
@@ -380,7 +380,7 @@ const projects: Project[] = [
     right: 6px;
     height: 240px;
     top: calc(50% - 120px);   /* vertically centered in 488px container */
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     outline: none;
@@ -640,18 +640,16 @@ const projects: Project[] = [
         const opacity = abs <= 1
           ? 1 - tc * 0.55                                        // 1.0 → 0.45
           : Math.max(0, 0.45 - (abs - 1) * 0.45);               // 0.45 → 0
-        const blur    = tc * 2.5;                                 // 0 → 2.5px
         const zIdx    = Math.max(0, 10 - Math.round(abs));
 
         slide.style.transform = `translateY(${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`;
         slide.style.opacity   = Math.max(0, opacity).toFixed(4);
-        slide.style.filter    = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
         slide.style.zIndex    = String(zIdx);
       });
     }
 
     // ── State ────────────────────────────────────────────
-    const TRANSITION = 'transform 0.52s cubic-bezier(0.25,1,0.5,1), opacity 0.4s ease, filter 0.4s ease';
+    const TRANSITION = 'transform 0.52s cubic-bezier(0.25,1,0.5,1), opacity 0.4s ease';
 
     function markActive(): void {
       slides.forEach((s, i) => {
@@ -712,10 +710,11 @@ const projects: Project[] = [
     }, { passive: true });
 
     carousel.addEventListener('touchmove', (e: TouchEvent) => {
+      e.preventDefault(); // prevent iOS Safari from scrolling the page during carousel drag
       touchCurrY = e.touches[0].clientY;
       isDragging = true;
       applyTransforms(touchCurrY - touchStartY);
-    }, { passive: true });
+    }, { passive: false });
 
     carousel.addEventListener('touchend', () => {
       const delta = touchCurrY - touchStartY;
