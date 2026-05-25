@@ -1,230 +1,223 @@
 ---
-// Workflow.astro — 4-step process: Embla scale carousel with tween
+const steps = [
+  {
+    num: "01",
+    icon: "ph-handshake",
+    titleKey: "wf.s1.title",
+    title: "Discovery Call",
+    descKey: "wf.s1.desc",
+    desc: "Definimos ideas, objetivos y alcance del proyecto en una reunión inicial sin compromisos.",
+  },
+  {
+    num: "02",
+    icon: "ph-figma-logo",
+    titleKey: "wf.s2.title",
+    title: "Diseño & Prototipo",
+    descKey: "wf.s2.desc",
+    desc: "Mockups en Figma y esquema de colores aprobado por el cliente antes de escribir una sola línea de código.",
+  },
+  {
+    num: "03",
+    icon: "ph-code",
+    titleKey: "wf.s3.title",
+    title: "Desarrollo",
+    descKey: "wf.s3.desc",
+    desc: "Desarrollo ágil con control de versiones en Git y reuniones de avance periódicas para garantizar alineación constante.",
+  },
+  {
+    num: "04",
+    icon: "ph-rocket-launch",
+    titleKey: "wf.s4.title",
+    title: "Lanzamiento & Soporte",
+    descKey: "wf.s4.desc",
+    desc: "Deploy, QA, SEO técnico, analítica y soporte continuo para mantener el producto en su mejor rendimiento.",
+  },
+];
 ---
 
-<section id="workflow" class="py-20 lg:py-[120px] bg-black" aria-labelledby="wf-heading">
+<section
+  id="workflow"
+  class="py-20 lg:py-[120px] bg-black"
+  aria-labelledby="wf-heading"
+>
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
-    <p class="section-label" data-i18n="wf.label">07 — Proceso</p>
-    <h2 id="wf-heading" class="section-title reveal" data-i18n-html="wf.title">
-      Cómo <em>Trabajo</em>
-    </h2>
-  </div>
+    <!-- Meta bar -->
+    <div
+      class="flex items-center justify-between border-b border-border pb-4 mb-12 lg:mb-16"
+    >
+      <p class="section-label !mb-0">
+        <span data-i18n="wf.label">07 — Proceso</span>
+        <span class="jp-tag">プロセス</span>
+      </p>
+      <span
+        class="text-[9px] tracking-[0.22em] uppercase hidden md:block"
+        style="color:rgba(255,255,255,0.18);">WORK PROCESS</span
+      >
+    </div>
 
-  <!-- Embla: overlays are siblings of the viewport, not children -->
-  <div class="relative z-[2]">
-    <div class="overflow-hidden" id="emblaWorkflow" aria-label="Proceso de trabajo" role="region" style="touch-action: pan-y;">
-      <ol class="flex" id="emblaWfContainer">
-
-      {[
-        {
-          num: '01',
-          icon: 'ph-handshake',
-          color: 'from-lime/[0.07] to-transparent',
-          titleKey: 'wf.s1.title', title: 'Discovery Call',
-          descKey: 'wf.s1.desc',  desc:  'Definimos ideas, objetivos y alcance del proyecto en una reunión inicial.',
-        },
-        {
-          num: '02',
-          icon: 'ph-figma-logo',
-          color: 'from-sky-400/[0.07] to-transparent',
-          titleKey: 'wf.s2.title', title: 'Diseño & Prototipo',
-          descKey: 'wf.s2.desc',  desc:  'Mockups en Figma y esquema de colores aprobado por el cliente antes de empezar.',
-        },
-        {
-          num: '03',
-          icon: 'ph-code',
-          color: 'from-violet-400/[0.07] to-transparent',
-          titleKey: 'wf.s3.title', title: 'Desarrollo',
-          descKey: 'wf.s3.desc',  desc:  'Desarrollo ágil con control de versiones en Git y reuniones de avance periódicas.',
-        },
-        {
-          num: '04',
-          icon: 'ph-rocket-launch',
-          color: 'from-orange-400/[0.07] to-transparent',
-          titleKey: 'wf.s4.title', title: 'Lanzamiento & Soporte',
-          descKey: 'wf.s4.desc',  desc:  'Deploy, QA, SEO técnico, analítica y soporte continuo para óptimo rendimiento.',
-        },
-      ].map((step) => (
-        <li
-          class="wf-slide flex-[0_0_85%] sm:flex-[0_0_62%] lg:flex-[0_0_40%] xl:flex-[0_0_34%] min-w-0 pl-4 lg:pl-5 will-change-transform"
-          style="transform-origin: center center;"
+    <!-- Two-column layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-12 lg:gap-[80px]">
+      <!-- Left: display text -->
+      <div class="reveal-left">
+        <h2
+          id="wf-heading"
+          class="section-title-anim font-display font-bold tracking-tightest leading-none text-white mb-4"
+          style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
         >
-          <article
-            class={`relative z-[2] flex flex-col min-h-[380px] lg:min-h-[440px] rounded-[20px]
-                    bg-surface border border-border overflow-hidden
-                    bg-gradient-to-br ${step.color}
-                    transition-[border-color,box-shadow] duration-300`}
-          >
-            <!-- Huge background step number -->
-            <span
-              class="pointer-events-none select-none absolute -right-4 -top-3 font-syne font-extrabold text-[130px] lg:text-[160px] leading-none text-white/[0.025]"
-              aria-hidden="true"
-            >
-              {step.num}
-            </span>
+          Cómo <br />Trabajo
+        </h2>
+        <p
+          class="text-[13px] leading-[1.85] text-text/55 mb-10 lg:mb-12"
+          data-i18n="wf.desc"
+        >
+          Cuatro etapas claras — desde la primera llamada hasta el soporte
+          post-lanzamiento — con comunicación abierta y entregas a tiempo.
+        </p>
 
-            <!-- Top: badge + icon -->
-            <div class="flex items-start justify-between p-7 pb-0">
-              <span class="font-mono text-[10px] tracking-[0.22em] text-lime uppercase border border-lime/20 rounded-[4px] px-[10px] py-[5px]">
-                Paso {step.num}
-              </span>
-              <div class="w-[46px] h-[46px] rounded-[12px] bg-lime-dim border border-lime/[0.18] flex items-center justify-center">
-                <i class={`ph ph-bold ${step.icon} text-[20px] text-lime`} aria-hidden="true" />
+        <!-- Step icons -->
+      </div>
+
+      <!-- Right: accordion -->
+      <div class="reveal-right" id="wf-accordion">
+        {
+          steps.map((step, i) => (
+            <div class="wf-item border-t border-border">
+              <button
+                class="wf-trigger w-full flex items-center gap-5 lg:gap-6 py-[22px] lg:py-[26px] text-left group cursor-none"
+                data-idx={String(i)}
+                aria-expanded="false"
+                aria-controls={`wf-panel-${i}`}
+              >
+                <span
+                  class="text-[10px] tracking-[0.22em] font-syne flex-shrink-0"
+                  style="color:rgba(255,255,255,0.25);width:28px;"
+                >
+                  {step.num}
+                </span>
+                <span
+                  class="flex-1 font-syne text-[16px] lg:text-[19px] font-bold text-white group-hover:text-lime transition-colors duration-200"
+                  data-i18n={step.titleKey}
+                >
+                  {step.title}
+                </span>
+                <i
+                  class="wf-icon ph ph-plus text-[15px] text-muted/50 group-hover:text-lime flex-shrink-0 transition-[transform,color] duration-300"
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                class="wf-panel overflow-hidden"
+                id={`wf-panel-${i}`}
+                style="height:0;transition:height 0.38s cubic-bezier(0.23,1,0.32,1);"
+                role="region"
+                aria-labelledby={`wf-trigger-${i}`}
+              >
+                <p
+                  class="text-[13px] leading-[1.85] text-text/55 pb-6 lg:pb-8 pl-[48px] lg:pl-[52px]"
+                  data-i18n={step.descKey}
+                >
+                  {step.desc}
+                </p>
               </div>
             </div>
-
-            <!-- Body -->
-            <div class="flex flex-col flex-1 px-7 pt-8 pb-7 gap-4">
-              <h3
-                class="font-syne text-[22px] lg:text-[26px] font-extrabold text-white leading-[1.15] tracking-[-0.01em]"
-                data-i18n={step.titleKey}
-              >
-                {step.title}
-              </h3>
-
-              <p
-                class="text-[13px] leading-[1.8] text-text/55 flex-1"
-                data-i18n={step.descKey}
-              >
-                {step.desc}
-              </p>
-
-              <!-- Bottom lime accent bar -->
-              <div class="h-px w-full bg-gradient-to-r from-lime/40 via-lime/10 to-transparent mt-auto" aria-hidden="true" />
-            </div>
-          </article>
-        </li>
-      ))}
-
-      </ol>
-    </div>
-    <!-- Side fade overlays — outside the Embla viewport so Embla's container detection is not affected -->
-    <div class="pointer-events-none absolute inset-y-0 left-0 w-[10%] sm:w-[14%] bg-gradient-to-r from-black to-transparent z-10" aria-hidden="true" />
-    <div class="pointer-events-none absolute inset-y-0 right-0 w-[10%] sm:w-[14%] bg-gradient-to-l from-black to-transparent z-10" aria-hidden="true" />
-  </div>
-
-  <!-- Controls -->
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px] mt-8 flex items-center justify-between">
-    <!-- Dots -->
-    <div class="flex gap-2" id="wfDots" aria-label="Navegación de pasos" role="tablist">
-      {[0,1,2,3].map((i) => (
-        <button
-          class="wf-dot w-2 h-2 rounded-full border border-border bg-transparent transition-all duration-300"
-          data-index={i}
-          aria-label={`Paso ${i+1}`}
-          role="tab"
-        />
-      ))}
-    </div>
-    <!-- Arrows -->
-    <div class="flex gap-2">
-      <button
-        id="wfPrev"
-        aria-label="Paso anterior"
-        class="w-10 h-10 border border-border rounded-full bg-transparent text-text text-[16px] flex items-center justify-center cursor-none transition-all duration-300 hover:border-lime hover:text-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] disabled:opacity-25 disabled:pointer-events-none"
-      >
-        <i class="ph ph-arrow-left" aria-hidden="true" />
-      </button>
-      <button
-        id="wfNext"
-        aria-label="Siguiente paso"
-        class="w-10 h-10 border border-border rounded-full bg-transparent text-text text-[16px] flex items-center justify-center cursor-none transition-all duration-300 hover:border-lime hover:text-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] disabled:opacity-25 disabled:pointer-events-none"
-      >
-        <i class="ph ph-arrow-right" aria-hidden="true" />
-      </button>
+          ))
+        }
+        <div class="border-t border-border" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
-
 </section>
 
 <style>
   .section-label {
-    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+    @apply text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
   }
   .section-label::after {
-    content: '';
+    content: "";
     @apply block w-[40px] h-px bg-lime;
   }
-  .section-title {
-    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
-    font-size: clamp(30px, 5vw, 50px);
-  }
-  .section-title em { @apply text-lime not-italic; }
 
-  .reveal {
-    @apply opacity-0 translate-y-[30px] transition-[opacity,transform] duration-[700ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal.visible { @apply opacity-100 translate-y-0; }
-
-  /* Slide tween — JS overrides inline */
-  .wf-slide {
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                opacity  0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  #wf-heading em {
+    @apply text-lime not-italic;
   }
 
-  /* Active dot */
-  .wf-dot.active {
-    @apply bg-lime border-lime w-5;
+  .reveal-left {
+    @apply opacity-0 -translate-x-[50px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal-left.visible {
+    @apply opacity-100 translate-x-0;
+  }
+
+  .reveal-right {
+    @apply opacity-0 translate-x-[50px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+  }
+  .reveal-right.visible {
+    @apply opacity-100 translate-x-0;
+  }
+
+  /* Trigger hover: lime glow on icon */
+  .wf-trigger[aria-expanded="true"] .wf-icon {
+    transform: rotate(45deg);
+    color: #b4df00;
+  }
+  .wf-trigger[aria-expanded="true"] > span:nth-child(2) {
+    color: #b4df00;
   }
 </style>
 
 <script>
-  import EmblaCarousel from 'embla-carousel';
-  import Autoplay from 'embla-carousel-autoplay';
+  // ── Reveal on scroll ──────────────────────────────────────
+  const revealEls = document.querySelectorAll<HTMLElement>(
+    "#workflow .reveal-left, #workflow .reveal-right",
+  );
+  const revealIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          revealIO.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.15 },
+  );
+  revealEls.forEach((el) => revealIO.observe(el));
 
-  const viewport = document.getElementById('emblaWorkflow')!;
-  const dots     = Array.from(document.querySelectorAll<HTMLElement>('.wf-dot'));
-  const prevBtn  = document.getElementById('wfPrev') as HTMLButtonElement;
-  const nextBtn  = document.getElementById('wfNext') as HTMLButtonElement;
+  // ── Accordion ────────────────────────────────────────────
+  const triggers = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".wf-trigger"),
+  );
 
-  // Cache vpRect — only the slides move inside the viewport, not the viewport itself
-  let vpRect = viewport.getBoundingClientRect();
-  window.addEventListener('resize', () => { vpRect = viewport.getBoundingClientRect(); }, { passive: true });
+  let openIdx = -1;
 
-  const autoplay = Autoplay({
-    delay: 3600,
-    stopOnInteraction: false,   // resume after drag
-    stopOnMouseEnter: true,     // pause on hover
-    playOnInit: true,
-  });
+  function closePanelAt(idx: number) {
+    const t = triggers[idx];
+    if (!t) return;
+    const panel = document.getElementById(`wf-panel-${idx}`) as HTMLElement;
+    t.setAttribute("aria-expanded", "false");
+    panel.style.height = "0";
+  }
 
-  const embla = EmblaCarousel(viewport, {
-    loop: true,
-    align: 'center',
-    dragFree: false,
-  }, [autoplay]);
+  function openPanelAt(idx: number) {
+    const t = triggers[idx];
+    if (!t) return;
+    const panel = document.getElementById(`wf-panel-${idx}`) as HTMLElement;
+    t.setAttribute("aria-expanded", "true");
+    panel.style.height = panel.scrollHeight + "px";
+  }
 
-  // ── Scale tween ──────────────────────────────────────────────
-  // Uses getBoundingClientRect so loop-cloned slides are also tweened correctly
-  // (scrollProgress() jumps at the loop seam, causing a visual flash)
-  function applyTweens() {
-    const vpCenter = vpRect.left + vpRect.width / 2;
-    embla.slideNodes().forEach((slide) => {
-      const r          = slide.getBoundingClientRect();
-      const dist       = (r.left + r.width / 2 - vpCenter) / vpRect.width;
-      const abs        = Math.abs(dist);
-      const scale      = Math.max(1 - abs * 0.40, 0.88);
-      const opacity    = Math.max(1 - abs * 1.20, 0.45);
-      slide.style.transform = `scale(${scale})`;
-      slide.style.opacity   = String(opacity);
+  triggers.forEach((trigger, i) => {
+    trigger.addEventListener("click", () => {
+      const isOpen = openIdx === i;
+
+      if (openIdx !== -1) closePanelAt(openIdx);
+
+      if (isOpen) {
+        openIdx = -1;
+      } else {
+        openPanelAt(i);
+        openIdx = i;
+      }
     });
-  }
-
-  // ── Dots + buttons ───────────────────────────────────────────
-  function syncUI() {
-    const idx = embla.selectedScrollSnap();
-    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-  }
-
-  embla.on('scroll', applyTweens);
-  embla.on('reInit', applyTweens);
-  embla.on('reInit', syncUI);
-  embla.on('select', syncUI);
-
-  prevBtn.addEventListener('click', () => { autoplay.reset(); embla.scrollPrev(); });
-  nextBtn.addEventListener('click', () => { autoplay.reset(); embla.scrollNext(); });
-  dots.forEach((dot, i) => dot.addEventListener('click', () => { autoplay.reset(); embla.scrollTo(i); }));
-
-  applyTweens();
-  syncUI();
+  });
 </script>

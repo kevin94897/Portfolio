@@ -9,13 +9,17 @@
   aria-labelledby="contact-heading"
 >
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
-    <p class="section-label" data-i18n="contact.label">09 — Contacto</p>
+    <p class="section-label">
+      <span data-i18n="contact.label">09 — Contacto</span><span class="jp-tag"
+        >お問い合わせ</span
+      >
+    </p>
     <h2
       id="contact-heading"
-      class="section-title"
-      data-i18n-html="contact.title"
+      class="section-title-anim font-display font-bold tracking-tightest leading-none text-white mb-12"
+      style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
     >
-      Hablemos <em>Hoy</em>
+      Hablemos Hoy
     </h2>
 
     <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 lg:gap-[80px]">
@@ -92,7 +96,7 @@
           <a
             href="/files/KevinGomezLazaroCV_2026.pdf"
             download
-            class="flex items-center gap-[9px] px-4 py-[11px] rounded-[6px] no-underline font-mono text-[11px] tracking-[0.08em] cursor-none mb-2 transition-all duration-300 bg-lime text-black font-medium hover:shadow-[0_0_24px_rgba(180,223,0,0.4)] hover:-translate-y-px"
+            class="flex items-center gap-[9px] px-4 py-[11px] rounded-[6px] no-underline text-[11px] tracking-[0.08em] cursor-none mb-2 transition-all duration-300 bg-lime text-black font-medium hover:shadow-[0_0_24px_rgba(180,223,0,0.4)] hover:-translate-y-px"
           >
             <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
             <span data-i18n="contact.dlcv">Curriculum Vitae 2026 (PDF)</span>
@@ -100,7 +104,7 @@
           <a
             href="/files/Carta_Presentacion_KevinGomez.pdf"
             download
-            class="flex w-full items-center gap-[9px] px-4 py-[11px] rounded-[6px] no-underline font-mono text-[11px] tracking-[0.08em] cursor-none mb-2 transition-all duration-300 border border-border text-muted hover:border-lime/30 hover:text-lime"
+            class="flex w-full items-center gap-[9px] px-4 py-[11px] rounded-[6px] no-underline text-[11px] tracking-[0.08em] cursor-none mb-2 transition-all duration-300 border border-border text-muted hover:border-lime/30 hover:text-lime"
           >
             <i class="ph ph-file-text" aria-hidden="true"></i>
             <span data-i18n="contact.dlcover">Carta de Presentación (PDF)</span>
@@ -108,7 +112,7 @@
           <a
             href="/files/Carta_Recomendacion_Burns_KevinGomez.pdf"
             download
-            class="flex w-full items-center gap-[9px] px-4 py-[11px] rounded-[6px] no-underline font-mono text-[11px] tracking-[0.08em] cursor-none transition-all duration-300 border border-border text-muted hover:border-lime/30 hover:text-lime"
+            class="flex w-full items-center gap-[9px] px-4 py-[11px] rounded-[6px] no-underline text-[11px] tracking-[0.08em] cursor-none transition-all duration-300 border border-border text-muted hover:border-lime/30 hover:text-lime"
           >
             <i class="ph ph-medal" aria-hidden="true"></i>
             <span data-i18n="contact.dlrecom"
@@ -127,7 +131,7 @@
           id="formToast"
           role="alert"
           aria-live="polite"
-          class="hidden mb-5 flex items-center gap-3 px-4 py-3 rounded-[10px] border text-[13px] font-mono"
+          class="hidden mb-5 flex items-center gap-3 px-4 py-3 rounded-[10px] border text-[13px]"
         >
           <i id="formToastIcon" class="ph text-[18px]" aria-hidden="true"></i>
           <span id="formToastMsg"></span>
@@ -160,7 +164,7 @@
             <div class="field-group mb-[14px] sm:mb-[18px]">
               <label
                 for="fname"
-                class="block font-mono text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
+                class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
                 data-i18n="form.name">Nombre</label
               >
               <input
@@ -178,7 +182,7 @@
             <div class="field-group mb-[14px] sm:mb-[18px]">
               <label
                 for="lname"
-                class="block font-mono text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
+                class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
                 data-i18n="form.lastname">Apellido</label
               >
               <input
@@ -198,7 +202,7 @@
           <div class="field-group mb-[14px] sm:mb-[18px]">
             <label
               for="email"
-              class="block font-mono text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
+              class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
               >Email</label
             >
             <input
@@ -216,7 +220,7 @@
           <div class="field-group mb-[14px] sm:mb-[18px]">
             <label
               for="subject"
-              class="block font-mono text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
+              class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
               data-i18n="form.subject">Asunto</label
             >
             <input
@@ -234,7 +238,7 @@
           <div class="field-group mb-[14px] sm:mb-[18px]">
             <label
               for="message"
-              class="block font-mono text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
+              class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
               data-i18n="form.message">Mensaje</label
             >
             <textarea
@@ -255,7 +259,7 @@
           <button
             id="submitBtn"
             type="submit"
-            class="w-full flex items-center justify-center gap-[9px] py-[13px] sm:py-[15px] bg-lime text-black border-none rounded-[8px] font-mono text-[11px] font-medium tracking-[0.1em] uppercase cursor-none transition-all duration-300 hover:shadow-[0_0_36px_rgba(180,223,0,0.4)] hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none"
+            class="w-full flex items-center justify-center gap-[9px] py-[13px] sm:py-[15px] bg-lime text-black border-none rounded-[8px] text-[11px] font-medium tracking-[0.1em] uppercase cursor-none transition-all duration-300 hover:shadow-[0_0_36px_rgba(180,223,0,0.4)] hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none"
           >
             <i id="submitIcon" class="ph ph-paper-plane-tilt" aria-hidden="true"
             ></i>
@@ -276,7 +280,7 @@
 
 <style>
   .section-label {
-    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
+    @apply text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
   }
   .section-label::after {
     content: "";
@@ -314,7 +318,7 @@
   }
   .field-error {
     display: block;
-    font-family: "DM Mono", monospace;
+    font-family: "Inter", sans-serif;
     font-size: 10px;
     color: rgba(255, 90, 90, 0.9);
     letter-spacing: 0.05em;

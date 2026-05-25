@@ -1,0 +1,22 @@
+---
+const { items, speed = "30s", reverse = false } = Astro.props;
+---
+
+<div class="overflow-hidden border-y border-border py-5 bg-lime">
+  <div
+    class="marquee-track flex gap-14 items-center"
+    style={`animation-duration: ${speed}; ${reverse ? "animation-direction: reverse;" : ""}`}
+  >
+    {
+      [...items, ...items].map((item: string) => (
+        <span
+          class="font-display text-2xl md:text-4xl font-semibold tracking-tightest text-black whitespace-nowrap"
+          style="font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
+        >
+          {item}
+          <span class="text-black/25 mx-6">/</span>
+        </span>
+      ))
+    }
+  </div>
+</div>

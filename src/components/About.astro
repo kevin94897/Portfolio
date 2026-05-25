@@ -1,235 +1,209 @@
 ---
-// About.astro — Profile section: photo, bio, stats, tech stack
-import fotoKevin from '../assets/images/foto_kevin.jpeg';
+import fotoKevin from "../assets/images/foto_kevin.jpeg";
+import portrait from "../assets/images/foto_portrait_kevin.jpeg";
 ---
 
+<!-- Floating portrait — follows cursor inside About section --><!-- <div id="about-floating-img" aria-hidden="true">
+  <img src={portrait.src} alt="" />
+</div> -->
 <section
   id="about"
-  class="py-20 lg:py-[120px] bg-black"
+  class="px-6 md:px-10 py-24 border-b border-border bg-black"
   aria-labelledby="about-heading"
 >
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
-    <p class="section-label" data-i18n="about.label">01 — Perfil</p>
-    <h2 id="about-heading" class="section-title" data-i18n-html="about.title">
-      Sobre <em>Mí</em>
-    </h2>
-
-    <!-- 1-col mobile → 2-col desktop -->
-    <div
-      class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-12 lg:gap-[80px] items-start"
-    >
-      <!-- Photo column -->
+  <div class="max-w-[1400px] mx-auto">
+    <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Left: portrait image -->
       <div
-        class="reveal-left relative flex items-center justify-center min-h-[300px] lg:min-h-[390px] mb-4 lg:mb-0"
+        class="reveal-left relative aspect-[3/4] max-w-sm w-full overflow-hidden group"
       >
         <div
-          class="absolute w-[280px] h-[280px] lg:w-[370px] lg:h-[370px] rounded-full border border-lime/[0.08] [animation:ringPulse_3s_ease-in-out_infinite_0.6s]"
-          aria-hidden="true"
+          class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"
         >
         </div>
-        <div
-          class="absolute w-[250px] h-[250px] lg:w-[330px] lg:h-[330px] rounded-full border border-lime/25 [animation:ringPulse_3s_ease-in-out_infinite]"
-          aria-hidden="true"
-        >
-        </div>
-
-        <div
-          class="w-[220px] h-[220px] lg:w-[290px] lg:h-[290px] rounded-full bg-surface2 border-2 border-lime/35
-                 shadow-[0_0_60px_rgba(180,223,0,0.12)] overflow-hidden
-                 transition-[transform,box-shadow] duration-400
-                 hover:scale-[1.04] hover:shadow-[0_0_80px_rgba(180,223,0,0.22)]"
-          role="img"
-          aria-label="Avatar de Kevin Gómez Lázaro"
-        >
-          <img
-            src={fotoKevin.src}
-            alt="Logo KG"
-            class="object-cover w-full h-full"
-          />
-        </div>
-
-        <div
-          class="absolute bottom-[10px] flex gap-2 flex-wrap justify-center"
-          aria-hidden="true"
-        >
+        <img
+          src={portrait.src}
+          alt="Kevin Gómez Lázaro — Full Stack Developer"
+          class="w-full h-full object-cover object-top grayscale transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+        />
+        <div class="absolute bottom-5 left-5 z-20">
           <span
-            class="bg-surface2 border border-lime/20 rounded-[30px] px-[13px] py-[5px] font-mono text-[10px] text-lime tracking-[0.08em] backdrop-blur-[10px]"
-            >Lima, Perú</span
+            class="text-[10px] tracking-widest uppercase text-muted/80 bg-black/80 px-2 py-1"
           >
-          <span
-            class="bg-surface2 border border-lime/20 rounded-[30px] px-[13px] py-[5px] font-mono text-[10px] text-lime tracking-[0.08em] backdrop-blur-[10px]"
-            data-i18n="about.freelance">Freelance ✓</span
-          >
+            Full Stack Developer
+          </span>
         </div>
       </div>
 
-      <!-- Content column -->
+      <!-- Right: content -->
       <div class="reveal-right">
+        <!-- Section label -->
+        <div class="flex items-center gap-3 mb-8">
+          <span
+            class="text-[10px] tracking-widest uppercase text-muted"
+            data-i18n="about.label">01 — Perfil</span
+          >
+          <span class="text-[10px] text-muted/40 tracking-[0.06em]">プロフィール</span>
+        </div>
+
+        <!-- Big display headline -->
+        <h2
+          id="about-heading"
+          class="section-title-anim font-display font-bold leading-[0.88] tracking-tightest text-white mb-8"
+          style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
+          data-i18n-html="about.title"
+        >
+          Sobre <em class="text-lime not-italic">Mí</em>
+        </h2>
+
+        <!-- Bio -->
         <p
-          class="text-[14px] md:text-[15px] leading-[1.85] text-text/65 mb-7"
+          class="text-muted text-[14px] leading-relaxed mb-5 max-w-md"
           data-i18n-html="about.bio1"
         >
           Desarrollador Full Stack con trayectoria en proyectos para
           <strong class="text-white"
             >telecomunicaciones, e-commerce y soluciones digitales a medida</strong
           >. He colaborado con Entel (via SrBurns), NERD, Well-Done Media y One
-          Blush, construyendo desde landing pages de alto rendimiento hasta
-          sistemas distribuidos con NestJS, Next.js y WordPress Headless.
+          Blush.
         </p>
         <p
-          class="text-[14px] md:text-[15px] leading-[1.85] text-text/65 mb-7 -mt-3"
+          class="text-muted text-[14px] leading-relaxed mb-10 max-w-md"
           data-i18n-html="about.bio2"
         >
           Me destaco por mi responsabilidad, adaptación y compromiso con la
-          entrega de productos eficientes y seguros. Trabajo en equipos ágiles
-          con
-          <strong class="text-white">Scrum, Git, Jira y ClickUp</strong>.
-          Certificado SFPC con 95 puntos.
+          entrega de productos eficientes y seguros. Certificado SFPC con 95
+          puntos.
         </p>
-
-        <!-- Stats -->
-        <div
-          class="grid grid-cols-3 gap-px bg-border border border-border rounded-[12px] overflow-hidden mb-9"
-          role="list"
-          aria-label="Estadísticas profesionales"
-        >
-          <div class="bg-surface p-4 md:p-[22px] text-center" role="listitem">
-            <div
-              class="font-syne text-[28px] md:text-[32px] font-extrabold text-lime leading-none mb-1"
-            >
-              8+
-            </div>
-            <div
-              class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] text-muted uppercase"
-              data-i18n="about.stat1"
-            >
-              Años Exp.
-            </div>
-          </div>
-          <div class="bg-surface p-4 md:p-[22px] text-center" role="listitem">
-            <div
-              class="font-syne text-[28px] md:text-[32px] font-extrabold text-lime leading-none mb-1"
-            >
-              20+
-            </div>
-            <div
-              class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] text-muted uppercase"
-              data-i18n="about.stat2"
-            >
-              Proyectos
-            </div>
-          </div>
-          <div class="bg-surface p-4 md:p-[22px] text-center" role="listitem">
-            <div
-              class="font-syne text-[28px] md:text-[32px] font-extrabold text-lime leading-none mb-1"
-            >
-              95
-            </div>
-            <div
-              class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] text-muted uppercase"
-            >
-              SFPC Score
-            </div>
-          </div>
-        </div>
-
-        <!-- Tech Stack -->
-        <p
-          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-[14px]"
-          data-i18n="about.stack"
-        >
-          Tech Stack Completo
-        </p>
-        <div
-          class="skills-grid flex flex-wrap gap-2 mb-7"
-          role="list"
-          aria-label="Tecnologías dominadas"
-        >
-          {
-            [
-              "Next.js",
-              "React / Vite",
-              "NestJS",
-              "Astro",
-              "Vue.js",
-              "Angular",
-              "Laravel",
-              "PHP / CodeIgniter",
-              "Node.js",
-              "Tailwind CSS",
-              "SCSS / Pug",
-              "WordPress Headless",
-              "Shopify",
-              "PrestaShop",
-              "WooCommerce",
-              "SQL / MySQL",
-              "REST APIs / JSON",
-              "Figma / Zeplin",
-              "Flutter",
-              "Git / Scrum / Jira",
-            ].map((tech) => (
-              <div
-                class="skill-pill flex items-center gap-[7px] px-[11px] py-[6px] bg-surface2 border border-border rounded-[6px] font-mono text-[10px] md:text-[11px] text-text
-                     transition-[border-color,box-shadow,transform] duration-200
-                     hover:border-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] hover:-translate-y-0.5
-                     opacity-0 translate-y-2"
-                role="listitem"
-              >
-                <div
-                  class="w-[5px] h-[5px] rounded-full bg-lime flex-shrink-0"
-                  aria-hidden="true"
-                />
-                {tech}
-              </div>
-            ))
-          }
-        </div>
 
         <!-- CTA buttons -->
-        <div class="flex gap-3 flex-wrap">
+        <div class="flex gap-3 flex-wrap mb-14">
           <a
             href="/files/KevinGomezLazaroCV_2026.pdf"
             download
-            class="inline-flex items-center gap-2 px-5 md:px-[26px] py-3 md:py-[13px] bg-lime text-black font-mono text-[10px] md:text-[11px] font-medium tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:shadow-[0_0_30px_rgba(180,223,0,0.4)] hover:-translate-y-0.5"
+            class="inline-flex items-center gap-2 bg-lime text-black px-6 py-3 text-[11px] font-medium tracking-[0.1em] uppercase no-underline transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5"
           >
             <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
             <span data-i18n="about.cv">Descargar CV 2026</span>
           </a>
           <a
             href="#contact"
-            class="inline-flex items-center gap-2 px-5 md:px-[26px] py-3 md:py-[13px] border border-border text-text bg-transparent font-mono text-[10px] md:text-[11px] tracking-[0.1em] uppercase no-underline rounded-[6px] transition-all duration-300 cursor-none hover:border-lime hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.12)]"
+            class="inline-flex items-center gap-2 border border-border text-text bg-transparent px-6 py-3 text-[11px] tracking-[0.1em] uppercase no-underline transition-all duration-300 hover:border-lime hover:text-lime"
           >
             <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
             <span data-i18n="about.contact">Contactar</span>
           </a>
         </div>
+
+        <!-- Stats row -->
+        <div class="grid grid-cols-3 gap-6 pt-8 border-t border-border">
+          <div>
+            <div
+              class="font-display font-bold text-4xl md:text-5xl text-lime tracking-tightest leading-none mb-1"
+              style="font-optical-sizing: auto;"
+            >
+              8+
+            </div>
+            <div
+              class="text-[10px] tracking-widest uppercase text-muted"
+              data-i18n="about.stat1"
+            >
+              Años Exp.
+            </div>
+          </div>
+          <div>
+            <div
+              class="font-display font-bold text-4xl md:text-5xl text-lime tracking-tightest leading-none mb-1"
+              style="font-optical-sizing: auto;"
+            >
+              20+
+            </div>
+            <div
+              class="text-[10px] tracking-widest uppercase text-muted"
+              data-i18n="about.stat2"
+            >
+              Proyectos
+            </div>
+          </div>
+          <div>
+            <div
+              class="font-display font-bold text-4xl md:text-5xl text-lime tracking-tightest leading-none mb-1"
+              style="font-optical-sizing: auto;"
+            >
+              95
+            </div>
+            <div class="text-[10px] tracking-widest uppercase text-muted">
+              SFPC Score
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech stack — full width below grid -->
+    <div class="mt-16 pt-10 border-t border-border">
+      <p
+        class="text-[10px] tracking-widest uppercase text-muted mb-6"
+        data-i18n="about.stack"
+      >
+        Tech Stack Completo
+      </p>
+      <div
+        class="skills-grid flex flex-wrap gap-2"
+        role="list"
+        aria-label="Tecnologías dominadas"
+      >
+        {
+          [
+            "Next.js",
+            "React / Vite",
+            "NestJS",
+            "Astro",
+            "Vue.js",
+            "Angular",
+            "Laravel",
+            "PHP / CodeIgniter",
+            "Node.js",
+            "Tailwind CSS",
+            "SCSS / Pug",
+            "WordPress Headless",
+            "Shopify",
+            "PrestaShop",
+            "WooCommerce",
+            "SQL / MySQL",
+            "REST APIs / JSON",
+            "Figma / Zeplin",
+            "Flutter",
+            "Git / Scrum / Jira",
+          ].map((tech) => (
+            <div
+              class="skill-pill flex items-center gap-[7px] px-[11px] py-[6px] bg-surface2 border border-border text-[10px] md:text-[11px] text-text
+                   transition-[border-color,box-shadow,transform] duration-200
+                   hover:border-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] hover:-translate-y-0.5
+                   opacity-0 translate-y-2"
+              role="listitem"
+            >
+              <div
+                class="w-[5px] h-[5px] rounded-full bg-lime flex-shrink-0"
+                aria-hidden="true"
+              />
+              {tech}
+            </div>
+          ))
+        }
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .section-label {
-    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
-  }
-  .section-label::after {
-    content: "";
-    @apply block w-[40px] h-px bg-lime;
-  }
-  .section-title {
-    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
-    font-size: clamp(30px, 5vw, 50px);
-  }
-  .section-title em {
-    @apply text-lime not-italic;
-  }
-
   .reveal-left {
     @apply opacity-0 -translate-x-[40px] md:-translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
   }
   .reveal-left.visible {
     @apply opacity-100 translate-x-0;
   }
+
   .reveal-right {
     @apply opacity-0 translate-x-[40px] md:translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
   }
@@ -240,16 +214,64 @@ import fotoKevin from '../assets/images/foto_kevin.jpeg';
   .skill-pill.visible {
     @apply opacity-100 translate-y-0;
   }
+</style>
 
-  @keyframes ringPulse {
-    0%,
-    100% {
-      transform: scale(1);
-      opacity: 0.4;
-    }
-    50% {
-      transform: scale(1.02);
-      opacity: 1;
-    }
+<style is:global>
+  #about-floating-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 210px;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+      scale 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    scale: 0.85;
+    will-change: transform;
+  }
+  #about-floating-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: grayscale(100%);
   }
 </style>
+
+<script>
+  const section = document.getElementById("about");
+  const floatEl = document.getElementById(
+    "about-floating-img",
+  ) as HTMLElement | null;
+  if (section && floatEl) {
+    let tx = 0,
+      ty = 0,
+      cx = 0,
+      cy = 0;
+
+    document.addEventListener("mousemove", (e) => {
+      tx = e.clientX - 80;
+      ty = e.clientY - 105;
+    });
+
+    (function loop() {
+      cx += (tx - cx) * 0.1;
+      cy += (ty - cy) * 0.1;
+      floatEl.style.transform = `translate(${cx}px, ${cy}px)`;
+      requestAnimationFrame(loop);
+    })();
+
+    section.addEventListener("mouseenter", () => {
+      floatEl.style.opacity = "1";
+      floatEl.style.scale = "1";
+    });
+    section.addEventListener("mouseleave", () => {
+      floatEl.style.opacity = "0";
+      floatEl.style.scale = "0.85";
+    });
+  }
+</script>

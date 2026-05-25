@@ -18,6 +18,7 @@ import Workflow from "../components/Workflow.astro";
 import Pricing from "../components/Pricing.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
+import Marquee from "../components/Marquee.astro";
 ---
 
 <Layout>
@@ -26,7 +27,7 @@ import Footer from "../components/Footer.astro";
   <div id="cursor-ring" aria-hidden="true"></div>
 
   <!-- Circuit background (scroll-driven PCB animation) -->
-  <CircuitBackground />
+  <!-- <CircuitBackground /> -->
 
   <!-- Loading screen (first paint) -->
   <LoadingScreen />
@@ -42,6 +43,16 @@ import Footer from "../components/Footer.astro";
   <!-- Main content -->
   <main id="main-content">
     <Hero />
+    <Marquee
+      items={[
+        "Astro JS",
+        "React & Next.js",
+        "Node.js & NestJS",
+        "TypeScript",
+        "E-Commerce",
+        "IA",
+      ]}
+    />
     <About />
     <Services />
     <Experience />
@@ -80,7 +91,7 @@ import Footer from "../components/Footer.astro";
       "hero.role3": "E-Commerce & Soluciones Web",
       "hero.scroll": "Explorar",
       "about.label": "01 — Perfil",
-      "about.freelance": "Freelance ✓",
+      "about.freelance": "Freelance",
       "about.bio1":
         "Desarrollador Full Stack con trayectoria en proyectos para <strong style='color:var(--white)'>telecomunicaciones, e-commerce y soluciones digitales a medida</strong>. He colaborado con Entel (via SrBurns), NERD, Well-Done Media y One Blush, construyendo desde landing pages de alto rendimiento hasta sistemas distribuidos con NestJS, Next.js y WordPress Headless.",
       "about.bio2":
@@ -90,9 +101,9 @@ import Footer from "../components/Footer.astro";
       "about.stack": "Tech Stack Completo",
       "about.cv": "Descargar CV 2026",
       "about.contact": "Contactar",
-      "about.title": "Sobre <em>Mí</em>",
+      "about.title": "Sobre Mí",
       "services.label": "02 — Servicios",
-      "services.title": "Lo Que <em>Hago</em>",
+      "services.title": "Lo Que Hago",
       "services.s1.name": "Full Stack Dev",
       "services.s1.desc":
         "Aplicaciones web end-to-end con React, Next.js, NestJS, Laravel y Node.js. Diseño de APIs REST, autenticación y lógica de negocio.",
@@ -133,7 +144,7 @@ import Footer from "../components/Footer.astro";
       "ach.scrum.desc":
         "Certificación SFPC con 95 puntos. Trabajo activo en equipos ágiles con Git, Jira y ClickUp.",
       "proj.label": "04 — Portfolio",
-      "proj.title": "Proyectos <em>Reales</em>",
+      "proj.title": "Proyectos Reales",
       "p.colecciones.desc":
         "Arquitectura BaaS + Edge. React SPA con PostgreSQL vía Supabase, Cloudflare CDN (HTTP/3 + RUM) y Apache como servidor origen.",
       "p.kgstore.desc":
@@ -159,11 +170,11 @@ import Footer from "../components/Footer.astro";
       "p.view": "Ver proyecto",
       "p.demo": "Ver demo",
       "skills.label": "05 — Proficiency",
-      "skills.title": "Habilidades <em>Técnicas</em>",
+      "skills.title": "Habilidades Técnicas",
       "skills.dev": "Desarrollo",
       "skills.tools": "CMS, Marketing & Tools",
       "t.label": "06 — Testimonios",
-      "t.title": "Lo Que <em>Dicen</em>",
+      "t.title": "Lo Que Dicen",
       "t.t1.text":
         "Kevin es un profesional comprometido con su labor, siempre estuvo a la altura de los proyectos encomendados. Tiene un gran talento al diseño, UX y desarrollo web. Es una persona que recomendaría para proyectos en fábrica de software.",
       "t.t2.text":
@@ -173,7 +184,7 @@ import Footer from "../components/Footer.astro";
       "t.t4.text":
         "Trabajar con Kevin fue una gran experiencia. Su profundidad técnica combinada con sus habilidades de comunicación hicieron que cada entrega fuera fluida.",
       "wf.label": "07 — Proceso",
-      "wf.title": "Cómo <em>Trabajo</em>",
+      "wf.title": "Cómo Trabajo",
       "wf.s1.title": "Discovery Call",
       "wf.s1.desc":
         "Definimos ideas, objetivos y alcance del proyecto en una reunión inicial.",
@@ -209,7 +220,7 @@ import Footer from "../components/Footer.astro";
       "price.p3.f5": "SEO + asesoría",
       "price.p3.f6": "Entrega: 4 sem · Soporte: 5 sem",
       "contact.label": "09 — Contacto",
-      "contact.title": "Hablemos <em>Hoy</em>",
+      "contact.title": "Hablemos Hoy",
       "contact.desc":
         "¿Tienes un proyecto en mente? Estoy disponible para freelance, colaboraciones y nuevas oportunidades. Escríbeme.",
       "contact.docs": "Documentos",
@@ -780,7 +791,7 @@ import Footer from "../components/Footer.astro";
     function showToast(type: "success" | "error", msg: string) {
       if (!toast || !toastMsg || !toastIcon) return;
       clearTimeout(toastTimer);
-      toast.className = `mb-5 flex items-center gap-3 px-4 py-3 rounded-[10px] border text-[13px] font-mono toast-${type}`;
+      toast.className = `mb-5 flex items-center gap-3 px-4 py-3 rounded-[10px] border text-[13px] toast-${type}`;
       toastMsg.textContent = msg;
       toastIcon.className = `ph ${type === "success" ? "ph-check-circle" : "ph-warning"} text-[18px]`;
       if (type === "success") {

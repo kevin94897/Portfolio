@@ -1,318 +1,134 @@
 ---
-// Experience.astro — Timeline + Education + Achievements
+const jobs = [
+  {
+    year: '2025',
+    title: 'Full Stack Developer',
+    company: 'NERD — Lima, Perú',
+    i18n: 'exp.nerd',
+    desc: 'Backend NestJS + APIs REST. Frontend Next.js y React+Vite (Liwilu, Punto Azul). Integración con ERP, Zoho, Headless WordPress y PrestaShop.',
+    tags: ['Next.js', 'NestJS', 'React', 'Tailwind', 'Zoho'],
+  },
+  {
+    year: '2021 — 2025',
+    title: 'Full Stack Developer',
+    company: 'SrBurns — Miraflores, Lima',
+    i18n: 'exp.srburns',
+    desc: 'Desarrollo para Entel, Urbanova, Paseo Begonias y La Rambla. WordPress Headless + Astro + Tailwind. APIs REST, SEO técnico y Scrum.',
+    tags: ['Astro', 'WP Headless', 'Node.js', 'SCSS', 'Figma'],
+  },
+  {
+    year: '2020 — 2021',
+    title: 'Web Developer',
+    company: 'Well-Done Media — Puerto Rico',
+    i18n: 'exp.wellDone',
+    desc: 'WordPress, Shopify, PrestaShop con temas personalizados. React y Vue.js en arquitecturas modernas. GTM, Google Analytics y Zoho CRM.',
+    tags: ['React', 'Vue.js', 'Shopify', 'GTM', 'Zapier'],
+  },
+  {
+    year: '2020',
+    title: 'Full Stack Developer',
+    company: 'One Blush Salon — Miraflores',
+    i18n: 'exp.oneBlush',
+    desc: 'Laravel, CodeIgniter, Vue.js y jQuery. REST APIs con token-auth. Sistema de citas online, asistente virtual y módulos de ventas.',
+    tags: ['Laravel', 'CodeIgniter', 'Vue.js', 'REST API'],
+  },
+  {
+    year: '2019 — 2020',
+    title: 'Web Developer',
+    company: 'Softbrilliance — San Borja',
+    i18n: 'exp.soft',
+    desc: 'WordPress (SOAP), SEMRush, Screaming Frog, análisis On-Page, reportes SEO y vistas responsivas.',
+    tags: ['WordPress', 'SEO', 'Analytics'],
+  },
+  {
+    year: '2017 — 2018',
+    title: 'Freelancer',
+    company: 'Vex Soluciones — Lima',
+    i18n: 'exp.vex',
+    desc: 'WooCommerce, Shopify, WordPress. UX con evaluaciones heurísticas, prototipado y tests con usuarios.',
+    tags: ['WooCommerce', 'Shopify', 'UX'],
+  },
+];
 ---
 
 <section
   id="experience"
-  class="py-20 lg:py-[120px] bg-black"
+  class="px-6 md:px-10 py-24 border-b border-border bg-black"
   aria-labelledby="exp-heading"
 >
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
-    <p class="section-label" data-i18n="exp.label">03 — Carrera</p>
-    <h2 id="exp-heading" class="section-title" data-i18n-html="exp.title">
-      <em>Experiencia</em> &amp; Educación
+
+  <!-- Label -->
+  <div class="flex items-center gap-3 mb-4 max-w-[1400px] mx-auto">
+    <span class="text-[10px] tracking-widest uppercase text-muted" data-i18n="exp.label">03 — Carrera</span>
+    <span class="text-[10px] text-muted/40 tracking-[0.06em]">職歴</span>
+  </div>
+
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-12 max-w-[1400px] mx-auto">
+    <h2
+      id="exp-heading"
+      class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
+      style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
+    >
+      Experiencia
     </h2>
+  </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[80px]">
-      <!-- ── Work Timeline ── -->
-      <div class="reveal-left relative z-[2]">
-        <p
-          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-7"
-          data-i18n="exp.work"
-        >
-          Experiencia Laboral
-        </p>
-
-        <ol
-          class="relative pl-7 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-border"
-          aria-label="Historial de trabajo"
-        >
-          {
-            [
-              {
-                title: "Full Stack Developer",
-                year: "2025",
-                datetime: "2025",
-                company: "NERD — Lima, Perú",
-                i18n: "exp.nerd",
-                desc: "Backend NestJS + APIs REST. Frontend Next.js y React+Vite (Liwilu, Punto Azul). Integración con ERP, Zoho, Headless WordPress y PrestaShop. Lazy loading, code splitting y optimización de rendimiento.",
-                tags: [
-                  "Next.js",
-                  "NestJS",
-                  "React+Vite",
-                  "Tailwind",
-                  "Zoho",
-                  "Railway",
-                ],
-              },
-              {
-                title: "Full Stack Developer",
-                year: "2021 — 2025",
-                datetime: "2021/2025",
-                company: "SrBurns — Miraflores, Lima",
-                i18n: "exp.srburns",
-                desc: "Desarrollo para Entel, Urbanova, Paseo Begonias y La Rambla. WordPress Headless + Astro + Tailwind. APIs REST/JSON, SEO técnico, reportes de leads, Scrum con Jira y ClickUp.",
-                tags: [
-                  "Astro",
-                  "WP Headless",
-                  "Pug",
-                  "SCSS",
-                  "Node.js",
-                  "Figma",
-                ],
-              },
-              {
-                title: "Web Developer",
-                year: "2020 — 2021",
-                datetime: "2020/2021",
-                company: "Well-Done Media — Puerto Rico",
-                i18n: "exp.wellDone",
-                desc: "WordPress, Shopify, PrestaShop con temas personalizados. React y Vue.js en arquitecturas modernas. GTM, Google Analytics, Facebook Pixel, Zoho CRM y Zapier.",
-                tags: [
-                  "React",
-                  "Vue.js",
-                  "Tailwind",
-                  "Shopify",
-                  "GTM",
-                  "Zapier",
-                ],
-              },
-              {
-                title: "Full Stack Developer",
-                year: "2020",
-                datetime: "2020",
-                company: "One Blush Salon S.A.C. — Miraflores",
-                i18n: "exp.oneBlush",
-                desc: "Laravel, CodeIgniter, Vue.js y jQuery. REST APIs con token-auth. Sistema de citas online, asistente virtual y módulos de calendario, ventas y profesionales.",
-                tags: ["Laravel", "CodeIgniter", "Vue.js", "REST API"],
-              },
-              {
-                title: "Web Developer",
-                year: "2019 — 2020",
-                datetime: "2019/2020",
-                company: "Softbrilliance S.A.C. — San Borja",
-                i18n: "exp.soft",
-                desc: "WordPress (SOAP), SEMRush, Screaming Frog, análisis On-Page, reportes SEO y vistas responsivas.",
-                tags: ["WordPress", "SEO", "Analytics"],
-              },
-              {
-                title: "Freelancer",
-                year: "2017 — 2018",
-                datetime: "2017/2018",
-                company: "Vex Soluciones E.I.R.L. — Lima",
-                i18n: "exp.vex",
-                desc: "WooCommerce, Shopify, WordPress. UX con evaluaciones heurísticas, prototipado y tests con usuarios.",
-                tags: ["WooCommerce", "Shopify", "UX"],
-              },
-            ].map((job) => (
-              <li class={`tl-item relative pb-9 last:pb-0 group`}>
-                <span
-                  class="absolute -left-[33px] top-[6px] w-[10px] h-[10px] rounded-full border-2 border-border bg-black transition-[border-color,background,box-shadow] duration-300 group-hover:border-lime group-hover:bg-lime group-hover:shadow-[0_0_10px_rgba(180,223,0,0.4)]"
-                  aria-hidden="true"
-                />
-                <div class="flex justify-between items-start mb-[3px] gap-[10px]">
-                  <strong class="font-syne text-[15px] font-bold text-white">
-                    {job.title}
-                  </strong>
-                  <time
-                    class="font-mono text-[10px] text-lime tracking-[0.08em] flex-shrink-0"
-                    datetime={job.datetime}
-                  >
-                    {job.year}
-                  </time>
-                </div>
-                <p class="text-[12px] text-lime/70 mb-[7px]">{job.company}</p>
-                <p
-                  class="text-[12px] leading-[1.7] text-muted"
-                  data-i18n={job.i18n}
-                >
-                  {job.desc}
-                </p>
-                <div
-                  class="flex flex-wrap gap-[5px] mt-[9px]"
-                  aria-label="Tecnologías usadas"
-                >
-                  {job.tags.map((tag) => (
-                    <span class="font-mono text-[9px] tracking-[0.07em] px-[7px] py-[3px] rounded-[3px] border border-border text-muted">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-
-      <!-- ── Education + Achievements ── -->
-      <div class="reveal-right relative z-[2]">
-        <p
-          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-[22px]"
-          data-i18n="exp.edu"
-        >
-          Educación
-        </p>
-
-        <ul class="flex flex-col gap-3 mb-8" aria-label="Formación académica">
-          {
-            [
-              {
-                icon: "ph-graduation-cap",
-                year: "2012 — 2019",
-                datetime: "2012/2019",
-                title: "Ingeniería de Sistemas — Bachiller",
-                i18n: "edu.systems",
-                place: "Universidad Nacional del Callao",
-              },
-              {
-                icon: "ph-brain",
-                year: "2025",
-                datetime: "2025",
-                title: "Fundamentos de AI & Machine Learning",
-                i18n: "edu.ai1",
-                place: "Platzi",
-              },
-              {
-                icon: "ph-robot",
-                year: "2025",
-                datetime: "2025",
-                title: "Inteligencia Artificial para Empresas",
-                i18n: "edu.ai2",
-                place: "Platzi",
-              },
-              {
-                icon: "ph-device-mobile",
-                year: "2019",
-                datetime: "2019",
-                title: "Android Mobile Developer 8.0 (64h)",
-                i18n: null,
-                place: "Cibertec",
-              },
-              {
-                icon: "ph-database",
-                year: "2016",
-                datetime: "2016",
-                title: "Oracle Database Administrator (48h)",
-                i18n: "edu.oracle",
-                place: "Universidad Nacional de Ingeniería",
-              },
-              {
-                icon: "ph-globe",
-                year: "2013 — 2016",
-                datetime: "2013/2016",
-                title: "Inglés Avanzado",
-                i18n: "edu.english",
-                place: "ICPNA",
-              },
-            ].map((edu) => (
-              <li class="flex items-center gap-4 bg-surface border border-border rounded-[10px] px-5 py-[18px] transition-[border-color,box-shadow] duration-300 hover:border-lime/25 hover:shadow-[0_0_20px_rgba(180,223,0,0.04)]">
-                <div
-                  class="w-[38px] h-[38px] flex-shrink-0 bg-lime-dim border border-lime/[0.15] rounded-[8px] flex items-center justify-center text-[16px] text-lime"
-                  aria-hidden="true"
-                >
-                  <i class={`ph ${edu.icon}`} />
-                </div>
-                <div>
-                  <p class="font-mono text-[9px] text-lime tracking-[0.08em] mb-[3px]">
-                    <time datetime={edu.datetime}>{edu.year}</time>
-                  </p>
-                  <h3
-                    class="font-syne text-[13px] font-bold text-white mb-px"
-                    data-i18n={edu.i18n ?? undefined}
-                  >
-                    {edu.title}
-                  </h3>
-                  <p class="text-[11px] text-muted">{edu.place}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ul>
-
-        <p
-          class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-[14px]"
-          data-i18n="exp.achievements"
-        >
-          Logros
-        </p>
-
-        <ul
-          class="flex flex-col gap-[10px] mt-1"
-          aria-label="Logros destacados"
-        >
-          <li
-            class="flex gap-[14px] items-start px-4 py-[14px] bg-surface border border-border rounded-[10px] transition-[border-color] duration-300 hover:border-lime/25"
-          >
-            <i
-              class="ph ph-trophy text-[19px] text-lime flex-shrink-0 mt-px"
-              aria-hidden="true"></i>
-            <div>
-              <h3
-                class="font-syne text-[13px] font-bold text-white mb-0.5"
-                data-i18n="ach.hack.title"
-              >
-                Líder de Equipo — Hackathon
-              </h3>
-              <p
-                class="text-[11px] text-muted leading-[1.5]"
-                data-i18n="ach.hack.desc"
-              >
-                Líder de equipo — Estadio Nacional, IPD &amp; ONPE. Sistema de
-                seguimiento de deportistas con PHP, SQL y Bootstrap.
-              </p>
-            </div>
-          </li>
-          <li
-            class="flex gap-[14px] items-start px-4 py-[14px] bg-surface border border-border rounded-[10px] transition-[border-color] duration-300 hover:border-lime/25"
-          >
-            <i
-              class="ph ph-certificate text-[19px] text-lime flex-shrink-0 mt-px"
-              aria-hidden="true"></i>
-            <div>
-              <h3 class="font-syne text-[13px] font-bold text-white mb-0.5">
-                Scrum Foundation Professional — Score 95
-              </h3>
-              <p
-                class="text-[11px] text-muted leading-[1.5]"
-                data-i18n="ach.scrum.desc"
-              >
-                Certificación SFPC. Trabajo activo en equipos ágiles con Git,
-                Jira y ClickUp.
-              </p>
-            </div>
-          </li>
-        </ul>
-      </div>
+  <!-- Company bar -->
+  <div class="border-y border-border py-4 mb-0 bg-lime">
+    <div class="max-w-[1400px] mx-auto flex items-center justify-between overflow-x-auto gap-6">
+      {['NERD', 'SrBurns', 'Well-Done', 'One Blush', 'Softbrilliance', 'Vex'].map((c) => (
+        <span class="text-[11px] md:text-[12px] tracking-widest uppercase text-black font-semibold whitespace-nowrap">
+          {c}
+        </span>
+      ))}
     </div>
   </div>
+
+  <!-- Job rows -->
+  <div class="max-w-[1400px] mx-auto" role="list">
+    {jobs.map((job) => (
+      <div
+        class="group grid grid-cols-1 md:grid-cols-[140px_1fr_2fr_auto] items-start border-t border-border py-8 md:py-10 gap-4 md:gap-8 transition-colors duration-300 hover:bg-white/[0.02]"
+        role="listitem"
+      >
+        <!-- Year -->
+        <time class="text-[11px] text-muted tracking-widest pt-1">
+          {job.year}
+        </time>
+
+        <!-- Title + company -->
+        <div>
+          <h3
+            class="font-display font-bold text-xl md:text-2xl tracking-tightest text-white transition-colors duration-300 group-hover:text-lime"
+            style="font-optical-sizing: auto;"
+          >
+            {job.title}
+          </h3>
+          <p class="text-[12px] text-lime/60 mt-1">{job.company}</p>
+        </div>
+
+        <!-- Description -->
+        <p
+          class="text-white text-[13px] md:text-[14px] leading-relaxed"
+          data-i18n={job.i18n}
+        >
+          {job.desc}
+        </p>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-[5px] md:justify-end">
+          {job.tags.map((tag) => (
+            <span class="text-[9px] tracking-widest uppercase px-[7px] py-[3px] border border-border text-muted">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    ))}
+    <!-- Closing border -->
+    <div class="border-t border-border"></div>
+  </div>
+
 </section>
 
-<style>
-  .section-label {
-    @apply font-mono text-[10px] tracking-[0.25em] text-lime uppercase flex items-center gap-3 mb-[14px];
-  }
-  .section-label::after {
-    content: "";
-    @apply block w-[40px] h-px bg-lime;
-  }
-  .section-title {
-    @apply font-syne font-extrabold leading-none text-white tracking-[-0.02em] mb-10 lg:mb-14;
-    font-size: clamp(30px, 5vw, 50px);
-  }
-  .section-title em {
-    @apply text-lime not-italic;
-  }
-
-  .reveal-left {
-    @apply opacity-0 -translate-x-[40px] md:-translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-left.visible {
-    @apply opacity-100 translate-x-0;
-  }
-  .reveal-right {
-    @apply opacity-0 translate-x-[40px] md:translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-right.visible {
-    @apply opacity-100 translate-x-0;
-  }
-</style>

@@ -3,9 +3,7 @@
    Astro migration: container added, semantic improvements
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Fontsource: self-hosted, no Google Fonts for these ── */
-@import '@fontsource-variable/space-grotesk';
-@import '@fontsource-variable/plus-jakarta-sans';
+/* ── Inter loaded via Google Fonts in Layout.astro ── */
 
 :root {
   --lime: #b4df00;
@@ -40,7 +38,8 @@ html {
 body {
   background: var(--black);
   color: var(--text);
-  font-family: 'Plus Jakarta Sans Variable', sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
   overflow-x: hidden;
   cursor: none;
 }
@@ -112,7 +111,7 @@ body {
 }
 
 .loading-tagline {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -267,7 +266,7 @@ form,
 }
 
 .nav-links a {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   color: var(--muted);
   text-decoration: none;
@@ -320,7 +319,7 @@ form,
 }
 
 .lang-btn {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.1em;
   font-weight: 500;
@@ -349,7 +348,7 @@ form,
   padding: 0 16px;
   height: 36px;
   border-radius: 6px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   text-decoration: none;
   letter-spacing: 0.08em;
@@ -370,7 +369,7 @@ form,
   padding: 0 20px;
   height: 36px;
   border-radius: 6px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 500;
   text-decoration: none;
@@ -436,7 +435,7 @@ form,
 }
 
 .hero-tag {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.2em;
   color: var(--lime);
@@ -486,10 +485,7 @@ form,
 }
 
 .hero-role {
-  font-family: 'DM Mono', monospace;
   font-size: clamp(13px, 1.6vw, 19px);
-  color: var(--muted);
-  letter-spacing: 0.05em;
   transition: color 0.5s;
 }
 
@@ -508,7 +504,7 @@ form,
 }
 
 .hero-badge {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -527,7 +523,7 @@ form,
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.15em;
   color: var(--muted);
@@ -569,7 +565,7 @@ section {
 }
 
 .section-label {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.25em;
   color: var(--lime);
@@ -603,7 +599,7 @@ section {
 }
 
 .section-sub {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -654,7 +650,7 @@ section {
   align-items: center;
   gap: 8px;
   padding: 13px 26px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -774,7 +770,7 @@ section {
   border: 1px solid rgba(180, 223, 0, 0.2);
   border-radius: 30px;
   padding: 5px 13px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   color: var(--lime);
   letter-spacing: 0.08em;
@@ -816,7 +812,7 @@ section {
 }
 
 .stat-label {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.1em;
   color: var(--muted);
@@ -838,7 +834,7 @@ section {
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   color: var(--text);
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
@@ -867,7 +863,7 @@ section {
 
 /* ─── SERVICES ─── */
 #services {
-  background: var(--surface);
+  /* background: var(--surface); */
 }
 
 .services-grid {
@@ -1007,7 +1003,7 @@ section {
 }
 
 .tl-year {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   color: var(--lime);
   letter-spacing: 0.08em;
@@ -1034,7 +1030,7 @@ section {
 }
 
 .tl-tag {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   letter-spacing: 0.07em;
   padding: 3px 7px;
@@ -1080,7 +1076,7 @@ section {
 }
 
 .edu-year {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   color: var(--lime);
   letter-spacing: 0.08em;
@@ -1288,7 +1284,7 @@ section {
 }
 
 .project-category {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1320,7 +1316,7 @@ section {
 }
 
 .stack-tag {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   letter-spacing: 0.06em;
   padding: 3px 7px;
@@ -1334,7 +1330,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1349,7 +1345,7 @@ section {
 }
 
 .embla-counter {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   color: var(--muted);
   letter-spacing: 0.08em;
@@ -1384,7 +1380,7 @@ section {
 }
 
 .skill-bar-pct {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   color: var(--lime);
 }
@@ -1525,7 +1521,7 @@ section {
   align-items: center;
   justify-content: center;
   margin: 0 auto 18px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   color: var(--lime);
   position: relative;
@@ -1596,7 +1592,7 @@ section {
   display: inline-block;
   background: var(--lime);
   color: #000;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -1622,7 +1618,7 @@ section {
 }
 
 .pricing-currency {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   color: var(--muted);
   margin-top: 6px;
@@ -1745,7 +1741,7 @@ section {
   padding: 11px 16px;
   border-radius: 6px;
   text-decoration: none;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.08em;
   transition: all 0.3s;
@@ -1799,7 +1795,7 @@ section {
 
 .form-group label {
   display: block;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1815,7 +1811,8 @@ section {
   border-radius: 8px;
   padding: 13px 15px;
   color: var(--text);
-  font-family: 'Plus Jakarta Sans Variable', sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
   font-size: 14px;
   transition: border-color 0.3s, box-shadow 0.3s;
   outline: none;
@@ -1839,7 +1836,7 @@ section {
   color: #000;
   border: none;
   border-radius: 8px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -1882,7 +1879,7 @@ footer {
 }
 
 .footer-copy {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   color: var(--muted);
   letter-spacing: 0.05em;
@@ -1894,7 +1891,7 @@ footer {
 }
 
 .footer-links a {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   color: var(--muted);
   text-decoration: none;
@@ -1938,7 +1935,7 @@ body::after {
     z-index: 0;
   }
 
-  #main-content > section:not(#hero) {
+  #main-content>section:not(#hero) {
     position: relative;
     z-index: 10;
     transform: translate3d(0, 0, 0);
@@ -2010,7 +2007,7 @@ body::after {
   color: #000;
   padding: 8px 16px;
   border-radius: 4px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   z-index: 99999;
   text-decoration: none;
@@ -2036,4 +2033,33 @@ body::after {
   * {
     cursor: auto !important;
   }
+}
+
+/* ─── MARQUEE ────────────────────────────────────────────────── */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+  width: max-content;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── JAPANESE LABEL TAG ────────────────────────────────────────── */
+.jp-tag {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(136, 136, 136, 0.4);
+  text-transform: none;
+  font-weight: 400;
 }

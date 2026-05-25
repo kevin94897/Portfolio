@@ -1,9 +1,12 @@
 ---
-// Hero.astro — Full-viewport hero section with Spline 3D + particles + H1
+import portrait from "../assets/images/foto_portrait_kevin.jpeg";
 ---
 
-<section id="hero" class="relative w-full h-screen overflow-hidden flex items-center" aria-labelledby="hero-heading">
-
+<section
+  id="hero"
+  class="relative w-full h-screen overflow-hidden flex flex-col justify-end"
+  aria-labelledby="hero-heading"
+>
   <!-- Background 3D animation -->
   <div class="absolute inset-0" aria-hidden="true">
     <iframe
@@ -12,87 +15,125 @@
       loading="lazy"
       width="100%"
       height="100%"
-      class="w-full h-full border-none pointer-events-auto"
-    ></iframe>
+      class="w-full h-full border-none pointer-events-auto"></iframe>
   </div>
 
   <!-- Canvas particles -->
-  <canvas id="particles" class="absolute inset-0 pointer-events-none z-[5]" aria-hidden="true"></canvas>
+  <canvas
+    id="particles"
+    class="absolute inset-0 pointer-events-none z-[5]"
+    aria-hidden="true"></canvas>
 
   <!-- Gradient overlay -->
   <div
     class="absolute inset-0 pointer-events-none"
-    style="background: linear-gradient(to bottom, rgba(3,3,3,0) 35%, rgba(3,3,3,0.55) 65%, #030303 100%), linear-gradient(to right, rgba(3,3,3,0.6) 0%, transparent 50%, rgba(3,3,3,0.6) 100%);"
+    style="background: linear-gradient(to bottom, rgba(3,3,3,0) 30%, rgba(3,3,3,0.5) 60%, #030303 100%);"
     aria-hidden="true"
-  ></div>
+  >
+  </div>
 
-  <!-- Hero content -->
-  <div class="relative z-10 w-full pointer-events-none">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
-
-      <p class="hero-tag font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-lime uppercase mb-4 md:mb-5 flex items-center gap-3
-                opacity-0 translate-y-5 [animation:fadeUp_0.8s_forwards_0.3s]"
-         data-i18n="hero.tag">
-        Full Stack Developer · Lima, Perú
-      </p>
-
-      <h1
-        id="hero-heading"
-        class="font-syne font-extrabold leading-[0.92] text-white tracking-[-0.03em] mb-4 md:mb-5
-               text-[clamp(44px,10vw,118px)]
-               opacity-0 translate-y-[30px] [animation:fadeUp_0.9s_forwards_0.5s]"
-      >
-        Kevin<br /><span class="text-lime">Gómez.</span>
-      </h1>
-
+  <!-- Role cycling — above the green bar -->
+  <div class="relative z-10 w-full pointer-events-none py-8">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-[40px]">
       <div
-        class="flex flex-col gap-0.5 mb-6 md:mb-7 opacity-0 translate-y-5 [animation:fadeUp_0.8s_forwards_0.8s]"
+        class="flex flex-col gap-0.5 mb-4 opacity-0 translate-y-5 [animation:fadeUp_0.8s_forwards_0.6s]"
         aria-live="polite"
         aria-atomic="true"
       >
-        <span class="hero-role hero-role-active font-mono text-[clamp(12px,1.6vw,19px)] text-text tracking-[0.05em] transition-colors duration-500" data-i18n="hero.role1">Frontend &amp; Backend Development</span>
-        <span class="hero-role font-mono text-[clamp(12px,1.6vw,19px)] text-muted tracking-[0.05em] transition-colors duration-500" data-i18n="hero.role2">Headless CMS &amp; Integración de APIs</span>
-        <span class="hero-role font-mono text-[clamp(12px,1.6vw,19px)] text-muted tracking-[0.05em] transition-colors duration-500" data-i18n="hero.role3">E-Commerce &amp; Soluciones Web</span>
+        <span
+          class="hero-role hero-role-active text-[clamp(11px,1.3vw,16px)] text-text transition-colors duration-500"
+          data-i18n="hero.role1">Frontend &amp; Backend Development</span
+        >
+        <span
+          class="hero-role text-[clamp(11px,1.3vw,16px)] text-white transition-colors duration-500"
+          data-i18n="hero.role2">Headless CMS &amp; Integración de APIs</span
+        >
+        <span
+          class="hero-role text-[clamp(11px,1.3vw,16px)] text-white transition-colors duration-500"
+          data-i18n="hero.role3">E-Commerce &amp; Soluciones Web</span
+        >
       </div>
-
-      <div
-        class="flex gap-2 flex-wrap pointer-events-auto opacity-0 translate-y-4 [animation:fadeUp_0.8s_forwards_1s]"
-        role="list"
-        aria-label="Tecnologías principales"
-      >
-        {['Next.js','React','NestJS','Astro','Laravel','WordPress Headless'].map(t => (
-          <span class="font-mono text-[9px] md:text-[10px] tracking-[0.1em] uppercase py-[5px] px-[9px] md:px-[11px] rounded-[4px] border border-border text-muted bg-white/[0.03]" role="listitem">{t}</span>
-        ))}
-      </div>
-
     </div>
   </div>
 
-  <!-- Scroll indicator — hidden on very small screens -->
+  <!-- Tech stack bar — static, inside container -->
   <div
-    class="hidden sm:flex absolute bottom-8 md:bottom-10 left-0 pl-6 lg:pl-[60px] items-center gap-3
-           font-mono text-[10px] tracking-[0.15em] text-muted uppercase pointer-events-none
+    class="relative z-10 w-full py-3 pointer-events-none md:block hidden"
+    aria-hidden="true"
+  >
+    <div class="max-w-[1400px] mx-auto px-6 py-2 lg:px-[60px] bg-lime">
+      <div class="flex items-center gap-6 md:gap-8 flex-wrap">
+        {
+          [
+            "Next.js",
+            "React",
+            "NestJS",
+            "Astro",
+            "Laravel",
+            "WordPress Headless",
+            "TypeScript",
+            "Node.js",
+          ].map((item: string, i: number, arr: string[]) => (
+            <span class="flex items-center gap-6 md:gap-8">
+              <span class="text-[11px] md:text-[12px] tracking-widest uppercase text-black font-semibold whitespace-nowrap">
+                {item}
+              </span>
+              {i < arr.length - 1 && (
+                <span class="text-black/30 text-[10px]">/</span>
+              )}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Big name -->
+  <div class="relative z-10 w-full py-10 md:py-14 pointer-events-none">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-[40px]">
+      <h1
+        id="hero-heading"
+        class="hero-title-anim font-display font-bold leading-[0.88] text-white tracking-tightest uppercase"
+        style="font-size: clamp(4.5rem, 10vw, 16rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
+      >
+        Kevin <span class="text-lime">Gomez.</span>
+      </h1>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div
+    class="hidden sm:flex absolute bottom-8 md:bottom-10 right-0 pr-6 lg:pr-[60px] items-end gap-3
+           text-[10px] tracking-[0.15em] text-muted uppercase pointer-events-none
            opacity-0 [animation:fadeUp_0.8s_forwards_1.3s]"
     aria-hidden="true"
   >
-    <div class="w-px h-10 [background:linear-gradient(to_bottom,#b4df00,transparent)] [animation:scrollPulse_2s_ease-in-out_infinite]"></div>
     <span data-i18n="hero.scroll">Explorar</span>
+    <div
+      class="w-px h-10 [background:linear-gradient(to_bottom,#b4df00,transparent)] [animation:scrollPulse_2s_ease-in-out_infinite]"
+    >
+    </div>
   </div>
-
 </section>
 
 <style>
-  .hero-tag::before {
-    content: '';
-    @apply block w-[24px] md:w-[30px] h-px bg-lime;
+  .hero-role.hero-role-active {
+    color: #e8e8e8;
   }
-  .hero-role.hero-role-active { @apply text-text; }
 
   @keyframes fadeUp {
-    to { opacity: 1; transform: none; }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   @keyframes scrollPulse {
-    0%, 100% { opacity: 0.3; }
-    50%       { opacity: 1; }
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 </style>

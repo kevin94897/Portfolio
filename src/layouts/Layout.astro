@@ -193,11 +193,11 @@ const structuredData = {
     <meta name="language" content="Spanish" />
     <meta name="revisit-after" content="7 days" />
 
-    <!-- ─── Fonts: DM Mono via Google Fonts; Space Grotesk + Plus Jakarta Sans via Fontsource (self-hosted) ─── -->
+    <!-- ─── Fonts: Inter variable (display + body) via Google Fonts ─── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
 
@@ -240,5 +240,44 @@ const structuredData = {
     <script
       src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
       is:inline></script>
+
+    <!-- GSAP title animations -->
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      import { SplitText } from "gsap/SplitText";
+
+      gsap.registerPlugin(ScrollTrigger, SplitText);
+
+      // Hero title — fires on load with a short delay (no ScrollTrigger)
+      const heroTitle = document.querySelector<HTMLElement>(".hero-title-anim");
+      if (heroTitle) {
+        const split = new SplitText(heroTitle, { type: "chars" });
+        gsap.from(split.chars, {
+          y: 70,
+          opacity: 0,
+          stagger: 0.018,
+          duration: 0.9,
+          delay: 0.3,
+          ease: "power3.out",
+        });
+      }
+
+      // All other section titles — fire on scroll
+      document.querySelectorAll<HTMLElement>(".section-title-anim").forEach((el) => {
+        const split = new SplitText(el, { type: "chars" });
+        gsap.from(split.chars, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 88%",
+          },
+          y: 60,
+          opacity: 0,
+          stagger: 0.015,
+          duration: 0.7,
+          ease: "power3.out",
+        });
+      });
+    </script>
   </body>
 </html>

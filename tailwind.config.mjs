@@ -14,11 +14,18 @@ export default {
         text: '#e8e8e8',
         muted: '#888888',
         border: 'rgba(255,255,255,0.07)',
+        accent: '#b4df00',
+        ink: '#030303',
+        paper: '#e8e8e8',
       },
       fontFamily: {
-        syne: ['"Space Grotesk Variable"', 'sans-serif'],
-        mono: ['"DM Mono"', 'monospace'],
-        sans: ['"Plus Jakarta Sans Variable"', 'sans-serif'],
+        syne: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        mono: ['Inter', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
+      },
+      letterSpacing: {
+        tightest: '-0.04em',
       },
       borderRadius: {
         DEFAULT: '12px',
