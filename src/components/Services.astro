@@ -56,10 +56,10 @@ const services = [
   </div>
 
   <!-- Descriptor bar -->
-  <div class="border-y border-border py-4 mb-0 bg-lime">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between">
+  <div class="border-y border-border py-4 mb-0 bg-lime overflow-x-auto scrollbar-hide">
+    <div class="flex items-center gap-8 md:gap-6 md:justify-between px-6 md:px-10 md:max-w-[1400px] md:mx-auto w-max md:w-full">
       {['Reliable', 'Scalable', 'Focused', 'Full Stack'].map((label) => (
-        <span class="text-[11px] md:text-[12px] tracking-widest uppercase text-black font-semibold">
+        <span class="text-[11px] md:text-[12px] tracking-widest uppercase text-black font-semibold whitespace-nowrap">
           {label}
         </span>
       ))}

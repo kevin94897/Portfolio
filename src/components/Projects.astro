@@ -314,29 +314,25 @@ const N = projects.length; // 11
     }
   </div>
 
-  <!-- Indicador de dirección (flechas arriba/abajo) -->
+  <!-- Indicador de dirección (dots) -->
   <div
     id="proj-nav-hint"
-    class="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-3"
+    class="absolute right-6 md:right-10 inset-y-0 z-20 hidden lg:flex items-center"
     aria-hidden="true"
   >
-    <button id="proj-btn-prev" class="proj-nav-btn" title="Proyecto anterior">
-      <i class="ph ph-caret-up text-[14px]"></i>
-    </button>
     <div id="proj-dots-vert" class="flex flex-col gap-[6px]">
       {
         projects.map((_, i) => (
           <div
             class="proj-dot-v"
             data-idx={String(i)}
-            style={i === 0 ? "background:#b4df00; height:14px;" : ""}
+            style={
+              i === 0 ? "background:rgba(180,223,0,0.5); height:14px;" : ""
+            }
           />
         ))
       }
     </div>
-    <button id="proj-btn-next" class="proj-nav-btn" title="Siguiente proyecto">
-      <i class="ph ph-caret-down text-[14px]"></i>
-    </button>
   </div>
 
   <!-- Scroll hint -->
@@ -378,7 +374,7 @@ const N = projects.length; // 11
           <div class="flex-1 min-w-0">
             <h3
               id="proj-info-name"
-              class="font-display font-bold text-white tracking-tightest leading-none mb-2"
+              class="font-display font-semibold text-white tracking-tightest leading-none mb-2"
               style="font-size: clamp(1.2rem, 2.6vw, 2.2rem); font-optical-sizing: auto;"
             >
             </h3>
@@ -581,38 +577,17 @@ const N = projects.length; // 11
 
   /* Vertical dots */
   .proj-dot-v {
-    width: 5px;
-    height: 5px;
+    width: 3px;
+    height: 3px;
     border-radius: 2px;
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.1);
     transition:
       background 0.3s ease,
       height 0.3s ease;
-    cursor: pointer;
   }
   .proj-dot-v.active {
-    background: #b4df00;
+    background: rgba(180, 223, 0, 0.5);
     height: 14px;
-  }
-
-  /* Nav buttons */
-  .proj-nav-btn {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    color: #888;
-    background: transparent;
-    cursor: pointer;
-    transition:
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-  .proj-nav-btn:hover {
-    border-color: rgba(180, 223, 0, 0.4);
-    color: #b4df00;
   }
 
   /* Scroll hint pulse */
@@ -694,8 +669,6 @@ const N = projects.length; // 11
   const dotsVert = Array.from(
     document.querySelectorAll<HTMLElement>(".proj-dot-v"),
   );
-  const btnPrev = document.getElementById("proj-btn-prev")!;
-  const btnNext = document.getElementById("proj-btn-next")!;
 
   const isMobile = () => window.innerWidth < 1024;
 
