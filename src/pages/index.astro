@@ -164,6 +164,8 @@ import Marquee from "../components/Marquee.astro";
   /* ──────────────────────────────────────────────────────────
    INTERSECTION OBSERVER — REVEAL ANIMATIONS
 ────────────────────────────────────────────────────────── */
+  const revealEls = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+
   const io = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
@@ -172,11 +174,27 @@ import Marquee from "../components/Marquee.astro";
           io.unobserve(e.target);
         }
       }),
-    { threshold: 0.04, rootMargin: "0px 0px -40px 0px" },
+    { threshold: 0.04 },
   );
-  document
-    .querySelectorAll(".reveal, .reveal-left, .reveal-right")
-    .forEach((el) => io.observe(el));
+  revealEls.forEach((el) => io.observe(el));
+
+  // Safari iOS: elements already in viewport at load may not fire the observer.
+  // Force-reveal any element whose top is within the initial viewport.
+  const forceRevealInViewport = () => {
+    const vh = window.innerHeight;
+    revealEls.forEach((el) => {
+      if (!el.classList.contains("visible")) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < vh && rect.bottom > 0) {
+          el.classList.add("visible");
+          io.unobserve(el);
+        }
+      }
+    });
+  };
+  // Run immediately and again after a short delay for Safari's deferred layout
+  forceRevealInViewport();
+  setTimeout(forceRevealInViewport, 400);
 
   // Skill pills stagger
   const skillsGridEl = document.querySelector(".skills-grid");
