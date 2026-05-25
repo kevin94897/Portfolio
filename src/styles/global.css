@@ -1987,7 +1987,6 @@ body::after {
   #main-content>section:not(#hero) {
     position: relative;
     z-index: 10;
-    transform: translate3d(0, 0, 0);
   }
 
   .nav-links {

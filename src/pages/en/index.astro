@@ -164,16 +164,35 @@ import Marquee from "../../components/Marquee.astro";
   /* ──────────────────────────────────────────────────────────
    INTERSECTION OBSERVER — REVEAL ANIMATIONS
 ────────────────────────────────────────────────────────── */
+  const revealEls = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+
   const io = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
-        if (e.isIntersecting) e.target.classList.add("visible");
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
+        }
       }),
-    { threshold: 0.1 },
+    { threshold: 0.04 },
   );
-  document
-    .querySelectorAll(".reveal, .reveal-left, .reveal-right")
-    .forEach((el) => io.observe(el));
+  revealEls.forEach((el) => io.observe(el));
+
+  // Safari iOS: force-reveal elements already in viewport at load
+  const forceRevealInViewport = () => {
+    const vh = window.innerHeight;
+    revealEls.forEach((el) => {
+      if (!el.classList.contains("visible")) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < vh && rect.bottom > 0) {
+          el.classList.add("visible");
+          io.unobserve(el);
+        }
+      }
+    });
+  };
+  forceRevealInViewport();
+  setTimeout(forceRevealInViewport, 400);
 
   // Skill pills stagger
   const skillsGridEl = document.querySelector(".skills-grid");
