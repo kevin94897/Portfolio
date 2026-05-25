@@ -10,6 +10,10 @@ import imgColecciones from "../assets/images/portfolio/KGFront.webp";
 import imgKGStore from "../assets/images/portfolio/KGStore.webp";
 import imgPuntoAzul from "../assets/images/portfolio/Puntoazul.webp";
 import imgCafePlaza from "../assets/images/portfolio/CafePlaza.webp";
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
 
 interface Project {
   img: ImageMetadata;
@@ -22,13 +26,15 @@ interface Project {
   demo?: { user: string; pass: string };
 }
 
+
+// Pre-translate descriptions so the JSON embedded in the page is already localized
 const projects: Project[] = [
   {
     img: imgColecciones,
     category: "SPA",
     name: "Colecciones Grupo Gómez",
     descKey: "p.colecciones.desc",
-    desc: "Dashboard administrativo SPA/PWA con React. Autenticación, métricas en tiempo real, CRUD completo y deploy en Vercel.",
+    desc: t("p.colecciones.desc"),
     stack: ["React", "React Router", "Lucide", "Vercel"],
     url: "https://colecciones.grupo-gomez.com/",
   },
@@ -37,7 +43,7 @@ const projects: Project[] = [
     category: "Headless E-Commerce",
     name: "Liwilu",
     descKey: "p.liwilu.desc",
-    desc: "Arquitectura headless desacoplada. SSR/SSG con Next.js, API con NestJS, e-commerce PrestaShop y animaciones con Framer Motion.",
+    desc: t("p.liwilu.desc"),
     stack: ["Next.js", "NestJS", "PrestaShop", "Tailwind"],
     url: "https://liwilu-staging.vercel.app/",
   },
@@ -46,7 +52,7 @@ const projects: Project[] = [
     category: "PWA",
     name: "KG Store Admin",
     descKey: "p.kgstore.desc",
-    desc: "Arquitectura BaaS + Edge. React SPA con PostgreSQL vía Supabase, Cloudflare CDN (HTTP/3 + RUM) y Apache como servidor origen.",
+    desc: t("p.kgstore.desc"),
     stack: ["React", "Supabase", "PostgreSQL", "Cloudflare"],
     url: "https://kg-admin-delta.vercel.app/",
     demo: { user: "demo", pass: "QCyJ iNW7 sFpl BPPS FoAR cka8" },
@@ -56,7 +62,7 @@ const projects: Project[] = [
     category: "Corporate",
     name: "Café de la Plaza",
     descKey: "p.cafeplaza.desc",
-    desc: "Sitio corporativo para restaurante en Puerto Rico. WordPress + Elementor con animaciones GSAP, slider Swiper, Cloudflare CDN y hosting en Kinsta.",
+    desc: t("p.cafeplaza.desc"),
     stack: ["WordPress", "Elementor", "GSAP", "Kinsta"],
     url: "https://cafedelaplazapr.com/",
   },
@@ -65,7 +71,7 @@ const projects: Project[] = [
     category: "E-Commerce",
     name: "Gustos Coffee Co.",
     descKey: "p.gustos.desc",
-    desc: "Tienda Shopify con frontend en Vue.js para Puerto Rico. Cloudflare CDN, pagos Apple Pay / Shop Pay y optimización de conversión.",
+    desc: t("p.gustos.desc"),
     stack: ["Shopify", "Vue.js", "Cloudflare", "Apple Pay"],
     url: "https://www.gustoscoffeeco.com/",
   },
@@ -74,7 +80,7 @@ const projects: Project[] = [
     category: "SSG Landing",
     name: "AIcon",
     descKey: "p.aicon.desc",
-    desc: "Landing SSG de alto rendimiento para plataforma de IA. Astro + Alpine.js en Vercel y AWS con integración Mailchimp.",
+    desc: t("p.aicon.desc"),
     stack: ["Astro", "Alpine.js", "Vercel", "AWS"],
     url: "https://landing-wisec.vercel.app/",
   },
@@ -83,7 +89,7 @@ const projects: Project[] = [
     category: "SaaS",
     name: "Whaticket",
     descKey: "p.whaticket.desc",
-    desc: "WordPress optimizado para marketing y performance. Elementor, Cloudflare CDN, WP Rocket, HubSpot CRM y GTM.",
+    desc: t("p.whaticket.desc"),
     stack: ["WordPress", "Elementor", "WP Rocket", "GTM"],
     url: "https://whaticket.com/",
   },
@@ -92,7 +98,7 @@ const projects: Project[] = [
     category: "Corporate",
     name: "Astra Medical",
     descKey: "p.astra.desc",
-    desc: "Sitio corporativo WordPress + WooCommerce. PHP + MySQL, Apache, Yoast SEO y diseño responsivo desde Figma.",
+    desc: t("p.astra.desc"),
     stack: ["WordPress", "WooCommerce", "PHP", "Yoast SEO"],
     url: "https://www.astra-medical.com/",
   },
@@ -101,7 +107,7 @@ const projects: Project[] = [
     category: "Education",
     name: "Chapa Tu Beca",
     descKey: "p.chapa.desc",
-    desc: "WordPress Multisite para becas universitarias. Elementor, PHP + MySQL, múltiples plugins y sistema de postulación en línea.",
+    desc: t("p.chapa.desc"),
     stack: ["WordPress Multisite", "Elementor", "PHP", "SEO"],
     url: "https://www.chapatubeca.org/",
   },
@@ -110,7 +116,7 @@ const projects: Project[] = [
     category: "E-Commerce",
     name: "Segway Powersports",
     descKey: "p.segway.desc",
-    desc: "Tienda de vehículos eléctricos con WordPress + Elementor. Apache, RankMath SEO, jQuery y pasarela de pagos para Perú.",
+    desc: t("p.segway.desc"),
     stack: ["WordPress", "Elementor", "RankMath", "jQuery"],
     url: "https://segwaypowersports.com.pe/",
   },
@@ -119,14 +125,16 @@ const projects: Project[] = [
     category: "SPA",
     name: "Panel PuntoAzul",
     descKey: "p.puntoazul.desc",
-    desc: "Panel administrativo para restaurante. Bloqueo de fechas y gestión de reservas con React + Vite. Calendario con react-day-picker.",
+    desc: t("p.puntoazul.desc"),
     stack: ["React", "Vite", "Tailwind", "react-day-picker"],
     url: "https://staging.puntoazulrestaurante.com/",
     demo: { user: "demo", pass: "QCyJ iNW7 sFpl BPPS FoAR cka8" },
   },
 ];
 
-const N = projects.length; // 11
+const N = projects.length;
+const viewLabel = t('p.view');
+
 ---
 
 <!-- Sección ocupa 100vh — el scroll hijack la mantiene fija -->
@@ -162,7 +170,7 @@ const N = projects.length; // 11
       <p
         class="text-[10px] tracking-[0.25em] uppercase text-lime flex items-center gap-3 mb-2"
       >
-        <span data-i18n="proj.label">04 — Portfolio</span>
+        <span>{t('proj.label')}</span>
         <span class="w-8 h-px bg-lime block" aria-hidden="true"></span>
         <span
           style="color:rgba(180,223,0,0.35); font-size:10px; letter-spacing:0.06em; text-transform:none;"
@@ -173,9 +181,8 @@ const N = projects.length; // 11
         id="projects-heading"
         class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
         style="font-size: clamp(2rem, 4.5vw, 4.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
-        data-i18n-html="proj.title"
       >
-        Proyectos Reales
+        {t('proj.title')}
       </h2>
     </div>
   </div>
@@ -401,7 +408,7 @@ const N = projects.length; // 11
                    text-[10px] tracking-[0.12em] uppercase font-medium no-underline
                    transition-all duration-200 hover:opacity-90"
             >
-              <span data-i18n="p.view">Ver proyecto</span>
+              <span>{viewLabel}</span>
               <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
             </a>
           </div>
@@ -525,7 +532,7 @@ const N = projects.length; // 11
                text-[11px] font-medium tracking-[0.1em] uppercase no-underline
                transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
       >
-        <span data-i18n="p.view">Ver proyecto</span>
+        <span>{viewLabel}</span>
         <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
       </a>
     </div>

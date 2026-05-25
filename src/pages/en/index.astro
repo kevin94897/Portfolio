@@ -3,22 +3,22 @@
 //  index.astro — Main page
 //  Assembles all sections + client-side scripts
 // ═══════════════════════════════════════════════════════════
-import Layout from "../layouts/Layout.astro";
-import LoadingScreen from "../components/LoadingScreen.astro";
-import CircuitBackground from "../components/CircuitBackground.astro";
-import Nav from "../components/Nav.astro";
-import Hero from "../components/Hero.astro";
-import About from "../components/About.astro";
-import Services from "../components/Services.astro";
-import Experience from "../components/Experience.astro";
-import Projects from "../components/Projects.astro";
-import SkillsBars from "../components/SkillsBars.astro";
-import Testimonials from "../components/Testimonials.astro";
-import Workflow from "../components/Workflow.astro";
-import Pricing from "../components/Pricing.astro";
-import Contact from "../components/Contact.astro";
-import Footer from "../components/Footer.astro";
-import Marquee from "../components/Marquee.astro";
+import Layout from "../../layouts/Layout.astro";
+import LoadingScreen from "../../components/LoadingScreen.astro";
+import CircuitBackground from "../../components/CircuitBackground.astro";
+import Nav from "../../components/Nav.astro";
+import Hero from "../../components/Hero.astro";
+import About from "../../components/About.astro";
+import Services from "../../components/Services.astro";
+import Experience from "../../components/Experience.astro";
+import Projects from "../../components/Projects.astro";
+import SkillsBars from "../../components/SkillsBars.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import Workflow from "../../components/Workflow.astro";
+import Pricing from "../../components/Pricing.astro";
+import Contact from "../../components/Contact.astro";
+import Footer from "../../components/Footer.astro";
+import Marquee from "../../components/Marquee.astro";
 ---
 
 <Layout>
@@ -167,12 +167,9 @@ import Marquee from "../components/Marquee.astro";
   const io = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("visible");
-          io.unobserve(e.target);
-        }
+        if (e.isIntersecting) e.target.classList.add("visible");
       }),
-    { threshold: 0.04, rootMargin: "0px 0px -40px 0px" },
+    { threshold: 0.1 },
   );
   document
     .querySelectorAll(".reveal, .reveal-left, .reveal-right")

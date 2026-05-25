@@ -1,6 +1,10 @@
 ---
 import fotoKevin from "../assets/images/foto_kevin.jpeg";
 import portrait from "../assets/images/foto_portrait_kevin.jpeg";
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
 ---
 
 <!-- Floating portrait — follows cursor inside About section --><!-- <div id="about-floating-img" aria-hidden="true">
@@ -41,7 +45,7 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
         <div class="flex items-center gap-3 mb-8">
           <span
             class="text-[10px] tracking-widest uppercase text-muted"
-            data-i18n="about.label">01 — Perfil</span
+            >{t('about.label')}</span
           >
           <span class="text-[10px] text-muted/40 tracking-[0.06em]">プロフィール</span>
         </div>
@@ -51,30 +55,18 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
           id="about-heading"
           class="section-title-anim font-display font-bold leading-[0.88] tracking-tightest text-white mb-8"
           style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
-          data-i18n-html="about.title"
-        >
-          Sobre Mí
-        </h2>
+          set:html={t('about.title')}
+        />
 
         <!-- Bio -->
         <p
           class="text-muted text-[14px] leading-relaxed mb-5 max-w-md"
-          data-i18n-html="about.bio1"
-        >
-          Desarrollador Full Stack con trayectoria en proyectos para
-          <strong class="text-white"
-            >telecomunicaciones, e-commerce y soluciones digitales a medida</strong
-          >. He colaborado con Entel (via SrBurns), NERD, Well-Done Media y One
-          Blush.
-        </p>
+          set:html={t('about.bio1')}
+        />
         <p
           class="text-muted text-[14px] leading-relaxed mb-10 max-w-md"
-          data-i18n-html="about.bio2"
-        >
-          Me destaco por mi responsabilidad, adaptación y compromiso con la
-          entrega de productos eficientes y seguros. Certificado SFPC con 95
-          puntos.
-        </p>
+          set:html={t('about.bio2')}
+        />
 
         <!-- CTA buttons -->
         <div class="flex gap-3 flex-wrap mb-14">
@@ -84,14 +76,14 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
             class="inline-flex items-center gap-2 bg-lime text-black px-6 py-3 text-[11px] font-medium tracking-[0.1em] uppercase no-underline transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5"
           >
             <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
-            <span data-i18n="about.cv">Descargar CV 2026</span>
+            <span>{t('about.cv')}</span>
           </a>
           <a
             href="#contact"
             class="inline-flex items-center gap-2 border border-border text-text bg-transparent px-6 py-3 text-[11px] tracking-[0.1em] uppercase no-underline transition-all duration-300 hover:border-lime hover:text-lime"
           >
             <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
-            <span data-i18n="about.contact">Contactar</span>
+            <span>{t('about.contact')}</span>
           </a>
         </div>
 
@@ -104,11 +96,8 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
             >
               8+
             </div>
-            <div
-              class="text-[10px] tracking-widest uppercase text-muted"
-              data-i18n="about.stat1"
-            >
-              Años Exp.
+            <div class="text-[10px] tracking-widest uppercase text-muted">
+              {t('about.stat1')}
             </div>
           </div>
           <div>
@@ -118,11 +107,8 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
             >
               20+
             </div>
-            <div
-              class="text-[10px] tracking-widest uppercase text-muted"
-              data-i18n="about.stat2"
-            >
-              Proyectos
+            <div class="text-[10px] tracking-widest uppercase text-muted">
+              {t('about.stat2')}
             </div>
           </div>
           <div>
@@ -142,11 +128,8 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
 
     <!-- Tech stack — full width below grid -->
     <div class="mt-16 pt-10 border-t border-border">
-      <p
-        class="text-[10px] tracking-widest uppercase text-muted mb-6"
-        data-i18n="about.stack"
-      >
-        Tech Stack Completo
+      <p class="text-[10px] tracking-widest uppercase text-muted mb-6">
+        {t('about.stack')}
       </p>
       <div
         class="skills-grid flex flex-wrap gap-2"
@@ -197,18 +180,20 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
 </section>
 
 <style>
-  .reveal-left {
-    @apply opacity-0 -translate-x-[40px] md:-translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-left.visible {
-    @apply opacity-100 translate-x-0;
-  }
+  @media (min-width: 768px) {
+    .reveal-left {
+      @apply opacity-0 -translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal-left.visible {
+      @apply opacity-100 translate-x-0;
+    }
 
-  .reveal-right {
-    @apply opacity-0 translate-x-[40px] md:translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-right.visible {
-    @apply opacity-100 translate-x-0;
+    .reveal-right {
+      @apply opacity-0 translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal-right.visible {
+      @apply opacity-100 translate-x-0;
+    }
   }
 
   .skill-pill.visible {

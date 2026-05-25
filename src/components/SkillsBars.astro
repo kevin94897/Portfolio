@@ -1,4 +1,9 @@
 ---
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
+
 interface Skill {
   name: string;
   cat: string;
@@ -48,7 +53,7 @@ const skills: Skill[] = [
   { name: "Vue.js / Angular", cat: "Desarrollo", level: "Mid", pct: 72 },
 ];
 
-const marqueeText = "Habilidades Técnicas";
+const marqueeText = t('skills.title');
 ---
 
 <section
@@ -60,7 +65,7 @@ const marqueeText = "Habilidades Técnicas";
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px] mb-6 reveal">
     <div class="flex items-center justify-between">
       <p class="section-label !mb-0">
-        <span data-i18n="skills.label">05 — Proficiency</span>
+        <span>{t('skills.label')}</span>
         <span class="jp-tag">スキル</span>
       </p>
       <span
@@ -71,8 +76,8 @@ const marqueeText = "Habilidades Técnicas";
   </div>
 
   <!-- Accessible heading (screen readers) -->
-  <h2 id="skills-heading" class="sr-only" data-i18n="skills.title">
-    Habilidades Técnicas
+  <h2 id="skills-heading" class="sr-only">
+    {t('skills.title')}
   </h2>
 
   <!-- ── Marquee ── -->
@@ -119,16 +124,10 @@ const marqueeText = "Habilidades Técnicas";
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px] reveal-up">
     <!-- Column headers -->
     <div class="skill-grid border-t border-b border-border py-3 mb-0">
-      <span class="col-th" data-i18n="skills.col.tech">Tecnología</span>
-      <span class="col-th hidden sm:block" data-i18n="skills.col.cat"
-        >Categoría</span
-      >
-      <span class="col-th hidden md:block" data-i18n="skills.col.level"
-        >Nivel</span
-      >
-      <span class="col-th text-right" data-i18n="skills.col.prof"
-        >Proficiency</span
-      >
+      <span class="col-th">{t('skills.col.tech')}</span>
+      <span class="col-th hidden sm:block">{t('skills.col.cat')}</span>
+      <span class="col-th hidden md:block">{t('skills.col.level')}</span>
+      <span class="col-th text-right">{t('skills.col.prof')}</span>
     </div>
 
     <!-- Skill rows -->
@@ -195,7 +194,7 @@ const marqueeText = "Habilidades Técnicas";
     }
   }
   .skills-track {
-    animation: skills-scroll 28s linear infinite;
+    animation: skills-scroll 18s linear infinite;
     will-change: transform;
   }
   .skills-marquee:hover .skills-track {
@@ -230,16 +229,18 @@ const marqueeText = "Habilidades Técnicas";
   }
 
   /* ── Row reveal stagger ── */
-  .skill-row {
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      opacity 0.5s ease calc(var(--i) * 45ms),
-      transform 0.5s ease calc(var(--i) * 45ms);
-  }
-  .skills-visible .skill-row {
-    opacity: 1;
-    transform: translateY(0);
+  @media (min-width: 1024px) {
+    .skill-row {
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity 0.5s ease calc(var(--i) * 45ms),
+        transform 0.5s ease calc(var(--i) * 45ms);
+    }
+    .skills-visible .skill-row {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .skill-bar-fill {
@@ -248,18 +249,20 @@ const marqueeText = "Habilidades Técnicas";
   }
 
   /* ── Section reveals ── */
-  .reveal {
-    @apply opacity-0 translate-y-[20px] transition-[opacity,transform] duration-[600ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal.visible {
-    @apply opacity-100 translate-y-0;
-  }
+  @media (min-width: 1024px) {
+    .reveal {
+      @apply opacity-0 translate-y-[20px] transition-[opacity,transform] duration-[600ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal.visible {
+      @apply opacity-100 translate-y-0;
+    }
 
-  .reveal-up {
-    @apply opacity-0 translate-y-[20px] transition-[opacity,transform] duration-[600ms] delay-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-up.visible {
-    @apply opacity-100 translate-y-0;
+    .reveal-up {
+      @apply opacity-0 translate-y-[20px] transition-[opacity,transform] duration-[600ms] delay-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal-up.visible {
+      @apply opacity-100 translate-y-0;
+    }
   }
 </style>
 
@@ -285,7 +288,7 @@ const marqueeText = "Habilidades Técnicas";
         io.unobserve(entry.target);
       });
     },
-    { threshold: 0.12 },
+    { threshold: 0.04, rootMargin: "0px 0px -30px 0px" },
   );
 
   reveals.forEach((el) => io.observe(el));

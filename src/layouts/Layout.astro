@@ -1,26 +1,37 @@
 ---
 // ═══════════════════════════════════════════════════════════
-//  Layout.astro — SEO-optimised base layout
+//  Layout.astro — SEO-optimised base layout with native i18n
 //  Kevin Gómez Lázaro · Full Stack Developer · Lima, Perú
 // ═══════════════════════════════════════════════════════════
 import '../styles/global.css';
+
 export interface Props {
   title?: string;
   description?: string;
-  canonicalURL?: string;
   ogImage?: string;
-  lang?: string;
 }
 
-const {
-  title = "Kevin Gómez | Full Stack Developer Lima, Perú — Next.js · React · NestJS",
-  description = "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y E-Commerce. Proyectos para Entel, NERD, Well-Done. Disponible para freelance.",
-  canonicalURL = "https://kevin.grupo-gomez.com",
-  ogImage = "https://kevin.grupo-gomez.com/og-image.jpg",
-  lang = "es",
-} = Astro.props;
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const isEn = locale === 'en';
 
 const siteURL = "https://kevin.grupo-gomez.com";
+const canonicalURL = isEn ? `${siteURL}/en/` : `${siteURL}/`;
+
+const {
+  title = isEn
+    ? "Kevin Gómez | Full Stack Developer Lima, Peru — Next.js · React · NestJS"
+    : "Kevin Gómez | Full Stack Developer Lima, Perú — Next.js · React · NestJS",
+  description = isEn
+    ? "Full Stack Developer with 8+ years of experience in Lima, Peru. Specialist in Next.js, React, NestJS, Headless WordPress, Laravel and E-Commerce. Projects for Entel, NERD, Well-Done. Available for freelance."
+    : "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y E-Commerce. Proyectos para Entel, NERD, Well-Done. Disponible para freelance.",
+  ogImage = `${siteURL}/og-image.jpg`,
+} = Astro.props;
+
+const keywords = isEn
+  ? "full stack developer lima peru, web developer peru, next.js developer peru, react developer lima, nestjs developer, headless wordpress, laravel developer peru, ecommerce developer, freelance developer peru, kevin gomez"
+  : "full stack developer lima peru, desarrollador web lima, next.js developer peru, react developer lima, nestjs developer, wordpress headless, laravel developer peru, ecommerce developer, desarrollador freelance lima, kevin gomez";
+
+
 
 // ─── JSON-LD Structured Data ───
 const structuredData = {
@@ -134,7 +145,7 @@ const structuredData = {
 ---
 
 <!doctype html>
-<html lang={lang} dir="ltr">
+<html lang={locale} dir="ltr">
   <head>
     <!-- ─── Charset & Viewport ─── -->
     <meta charset="UTF-8" />
@@ -143,10 +154,7 @@ const structuredData = {
     <!-- ─── Primary SEO ─── -->
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta
-      name="keywords"
-      content="full stack developer lima peru, desarrollador web lima, next.js developer peru, react developer lima, nestjs developer, wordpress headless, laravel developer peru, ecommerce developer, desarrollador freelance lima, kevin gomez"
-    />
+    <meta name="keywords" content={keywords} />
     <meta name="author" content="Kevin Gómez Lázaro" />
     <meta
       name="robots"
@@ -173,8 +181,8 @@ const structuredData = {
       property="og:image:alt"
       content="Kevin Gómez — Full Stack Developer Lima, Perú"
     />
-    <meta property="og:locale" content="es_PE" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale" content={isEn ? 'en_US' : 'es_PE'} />
+    <meta property="og:locale:alternate" content={isEn ? 'es_PE' : 'en_US'} />
 
     <!-- ─── Twitter Card ─── -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -190,8 +198,13 @@ const structuredData = {
     <!-- ─── Geo / Local SEO ─── -->
     <meta name="geo.region" content="PE-LIM" />
     <meta name="geo.placename" content="Lima, Perú" />
-    <meta name="language" content="Spanish" />
+    <meta name="language" content={isEn ? 'English' : 'Spanish'} />
     <meta name="revisit-after" content="7 days" />
+
+    <!-- ─── hreflang — alternate language URLs ─── -->
+    <link rel="alternate" hreflang="es" href={`${siteURL}/`} />
+    <link rel="alternate" hreflang="en" href={`${siteURL}/en/`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteURL}/`} />
 
     <!-- ─── Fonts: Inter variable (display + body) via Google Fonts ─── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -229,7 +242,7 @@ const structuredData = {
 
   <body>
     <!-- Accessibility: skip to main content -->
-    <!-- <a href="#main-content" class="skip-link">Saltar al contenido principal</a> -->
+    <a href="#main-content" class="skip-link">{isEn ? 'Skip to main content' : 'Saltar al contenido principal'}</a>
 
     <slot />
 

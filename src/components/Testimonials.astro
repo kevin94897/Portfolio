@@ -1,5 +1,9 @@
 ---
 // Testimonials.astro — Embla carousel with 4 testimonials
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
 ---
 
 <section
@@ -14,7 +18,7 @@
     >
       <div>
         <p class="section-label">
-          <span data-i18n="t.label">06 — Testimonios</span><span class="jp-tag"
+          <span>{t('t.label')}</span><span class="jp-tag"
             >評価</span
           >
         </p>
@@ -61,32 +65,28 @@
             {
               initials: "CU",
               i18n: "t.t1.text",
-              text: "Kevin es un profesional comprometido con su labor, siempre estuvo a la altura de los proyectos encomendados. Tiene un gran talento al diseño, UX y desarrollo web. Es una persona que recomendaría para proyectos en fábrica de software.",
               name: "Cristian Uscata",
               role: "Remote Senior Java Fullstack Developer",
             },
             {
               initials: "AL",
               i18n: "t.t2.text",
-              text: "Kevin presta mucha atención a los detalles, es dinámico, muy capaz de aprender nuevas tecnologías. Cumple a tiempo sus tareas y responde al trabajo bajo presión. Muy recomendado para cualquier proyecto web.",
               name: "Aland Steven Laines Calonge",
               role: "Consultor TI — Desarrollador Web",
             },
             {
               initials: "CG",
               i18n: "t.t3.text",
-              text: "Kevin brings creative energy and solid execution to every project. His eye for design combined with strong backend expertise is a rare combination that makes him an exceptional developer to collaborate with.",
               name: "Cristian Gomez",
               role: "UI/UX Designer",
             },
             {
               initials: "FH",
               i18n: "t.t4.text",
-              text: "Working with Kevin was a great experience. His technical depth combined with strong communication skills made every milestone smooth. He adapts quickly to new frameworks and delivers clean, performant code.",
               name: "Frank Hinojosa",
               role: "UI/UX Designer",
             },
-          ].map((t) => (
+          ].map((item) => (
             <div class="flex-[0_0_calc(90%-10px)] md:flex-[0_0_calc(50%-10px)] min-w-0">
               <figure class="testimonial-card relative z-[2] bg-surface2 rounded-[16px] p-[34px] h-full duration-300">
                 <div
@@ -97,22 +97,21 @@
                 </div>
                 <blockquote
                   class="text-[13px] leading-[1.85] text-text/65 mb-5"
-                  data-i18n={t.i18n}
                 >
-                  {t.text}
+                  {t(item.i18n as any)}
                 </blockquote>
                 <figcaption class="flex items-center gap-3">
                   <div
                     class="w-[42px] h-[42px] rounded-full bg-lime-dim border border-lime/25 flex items-center justify-center font-syne font-extrabold text-[14px] text-lime flex-shrink-0"
                     aria-hidden="true"
                   >
-                    {t.initials}
+                    {item.initials}
                   </div>
                   <div>
                     <p class="font-syne text-[14px] font-bold text-white">
-                      {t.name}
+                      {item.name}
                     </p>
-                    <p class="text-[11px] text-muted">{t.role}</p>
+                    <p class="text-[11px] text-muted">{item.role}</p>
                   </div>
                 </figcaption>
               </figure>

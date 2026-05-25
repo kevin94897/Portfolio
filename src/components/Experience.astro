@@ -1,51 +1,50 @@
 ---
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
+
 const jobs = [
   {
     year: '2025',
     title: 'Full Stack Developer',
     company: 'NERD — Lima, Perú',
-    i18n: 'exp.nerd',
-    desc: 'Backend NestJS + APIs REST. Frontend Next.js y React+Vite (Liwilu, Punto Azul). Integración con ERP, Zoho, Headless WordPress y PrestaShop.',
+    descKey: 'exp.nerd',
     tags: ['Next.js', 'NestJS', 'React', 'Tailwind', 'Zoho'],
   },
   {
     year: '2021 — 2025',
     title: 'Full Stack Developer',
     company: 'SrBurns — Miraflores, Lima',
-    i18n: 'exp.srburns',
-    desc: 'Desarrollo para Entel, Urbanova, Paseo Begonias y La Rambla. WordPress Headless + Astro + Tailwind. APIs REST, SEO técnico y Scrum.',
+    descKey: 'exp.srburns',
     tags: ['Astro', 'WP Headless', 'Node.js', 'SCSS', 'Figma'],
   },
   {
     year: '2020 — 2021',
     title: 'Web Developer',
     company: 'Well-Done Media — Puerto Rico',
-    i18n: 'exp.wellDone',
-    desc: 'WordPress, Shopify, PrestaShop con temas personalizados. React y Vue.js en arquitecturas modernas. GTM, Google Analytics y Zoho CRM.',
+    descKey: 'exp.wellDone',
     tags: ['React', 'Vue.js', 'Shopify', 'GTM', 'Zapier'],
   },
   {
     year: '2020',
     title: 'Full Stack Developer',
     company: 'One Blush Salon — Miraflores',
-    i18n: 'exp.oneBlush',
-    desc: 'Laravel, CodeIgniter, Vue.js y jQuery. REST APIs con token-auth. Sistema de citas online, asistente virtual y módulos de ventas.',
+    descKey: 'exp.oneBlush',
     tags: ['Laravel', 'CodeIgniter', 'Vue.js', 'REST API'],
   },
   {
     year: '2019 — 2020',
     title: 'Web Developer',
     company: 'Softbrilliance — San Borja',
-    i18n: 'exp.soft',
-    desc: 'WordPress (SOAP), SEMRush, Screaming Frog, análisis On-Page, reportes SEO y vistas responsivas.',
+    descKey: 'exp.soft',
     tags: ['WordPress', 'SEO', 'Analytics'],
   },
   {
     year: '2017 — 2018',
     title: 'Freelancer',
     company: 'Vex Soluciones — Lima',
-    i18n: 'exp.vex',
-    desc: 'WooCommerce, Shopify, WordPress. UX con evaluaciones heurísticas, prototipado y tests con usuarios.',
+    descKey: 'exp.vex',
     tags: ['WooCommerce', 'Shopify', 'UX'],
   },
 ];
@@ -59,7 +58,7 @@ const jobs = [
 
   <!-- Label -->
   <div class="flex items-center gap-3 mb-4 max-w-[1400px] mx-auto">
-    <span class="text-[10px] tracking-widest uppercase text-muted" data-i18n="exp.label">03 — Carrera</span>
+    <span class="text-[10px] tracking-widest uppercase text-muted">{t('exp.label')}</span>
     <span class="text-[10px] text-muted/40 tracking-[0.06em]">職歴</span>
   </div>
 
@@ -70,7 +69,7 @@ const jobs = [
       class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
       style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
     >
-      Experiencia
+      {t('exp.work')}
     </h2>
   </div>
 
@@ -109,11 +108,8 @@ const jobs = [
         </div>
 
         <!-- Description -->
-        <p
-          class="text-white text-[13px] md:text-[14px] leading-relaxed"
-          data-i18n={job.i18n}
-        >
-          {job.desc}
+        <p class="text-white text-[13px] md:text-[14px] leading-relaxed">
+          {t(job.descKey)}
         </p>
 
         <!-- Tags -->

@@ -1,33 +1,14 @@
 ---
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
+
 const services = [
-  {
-    num: '01',
-    nameKey: 'services.s1.name',
-    name: 'Full Stack Dev',
-    descKey: 'services.s1.desc',
-    desc: 'Aplicaciones web end-to-end con React, Next.js, NestJS, Laravel y Node.js. Diseño de APIs REST, autenticación y lógica de negocio.',
-  },
-  {
-    num: '02',
-    nameKey: 'services.s2.name',
-    name: 'Diseño & UX',
-    descKey: 'services.s2.desc',
-    desc: 'Interfaces responsivas desde Figma hasta código. Evaluación heurística, prototipado y diseño centrado en el usuario.',
-  },
-  {
-    num: '03',
-    nameKey: 'services.s3.name',
-    name: 'E-Commerce',
-    descKey: 'services.s3.desc',
-    desc: 'Tiendas con WooCommerce, Shopify y PrestaShop. Pasarelas de pago, Zoho CRM y automatizaciones con Zapier.',
-  },
-  {
-    num: '04',
-    nameKey: 'services.s4.name',
-    name: 'SEO & Analytics',
-    descKey: 'services.s4.desc',
-    desc: 'SEO técnico y on-page, GTM, Google Analytics, Facebook Pixel, SEMRush, Screaming Frog y reportes de leads.',
-  },
+  { num: '01', nameKey: 'services.s1.name', descKey: 'services.s1.desc' },
+  { num: '02', nameKey: 'services.s2.name', descKey: 'services.s2.desc' },
+  { num: '03', nameKey: 'services.s3.name', descKey: 'services.s3.desc' },
+  { num: '04', nameKey: 'services.s4.name', descKey: 'services.s4.desc' },
 ];
 ---
 
@@ -39,7 +20,7 @@ const services = [
 
   <!-- Label -->
   <div class="flex items-center gap-3 mb-4 max-w-[1400px] mx-auto">
-    <span class="text-[10px] tracking-widest uppercase text-muted" data-i18n="services.label">02 — Servicios</span>
+    <span class="text-[10px] tracking-widest uppercase text-muted">{t('services.label')}</span>
     <span class="text-[10px] text-muted/40 tracking-[0.06em]">サービス</span>
   </div>
 
@@ -49,9 +30,8 @@ const services = [
       id="services-heading"
       class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
       style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
-      data-i18n-html="services.title"
     >
-      Services
+      {t('services.title')}
     </h2>
   </div>
 
@@ -85,17 +65,13 @@ const services = [
         <h3
           class="font-display font-bold text-2xl md:text-3xl lg:text-4xl tracking-tightest text-white transition-colors duration-300 group-hover:text-lime"
           style="font-optical-sizing: auto;"
-          data-i18n={s.nameKey}
         >
-          {s.name}
+          {t(s.nameKey)}
         </h3>
 
         <!-- Description -->
-        <p
-          class="text-muted text-[13px] md:text-[14px] leading-relaxed max-w-sm"
-          data-i18n={s.descKey}
-        >
-          {s.desc}
+        <p class="text-muted text-[13px] md:text-[14px] leading-relaxed max-w-sm">
+          {t(s.descKey)}
         </p>
       </div>
     ))}

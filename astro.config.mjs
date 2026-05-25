@@ -5,6 +5,13 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://kevin.grupo-gomez.com',
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   integrations: [sitemap(), tailwind()],
   compressHTML: true,
   build: {

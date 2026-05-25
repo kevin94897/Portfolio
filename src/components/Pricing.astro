@@ -1,5 +1,9 @@
 ---
 // Pricing.astro — 3 pricing plans with features lists
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
 ---
 
 <section
@@ -8,13 +12,12 @@
   aria-labelledby="pricing-heading"
 >
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
-    <p class="section-label" data-i18n="price.label">08 — Inversión</p>
+    <p class="section-label">{t('price.label')}</p>
     <h2
       id="pricing-heading"
       class="section-title section-title-anim"
-      data-i18n-html="price.title"
+      set:html={t('price.title')}
     >
-      Planes &amp; Precios
     </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -26,9 +29,8 @@
         <h3
           id="plan-basic"
           class="font-syne text-[20px] font-extrabold text-white mb-[7px]"
-          data-i18n="price.p1.name"
         >
-          Básico
+          {t('price.p1.name')}
         </h3>
         <div class="flex items-baseline gap-[3px] mb-[5px]">
           <span class="text-[13px] text-muted mt-[6px]">S/.</span>
@@ -61,7 +63,7 @@
                   class="ph-bold ph-check text-lime mt-[2px] flex-shrink-0"
                   aria-hidden="true"
                 />
-                <span data-i18n={f.key}>{f.text}</span>
+                <span>{t(f.key as any)}</span>
               </li>
             ))
           }
@@ -69,7 +71,7 @@
         <a
           href="#contact"
           class="flex justify-center items-center gap-2 px-[26px] py-[13px] border border-border text-text bg-transparent text-[11px] tracking-[0.1em] uppercase no-underline transition-all duration-300 cursor-none hover:border-lime hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.12)]"
-          data-i18n="price.cta">Adquirir</a
+        >{t('price.cta')}</a
         >
       </article>
 
@@ -87,16 +89,14 @@
         </div>
         <div
           class="inline-block bg-lime text-black text-[9px] font-medium tracking-[0.1em] uppercase px-[10px] py-1 rounded-[4px] mb-4"
-          data-i18n="price.popular"
         >
-          Más Popular
+          {t('price.popular')}
         </div>
         <h3
           id="plan-corp"
           class="font-syne text-[20px] font-extrabold text-white mb-[7px]"
-          data-i18n="price.p2.name"
         >
-          Corporativo
+          {t('price.p2.name')}
         </h3>
         <div class="flex items-baseline gap-[3px] mb-[5px]">
           <span class="text-[13px] text-muted mt-[6px]">S/.</span>
@@ -124,7 +124,7 @@
                   class="ph-bold ph-check text-lime mt-[2px] flex-shrink-0"
                   aria-hidden="true"
                 />
-                <span data-i18n={f.key}>{f.text}</span>
+                <span>{t(f.key as any)}</span>
               </li>
             ))
           }
@@ -132,7 +132,7 @@
         <a
           href="#contact"
           class="flex justify-center items-center gap-2 px-[26px] py-[13px] bg-lime text-black text-[11px] font-medium tracking-[0.1em] uppercase no-underline transition-all duration-300 cursor-none hover:shadow-[0_0_30px_rgba(180,223,0,0.4)] hover:-translate-y-0.5"
-          data-i18n="price.cta">Adquirir</a
+        >{t('price.cta')}</a
         >
       </article>
 
@@ -145,9 +145,8 @@
         <h3
           id="plan-store"
           class="font-syne text-[20px] font-extrabold text-white mb-[7px]"
-          data-i18n="price.p3.name"
         >
-          Tienda Virtual
+          {t('price.p3.name')}
         </h3>
         <div class="flex items-baseline gap-[3px] mb-[5px]">
           <span class="text-[13px] text-muted mt-[6px]">S/.</span>
@@ -175,7 +174,7 @@
                   class="ph-bold ph-check text-lime mt-[2px] flex-shrink-0"
                   aria-hidden="true"
                 />
-                <span data-i18n={f.key}>{f.text}</span>
+                <span>{t(f.key as any)}</span>
               </li>
             ))
           }
@@ -183,7 +182,7 @@
         <a
           href="#contact"
           class="flex justify-center items-center gap-2 px-[26px] py-[13px] border border-border text-text bg-transparent text-[11px] tracking-[0.1em] uppercase no-underline transition-all duration-300 cursor-none hover:border-lime hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.12)]"
-          data-i18n="price.cta">Adquirir</a
+        >{t('price.cta')}</a
         >
       </article>
     </div>
@@ -203,10 +202,12 @@
     font-size: clamp(30px, 5vw, 50px);
   }
 
-  .reveal {
-    @apply opacity-0 translate-y-[40px] transition-[opacity,transform] duration-[700ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal.visible {
-    @apply opacity-100 translate-y-0;
+  @media (min-width: 768px) {
+    .reveal {
+      @apply opacity-0 translate-y-[40px] transition-[opacity,transform] duration-[700ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal.visible {
+      @apply opacity-100 translate-y-0;
+    }
   }
 </style>

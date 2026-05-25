@@ -1,6 +1,10 @@
 ---
 // Contact.astro — Contact form + social links + CV download card
 // With: real validation, Gmail SMTP send, honeypot anti-bot, toast feedback
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
 ---
 
 <section
@@ -10,7 +14,7 @@
 >
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
     <p class="section-label">
-      <span data-i18n="contact.label">09 — Contacto</span><span class="jp-tag"
+      <span>{t('contact.label')}</span><span class="jp-tag"
         >お問い合わせ</span
       >
     </p>
@@ -27,10 +31,8 @@
       <div class="reveal-left relative z-[2]">
         <p
           class="text-[13px] md:text-[14px] leading-[1.75] text-text/55 mb-5 lg:mb-7"
-          data-i18n="contact.desc"
         >
-          ¿Tienes un proyecto en mente? Estoy disponible para freelance,
-          colaboraciones y nuevas oportunidades. Escríbeme.
+          {t('contact.desc')}
         </p>
 
         <nav
@@ -83,15 +85,13 @@
         >
           <p
             class="font-syne text-[15px] font-bold text-white mb-1"
-            data-i18n="contact.docs"
           >
-            Documentos
+            {t('contact.docs')}
           </p>
           <p
             class="text-[12px] text-muted mb-4 leading-[1.5]"
-            data-i18n="contact.docsub"
           >
-            Descarga mi CV, carta de presentación o carta de recomendación.
+            {t('contact.docsub')}
           </p>
           <a
             href="/files/KevinGomezLazaroCV_2026.pdf"
@@ -99,7 +99,7 @@
             class="flex items-center gap-[9px] px-4 py-[11px] no-underline text-[11px] tracking-[0.08em] cursor-none mb-2 transition-all duration-300 bg-lime text-black font-medium hover:shadow-[0_0_24px_rgba(180,223,0,0.4)] hover:-translate-y-px"
           >
             <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
-            <span data-i18n="contact.dlcv">Curriculum Vitae 2026 (PDF)</span>
+            <span>{t('contact.dlcv')}</span>
           </a>
           <a
             href="/files/Carta_Presentacion_KevinGomez.pdf"
@@ -107,7 +107,7 @@
             class="flex w-full items-center gap-[9px] px-4 py-[11px] no-underline text-[11px] tracking-[0.08em] cursor-none mb-2 transition-all duration-300 border border-border text-muted hover:border-lime/30 hover:text-lime"
           >
             <i class="ph ph-file-text" aria-hidden="true"></i>
-            <span data-i18n="contact.dlcover">Carta de Presentación (PDF)</span>
+            <span>{t('contact.dlcover')}</span>
           </a>
           <a
             href="/files/Carta_Recomendacion_Burns_KevinGomez.pdf"
@@ -115,9 +115,7 @@
             class="flex w-full items-center gap-[9px] px-4 py-[11px] no-underline text-[11px] tracking-[0.08em] cursor-none transition-all duration-300 border border-border text-muted hover:border-lime/30 hover:text-lime"
           >
             <i class="ph ph-medal" aria-hidden="true"></i>
-            <span data-i18n="contact.dlrecom"
-              >Carta de Recomendación — Burns</span
-            >
+            <span>{t('contact.dlrecom')}</span>
           </a>
         </div>
       </div>
@@ -165,15 +163,14 @@
               <label
                 for="fname"
                 class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
-                data-i18n="form.name">Nombre</label
+              >{t('form.name')}</label
               >
               <input
                 type="text"
                 id="fname"
                 name="NOMBRE"
                 autocomplete="given-name"
-                data-i18n-ph="form.namePh"
-                placeholder="Juan"
+                placeholder={t('form.namePh')}
                 required
                 class="form-input w-full bg-surface2 border border-border rounded-[8px] px-[14px] py-[11px] sm:py-[13px] text-text font-sans text-[13px] sm:text-[14px] outline-none resize-none transition-[border-color,box-shadow] duration-300 focus:border-lime/40 focus:shadow-[0_0_0_3px_rgba(180,223,0,0.05)]"
               />
@@ -183,15 +180,14 @@
               <label
                 for="lname"
                 class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
-                data-i18n="form.lastname">Apellido</label
+              >{t('form.lastname')}</label
               >
               <input
                 type="text"
                 id="lname"
                 name="APELLIDOS"
                 autocomplete="family-name"
-                data-i18n-ph="form.lastnamePh"
-                placeholder="García"
+                placeholder={t('form.lastnamePh')}
                 required
                 class="form-input w-full bg-surface2 border border-border rounded-[8px] px-[14px] py-[11px] sm:py-[13px] text-text font-sans text-[13px] sm:text-[14px] outline-none resize-none transition-[border-color,box-shadow] duration-300 focus:border-lime/40 focus:shadow-[0_0_0_3px_rgba(180,223,0,0.05)]"
               />
@@ -221,14 +217,13 @@
             <label
               for="subject"
               class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
-              data-i18n="form.subject">Asunto</label
+            >{t('form.subject')}</label
             >
             <input
               type="text"
               id="subject"
               name="ASUNTO"
-              data-i18n-ph="form.subjectPh"
-              placeholder="Consulta de proyecto"
+              placeholder={t('form.subjectPh')}
               required
               class="form-input w-full bg-surface2 border border-border rounded-[8px] px-[15px] py-[13px] text-text font-sans text-[14px] outline-none resize-none transition-[border-color,box-shadow] duration-300 focus:border-lime/40 focus:shadow-[0_0_0_3px_rgba(180,223,0,0.05)]"
             />
@@ -239,14 +234,13 @@
             <label
               for="message"
               class="block text-[10px] tracking-[0.15em] uppercase text-muted mb-[7px]"
-              data-i18n="form.message">Mensaje</label
+            >{t('form.message')}</label
             >
             <textarea
               id="message"
               name="MESSAGE"
               required
-              data-i18n-ph="form.messagePh"
-              placeholder="Cuéntame sobre tu proyecto..."
+              placeholder={t('form.messagePh')}
               class="form-input w-full h-[90px] sm:h-[110px] bg-surface2 border border-border rounded-[8px] px-[14px] py-[11px] sm:py-[13px] text-text font-sans text-[13px] sm:text-[14px] outline-none resize-none transition-[border-color,box-shadow] duration-300 focus:border-lime/40 focus:shadow-[0_0_0_3px_rgba(180,223,0,0.05)]"
             ></textarea>
             <span class="field-error" aria-live="polite"></span>
@@ -263,7 +257,7 @@
           >
             <i id="submitIcon" class="ph ph-paper-plane-tilt" aria-hidden="true"
             ></i>
-            <span id="submitLabel" data-i18n="form.send">Enviar Mensaje</span>
+            <span id="submitLabel">{t('form.send')}</span>
           </button>
         </form>
         <!-- Hidden iframe: receives Brevo's POST response without navigating page -->
@@ -294,17 +288,19 @@
     @apply text-lime not-italic;
   }
 
-  .reveal-left {
-    @apply opacity-0 -translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-left.visible {
-    @apply opacity-100 translate-x-0;
-  }
-  .reveal-right {
-    @apply opacity-0 translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
-  }
-  .reveal-right.visible {
-    @apply opacity-100 translate-x-0;
+  @media (min-width: 1024px) {
+    .reveal-left {
+      @apply opacity-0 -translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal-left.visible {
+      @apply opacity-100 translate-x-0;
+    }
+    .reveal-right {
+      @apply opacity-0 translate-x-[60px] transition-[opacity,transform] duration-[800ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)];
+    }
+    .reveal-right.visible {
+      @apply opacity-100 translate-x-0;
+    }
   }
 
   /* ── Field validation states ── */

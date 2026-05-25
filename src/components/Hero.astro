@@ -1,5 +1,9 @@
 ---
 import portrait from "../assets/images/foto_portrait_kevin.jpeg";
+import { useTranslations } from '../i18n/utils';
+
+const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const t = useTranslations(locale);
 ---
 
 <section
@@ -7,15 +11,14 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
   class="relative w-full h-screen overflow-hidden flex flex-col justify-end"
   aria-labelledby="hero-heading"
 >
-  <!-- Background 3D animation -->
-  <div class="absolute inset-0" aria-hidden="true">
-    <iframe
-      src="https://my.spline.design/animatedshapeblend-NZa3aGqZlc4TQObjvJlEW2RU/"
-      title="Animación 3D decorativa"
-      loading="lazy"
-      width="100%"
-      height="100%"
-      class="w-full h-full border-none pointer-events-auto"></iframe>
+  <!-- Background 3D animation — desktop only, deferred -->
+  <div class="absolute inset-0" aria-hidden="true" id="hero-spline-container">
+    <!-- CSS gradient fallback shown on mobile and before Spline loads -->
+    <div
+      id="hero-gradient-bg"
+      class="w-full h-full"
+      style="background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(180,223,0,0.08) 0%, rgba(3,3,3,0) 70%), radial-gradient(ellipse 50% 50% at 80% 20%, rgba(180,223,0,0.05) 0%, transparent 60%), #030303;"
+    ></div>
   </div>
 
   <!-- Canvas particles -->
@@ -42,15 +45,15 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
       >
         <span
           class="hero-role hero-role-active text-[clamp(11px,1.3vw,16px)] text-text transition-colors duration-500"
-          data-i18n="hero.role1">Frontend &amp; Backend Development</span
+          >{t('hero.role1')}</span
         >
         <span
           class="hero-role text-[clamp(11px,1.3vw,16px)] text-white transition-colors duration-500"
-          data-i18n="hero.role2">Headless CMS &amp; Integración de APIs</span
+          >{t('hero.role2')}</span
         >
         <span
           class="hero-role text-[clamp(11px,1.3vw,16px)] text-white transition-colors duration-500"
-          data-i18n="hero.role3">E-Commerce &amp; Soluciones Web</span
+          >{t('hero.role3')}</span
         >
       </div>
     </div>
@@ -115,7 +118,7 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
            opacity-0 [animation:fadeUp_0.8s_forwards_1.3s]"
     aria-hidden="true"
   >
-    <span data-i18n="hero.scroll">Explorar</span>
+    <span>{t('hero.scroll')}</span>
     <div
       class="w-px h-10 [background:linear-gradient(to_bottom,#b4df00,transparent)] [animation:scrollPulse_2s_ease-in-out_infinite]"
     >
@@ -144,3 +147,38 @@ import portrait from "../assets/images/foto_portrait_kevin.jpeg";
     }
   }
 </style>
+
+<script>
+  // ── Spline 3D: defer on all devices ────────────────
+  const container = document.getElementById('hero-spline-container');
+  const gradientBg = document.getElementById('hero-gradient-bg');
+
+  if (container) {
+    let loaded = false;
+
+    const loadSpline = () => {
+      if (loaded) return;
+      loaded = true;
+
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://my.spline.design/animatedshapeblend-NZa3aGqZlc4TQObjvJlEW2RU/';
+      iframe.title = 'Animación 3D decorativa';
+      iframe.className = 'w-full h-full border-none pointer-events-auto';
+      iframe.style.cssText = 'position:absolute;inset:0;opacity:0;transition:opacity 1s ease;';
+      iframe.onload = () => { iframe.style.opacity = '1'; };
+
+      // Insert before the gradient so it sits behind
+      if (gradientBg) {
+        container.insertBefore(iframe, gradientBg);
+      } else {
+        container.appendChild(iframe);
+      }
+    };
+
+    // Load after 1.5 s (after LCP is done) OR on first user interaction
+    setTimeout(loadSpline, 1500);
+    window.addEventListener('mousemove', loadSpline, { once: true });
+    window.addEventListener('touchstart', loadSpline, { once: true });
+    window.addEventListener('scroll', loadSpline, { once: true });
+  }
+</script>
