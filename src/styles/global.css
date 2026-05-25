@@ -445,8 +445,12 @@ form,
   align-items: center;
   gap: 12px;
   opacity: 0;
+  -webkit-transform: translateY(20px);
   transform: translateY(20px);
+  -webkit-animation: fadeUp 0.8s forwards 0.3s;
   animation: fadeUp 0.8s forwards 0.3s;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .hero-tag::before {
@@ -466,8 +470,12 @@ form,
   letter-spacing: -0.03em;
   margin-bottom: 20px;
   opacity: 0;
+  -webkit-transform: translateY(30px);
   transform: translateY(30px);
+  -webkit-animation: fadeUp 0.9s forwards 0.5s;
   animation: fadeUp 0.9s forwards 0.5s;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .hero-name .accent {
@@ -479,9 +487,13 @@ form,
   flex-direction: column;
   gap: 2px;
   opacity: 0;
+  -webkit-transform: translateY(20px);
   transform: translateY(20px);
+  -webkit-animation: fadeUp 0.8s forwards 0.8s;
   animation: fadeUp 0.8s forwards 0.8s;
   margin-bottom: 28px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .hero-role {
@@ -498,9 +510,13 @@ form,
   gap: 8px;
   flex-wrap: wrap;
   opacity: 0;
+  -webkit-transform: translateY(16px);
   transform: translateY(16px);
+  -webkit-animation: fadeUp 0.8s forwards 1s;
   animation: fadeUp 0.8s forwards 1s;
   pointer-events: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .hero-badge {
@@ -529,6 +545,7 @@ form,
   color: var(--muted);
   text-transform: uppercase;
   opacity: 0;
+  -webkit-animation: fadeUp 0.8s forwards 1.3s;
   animation: fadeUp 0.8s forwards 1.3s;
   pointer-events: none;
 }
@@ -555,7 +572,16 @@ form,
 @keyframes fadeUp {
   to {
     opacity: 1;
-    transform: none;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes fadeUp {
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
   }
 }
 
@@ -610,38 +636,56 @@ section {
 /* REVEAL */
 .reveal {
   opacity: 0;
+  -webkit-transform: translateY(40px);
   transform: translateY(40px);
+  -webkit-transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1),
+    -webkit-transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
   transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1),
     transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: none;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
 }
 
 .reveal-left {
   opacity: 0;
+  -webkit-transform: translateX(-60px);
   transform: translateX(-60px);
+  -webkit-transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    -webkit-transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
   transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
     transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .reveal-left.visible {
   opacity: 1;
-  transform: none;
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
 }
 
 .reveal-right {
   opacity: 0;
+  -webkit-transform: translateX(60px);
   transform: translateX(60px);
+  -webkit-transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    -webkit-transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
   transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
     transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .reveal-right.visible {
   opacity: 1;
-  transform: none;
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
 }
 
 /* BUTTONS */
@@ -837,14 +881,19 @@ section {
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   color: var(--text);
+  -webkit-transition: border-color 0.2s, box-shadow 0.2s, -webkit-transform 0.2s;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
   opacity: 0;
+  -webkit-transform: translateY(8px);
   transform: translateY(8px);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .skill-pill.visible {
   opacity: 1;
-  transform: none;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
 }
 
 .skill-pill:hover {
