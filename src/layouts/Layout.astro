@@ -234,6 +234,7 @@ const structuredData = {
 
     <!-- ─── Structured Data (JSON-LD) ─── -->
     <script
+      is:inline
       type="application/ld+json"
       set:html={JSON.stringify(structuredData, null, 2)}
     />
@@ -262,33 +263,104 @@ const structuredData = {
 
       gsap.registerPlugin(ScrollTrigger, SplitText);
 
-      // Hero title — fires on load with a short delay (no ScrollTrigger)
-      const heroTitle = document.querySelector<HTMLElement>(".hero-title-anim");
-      if (heroTitle) {
-        const split = new SplitText(heroTitle, { type: "chars" });
-        gsap.from(split.chars, {
-          y: 70,
-          opacity: 0,
-          stagger: 0.018,
-          duration: 0.9,
-          delay: 0.3,
-          ease: "power3.out",
+      function wrapLines(lines: Element[]) {
+        lines.forEach((line) => {
+          const wrap = document.createElement("div");
+          wrap.style.overflow = "hidden";
+          wrap.style.display = "block";
+          line.parentNode!.insertBefore(wrap, line);
+          wrap.appendChild(line);
         });
       }
 
-      // All other section titles — fire on scroll
+      // ── Hero title ───────────────────────────────────────────
+      // Loader handles the cinematic fly-in; we just toggle opacity.
+      // If no loader is present (e.g. navigating back), fall back to emerge.
+      const heroTitle = document.querySelector<HTMLElement>(".hero-title-anim");
+      if (heroTitle) {
+        if (document.getElementById("loading-screen")) {
+          // Keep invisible; loader will set opacity:1 when it arrives
+          gsap.set(heroTitle, { opacity: 0 });
+          document.addEventListener(
+            "hero:loader-done",
+            () => gsap.set(heroTitle, { opacity: 1 }),
+            { once: true },
+          );
+        } else {
+          // No loader — emerge from baseline
+          const split = new SplitText(heroTitle, { type: "lines" });
+          wrapLines(split.lines);
+          gsap.from(split.lines, {
+            y: "115%",
+            stagger: 0.1,
+            duration: 1.15,
+            delay: 0.25,
+            ease: "power4.out",
+          });
+        }
+      }
+
+      // ── Hero sub-elements — ordered reveal after loader ────────
+      // tech bar → roles → secondary (JP text + scroll) → Spline bg
+      const allHeroEls = document.querySelectorAll<HTMLElement>("[data-hero-reveal]");
+      const techEl       = document.querySelector<HTMLElement>('[data-hero-reveal="tech"]');
+      const rolesEl      = document.querySelector<HTMLElement>('[data-hero-reveal="roles"]');
+      const secondaryEls = document.querySelectorAll<HTMLElement>('[data-hero-reveal="secondary"]');
+
+      if (allHeroEls.length) {
+        if (document.getElementById("loading-screen")) {
+          gsap.set(allHeroEls, { opacity: 0, y: 18 });
+
+          document.addEventListener(
+            "hero:loader-done",
+            () => {
+              const tl = gsap.timeline();
+
+              // 1. Green tech bar slides up
+              if (techEl) {
+                tl.to(techEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
+              }
+
+              // 2. Role cycling text
+              if (rolesEl) {
+                tl.to(rolesEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.22);
+              }
+
+              // 3. JP text + scroll indicator
+              if (secondaryEls.length) {
+                tl.to(secondaryEls, {
+                  opacity: 1, y: 0, stagger: 0.12, duration: 0.55, ease: "power2.out",
+                }, 0.44);
+              }
+
+              // 4. Trigger Spline background fade-in last
+              tl.call(
+                () => document.dispatchEvent(new CustomEvent("hero:reveal-spline")),
+                undefined,
+                0.85,
+              );
+            },
+            { once: true },
+          );
+        } else {
+          // No loader — show everything immediately
+          gsap.set(allHeroEls, { opacity: 1, y: 0 });
+        }
+      }
+
+      // ── Section titles — fire on scroll (water-emerge from baseline) ──
       document.querySelectorAll<HTMLElement>(".section-title-anim").forEach((el) => {
-        const split = new SplitText(el, { type: "chars" });
-        gsap.from(split.chars, {
+        const split = new SplitText(el, { type: "lines" });
+        wrapLines(split.lines);
+        gsap.from(split.lines, {
           scrollTrigger: {
             trigger: el,
             start: "top 88%",
           },
-          y: 60,
-          opacity: 0,
-          stagger: 0.015,
-          duration: 0.7,
-          ease: "power3.out",
+          y: "115%",
+          stagger: 0.1,
+          duration: 1,
+          ease: "power4.out",
         });
       });
     </script>

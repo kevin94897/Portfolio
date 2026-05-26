@@ -938,14 +938,6 @@ const viewLabel = t('p.view');
     }
   });
 
-  // Nav buttons (arrows in sidebar)
-  btnPrev.addEventListener("click", () => {
-    if (locked) goTo(projIdx - 1);
-  });
-  btnNext.addEventListener("click", () => {
-    if (locked) goTo(projIdx + 1);
-  });
-
   // Dot clicks
   dotsVert.forEach((dot, i) => {
     dot.addEventListener("click", () => {

@@ -1,64 +1,119 @@
 ---
-// LoadingScreen.astro
-// Full-screen animated loading screen with lime progress bar
-// Disappears smoothly on window load
-import logo from '../assets/images/logo-kevin.png';
+// LoadingScreen.astro — cinematic intro: title appears centered → flies to hero position
 ---
 
 <div
   id="loading-screen"
-  role="progressbar"
-  aria-label="Cargando portfolio"
-  aria-busy="true"
-  class="fixed inset-0 bg-black z-[99999] flex flex-col items-center justify-center gap-7
-         transition-[opacity,visibility] duration-700 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]"
+  class="fixed inset-0 z-[99999]"
+  aria-hidden="true"
 >
-  <img
-    src={logo.src}
-    alt="Kevin Gómez Logo"
-    class="h-12 sm:h-16 w-auto [animation:loadingPulse_1.5s_ease-in-out_infinite]"
-  />
+  <!-- Background — fades out independently while name moves -->
+  <div id="loader-bg" class="absolute inset-0" style="background:#030303;"></div>
 
-  <p class="text-[11px] tracking-[0.25em] uppercase text-muted -mt-4">
-    Full Stack Developer · Lima, Perú
-  </p>
-
-  <div class="w-[200px] h-[2px] bg-white/[0.07] rounded-[2px] overflow-hidden">
-    <div class="h-full bg-lime rounded-[2px] w-0 shadow-[0_0_8px_rgba(180,223,0,0.4)] [animation:loadBar_1.6s_cubic-bezier(0.4,0,0.2,1)_forwards]"></div>
+  <!-- Name wrapper — centers the name initially -->
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <p
+      id="loader-name-el"
+      class="font-display font-bold leading-[0.88] text-white tracking-tightest uppercase select-none"
+      style="
+        font-size: clamp(3.8rem, 8vw, 12rem);
+        font-optical-sizing: auto;
+        font-variation-settings: 'opsz' 32;
+        opacity: 0;
+        will-change: transform, opacity;
+        white-space: nowrap;
+      "
+    >Kevin<span style="color:#b4df00">Gomez.</span><span class="hidden md:inline">ケビン</span></p>
   </div>
 </div>
 
-<style>
-  #loading-screen.hidden {
-    @apply opacity-0 invisible pointer-events-none;
-  }
-
-  @keyframes loadBar {
-    0%   { width: 0%; }
-    40%  { width: 55%; }
-    80%  { width: 85%; }
-    100% { width: 100%; }
-  }
-
-  @keyframes loadingPulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.6; }
-  }
-</style>
-
 <script>
-  function hideLoader() {
-    const screen = document.getElementById('loading-screen');
-    if (!screen) return;
-    setTimeout(() => {
-      screen.classList.add('hidden');
-      screen.addEventListener('transitionend', () => screen.remove(), { once: true });
-    }, 800);
+  import { gsap } from "gsap";
+
+  const screen  = document.getElementById("loading-screen") as HTMLElement;
+  const bg      = document.getElementById("loader-bg")      as HTMLElement;
+  const loaderEl= document.getElementById("loader-name-el") as HTMLElement;
+
+  // ── Phase 1: name emerges from below, centre-screen ──────
+  gsap.fromTo(
+    loaderEl,
+    { opacity: 0, y: 28 },
+    { opacity: 1, y: 0, duration: 0.85, delay: 0.15, ease: "power2.out" },
+  );
+
+  // Safety fallback
+  const fallback = setTimeout(() => {
+    screen?.remove();
+    document.dispatchEvent(new CustomEvent("hero:loader-done"));
+  }, 7000);
+
+  // ── Phase 2: fly name to its hero position ────────────────
+  function flyToHero() {
+    clearTimeout(fallback);
+
+    const heroEl = document.getElementById("hero-heading");
+
+    if (!heroEl) {
+      gsap.to(screen, {
+        opacity: 0, duration: 0.6,
+        onComplete: () => {
+          screen.remove();
+          document.dispatchEvent(new CustomEvent("hero:loader-done"));
+        },
+      });
+      return;
+    }
+
+    // Measure BEFORE any GSAP transform
+    const heroRect  = heroEl.getBoundingClientRect();
+    const loaderRect = loaderEl.getBoundingClientRect();
+    const dx = heroRect.left - loaderRect.left;
+    const dy = heroRect.top  - loaderRect.top;
+
+    const tl = gsap.timeline();
+
+    // Fly name to hero heading position
+    tl.to(loaderEl, {
+      x: dx,
+      y: dy,
+      duration: 1.0,
+      ease: "power3.inOut",
+    }, 0)
+
+    // Background dissolves while name is mid-flight
+    .to(bg, {
+      opacity: 0,
+      duration: 0.7,
+      ease: "power2.in",
+    }, 0.15)
+
+    // Cross-fade: reveal hero heading, fade out loader name
+    .add(() => {
+      heroEl.style.opacity = "1";
+      document.dispatchEvent(new CustomEvent("hero:loader-done"));
+    }, 0.82)
+
+    .to(loaderEl, {
+      opacity: 0,
+      duration: 0.28,
+      ease: "power1.in",
+    }, 0.82)
+
+    // Remove DOM node
+    .call(() => screen.remove(), undefined, 1.2);
   }
 
-  if (document.readyState === 'complete') {
-    hideLoader();
+  const MIN_MS = 1350;
+  const t0 = performance.now();
+
+  function schedFly() {
+    const wait = Math.max(0, MIN_MS - (performance.now() - t0));
+    setTimeout(flyToHero, wait);
+  }
+
+  if (document.readyState === "complete") {
+    schedFly();
   } else {
-    window.addEventListener('load', hideLoader);
+    window.addEventListener("load", schedFly, { once: true });
   }
 </script>

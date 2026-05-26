@@ -688,6 +688,19 @@ section {
   transform: translateX(0);
 }
 
+/* Mobile: never hide reveal elements — animations only for desktop */
+@media (max-width: 767px) {
+  .reveal,
+  .reveal-left,
+  .reveal-right {
+    opacity: 1 !important;
+    -webkit-transform: none !important;
+    transform: none !important;
+    -webkit-transition: none !important;
+    transition: none !important;
+  }
+}
+
 /* BUTTONS */
 .btn {
   display: inline-flex;
@@ -911,10 +924,6 @@ section {
 }
 
 /* ─── SERVICES ─── */
-#services {
-  /* background: var(--surface); */
-}
-
 .services-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

@@ -162,8 +162,7 @@ const t = useTranslations(locale);
             <div
               class="skill-pill flex items-center gap-[7px] px-[11px] py-[6px] bg-surface2 border border-border text-[10px] md:text-[11px] text-text
                    transition-[border-color,box-shadow,transform] duration-200
-                   hover:border-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] hover:-translate-y-0.5
-                   opacity-0 translate-y-2"
+                   hover:border-lime hover:shadow-[0_0_14px_rgba(180,223,0,0.12)] hover:-translate-y-0.5"
               role="listitem"
             >
               <div
@@ -196,8 +195,13 @@ const t = useTranslations(locale);
     }
   }
 
-  .skill-pill.visible {
-    @apply opacity-100 translate-y-0;
+  @media (min-width: 768px) {
+    .skill-pill {
+      @apply opacity-0 translate-y-2;
+    }
+    .skill-pill.visible {
+      @apply opacity-100 translate-y-0;
+    }
   }
 </style>
 

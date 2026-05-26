@@ -39,7 +39,8 @@ const t = useTranslations(locale);
   <div class="relative z-10 w-full pointer-events-none py-8">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-[40px]">
       <div
-        class="flex flex-col gap-0.5 mb-4 opacity-0 translate-y-5 [animation:fadeUp_0.8s_forwards_0.6s]"
+        class="flex flex-col gap-0.5 mb-4"
+        data-hero-reveal="roles"
         aria-live="polite"
         aria-atomic="true"
       >
@@ -62,6 +63,7 @@ const t = useTranslations(locale);
   <!-- Tech stack bar — static, inside container -->
   <div
     class="relative z-10 w-full py-3 pointer-events-none md:block hidden"
+    data-hero-reveal="tech"
     aria-hidden="true"
   >
     <div class="max-w-[1400px] mx-auto px-6 py-2 lg:px-[60px] bg-lime">
@@ -103,8 +105,9 @@ const t = useTranslations(locale);
         Kevin<span class="text-lime">Gomez.</span>ケビン
       </h1>
       <p
-        class="mt-3 text-[11px] tracking-[0.18em] opacity-0 [animation:fadeUp_0.8s_forwards_0.9s]"
+        class="mt-3 text-[11px] tracking-[0.18em]"
         style="color:rgba(255,255,255,0.22);"
+        data-hero-reveal="secondary"
       >
         ケビン・ゴメス &nbsp;—&nbsp; ウェブ開発者
       </p>
@@ -114,8 +117,8 @@ const t = useTranslations(locale);
   <!-- Scroll indicator -->
   <div
     class="hidden sm:flex absolute bottom-8 md:bottom-10 right-0 pr-6 lg:pr-[60px] items-end gap-3
-           text-[10px] tracking-[0.15em] text-muted uppercase pointer-events-none
-           opacity-0 [animation:fadeUp_0.8s_forwards_1.3s]"
+           text-[10px] tracking-[0.15em] text-muted uppercase pointer-events-none"
+    data-hero-reveal="secondary"
     aria-hidden="true"
   >
     <span>{t('hero.scroll')}</span>
@@ -131,12 +134,6 @@ const t = useTranslations(locale);
     color: #e8e8e8;
   }
 
-  @keyframes fadeUp {
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
   @keyframes scrollPulse {
     0%,
     100% {
@@ -175,8 +172,9 @@ const t = useTranslations(locale);
       }
     };
 
-    // Load after 1.5 s (after LCP is done) OR on first user interaction
-    setTimeout(loadSpline, 1500);
+    // Load after hero elements appear (event from loader) or fallback after 2.5 s
+    document.addEventListener('hero:reveal-spline', loadSpline, { once: true });
+    setTimeout(loadSpline, 2500);
     window.addEventListener('mousemove', loadSpline, { once: true });
     window.addEventListener('touchstart', loadSpline, { once: true });
     window.addEventListener('scroll', loadSpline, { once: true });
