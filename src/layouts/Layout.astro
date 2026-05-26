@@ -204,23 +204,43 @@ const structuredData = {
     <link rel="alternate" hreflang="en" href={`${siteURL}/en/`} />
     <link rel="alternate" hreflang="x-default" href={`${siteURL}/`} />
 
-    <!-- ─── Fonts: Inter variable (display + body) via Google Fonts ─── -->
+    <!-- ─── Fonts: Inter variable — async (non-render-blocking) ─── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      media="print"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
-    <!-- ─── Icons ─── -->
+    <!-- ─── Icons: Phosphor — async (non-render-blocking) ─── -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
+      media="print"
     />
     <link
       rel="stylesheet"
       href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css"
+      media="print"
     />
+    <noscript>
+      <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+      <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+    </noscript>
+    <!-- Switch media to 'all' after load so icons/fonts apply without blocking -->
+    <script is:inline>
+      document.querySelectorAll('link[media="print"]').forEach(function(l){
+        l.addEventListener('load', function(){ l.media = 'all'; });
+        if(l.sheet) l.media = 'all';
+      });
+    </script>
 
     <!-- ─── Favicon ─── -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -245,14 +265,6 @@ const structuredData = {
     >
 
     <slot />
-
-    <!-- Embla Carousel via CDN -->
-    <script
-      src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"
-      is:inline></script>
-    <script
-      src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"
-      is:inline></script>
 
     <!-- GSAP title animations -->
     <script>

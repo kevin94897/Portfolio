@@ -11,8 +11,6 @@
   "dependencies": {
     "@astrojs/sitemap": "3.6.0",
     "@astrojs/tailwind": "^6.0.2",
-    "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
-    "@fontsource-variable/space-grotesk": "^5.2.10",
     "astro": "^4.16.0",
     "embla-carousel": "^8.3.0",
     "embla-carousel-autoplay": "^8.3.0",

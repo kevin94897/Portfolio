@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
+  output: 'static',
   site: 'https://kevin-gomez.dev',
   i18n: {
     defaultLocale: 'es',
@@ -15,11 +16,8 @@ export default defineConfig({
   integrations: [sitemap(), tailwind()],
   compressHTML: true,
   build: {
-    inlineStylesheets: 'auto',
-  },
-  vite: {
-    build: {
-      cssCodeSplit: false,
-    },
+    // Inline all CSS into HTML — eliminates the render-blocking external stylesheet
+    // Trade-off: slightly larger HTML, but zero additional CSS requests on first load
+    inlineStylesheets: 'always',
   },
 });

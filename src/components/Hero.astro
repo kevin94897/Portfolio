@@ -176,11 +176,18 @@ const t = useTranslations(locale);
       }
     };
 
-    document.addEventListener("hero:reveal-spline", loadSpline, { once: true });
-    setTimeout(loadSpline, 2000);
-    window.addEventListener("mousemove", loadSpline, { once: true });
-    window.addEventListener("touchstart", loadSpline, { once: true });
-    window.addEventListener("scroll", loadSpline, { once: true });
+    // Load during browser idle time so Spline's heavy runtime doesn't block TTI.
+    // requestIdleCallback fires when the main thread is free; 10 s hard timeout as fallback.
+    const scheduleSpline = () => {
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(loadSpline, { timeout: 10000 });
+      } else {
+        setTimeout(loadSpline, 8000);
+      }
+    };
+
+    document.addEventListener("hero:reveal-spline", scheduleSpline, { once: true });
+    scheduleSpline();
   }
 </script>
 

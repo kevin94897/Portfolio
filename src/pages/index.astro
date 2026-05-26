@@ -4,7 +4,6 @@
 //  Assembles all sections + client-side scripts
 // ═══════════════════════════════════════════════════════════
 import Layout from "../layouts/Layout.astro";
-import CircuitBackground from "../components/CircuitBackground.astro";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
 import About from "../components/About.astro";
@@ -14,7 +13,6 @@ import Projects from "../components/Projects.astro";
 import SkillsBars from "../components/SkillsBars.astro";
 import Testimonials from "../components/Testimonials.astro";
 import Workflow from "../components/Workflow.astro";
-import Pricing from "../components/Pricing.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
 import Marquee from "../components/Marquee.astro";
@@ -245,12 +243,12 @@ import Marquee from "../components/Marquee.astro";
    EMBLA — TESTIMONIALS CAROUSEL
 ────────────────────────────────────────────────────────── */
   const tViewport = document.getElementById("emblaTestimonials")!;
-  // @ts-ignore
+  const { default: EmblaCarousel } = await import("embla-carousel");
+  const { default: EmblaCarouselAutoplay } = await import("embla-carousel-autoplay");
   const tAutoplay = EmblaCarouselAutoplay({
     delay: 5500,
     stopOnInteraction: true,
   });
-  // @ts-ignore
   const emblaT = EmblaCarousel(
     tViewport,
     { loop: true, align: "start", slidesToScroll: 1 },
