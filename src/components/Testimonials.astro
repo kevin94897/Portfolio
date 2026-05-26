@@ -1,8 +1,8 @@
 ---
 // Testimonials.astro — Embla carousel with 4 testimonials
-import { useTranslations } from '../i18n/utils';
+import { useTranslations } from "../i18n/utils";
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 ---
 
@@ -18,9 +18,7 @@ const t = useTranslations(locale);
     >
       <div>
         <p class="section-label">
-          <span>{t('t.label')}</span><span class="jp-tag"
-            >評価</span
-          >
+          <span>{t("t.label")}</span><span class="jp-tag">評価</span>
         </p>
         <h2
           id="t-heading"
@@ -88,16 +86,14 @@ const t = useTranslations(locale);
             },
           ].map((item) => (
             <div class="flex-[0_0_calc(90%-10px)] md:flex-[0_0_calc(50%-10px)] min-w-0">
-              <figure class="testimonial-card relative z-[2] bg-surface2 rounded-[16px] p-[34px] h-full duration-300">
+              <figure class="testimonial-card relative z-[2] bg-surface2 p-[34px] h-full duration-300">
                 <div
                   class="font-syne text-[38px] text-lime leading-none mb-3"
                   aria-hidden="true"
                 >
                   "
                 </div>
-                <blockquote
-                  class="text-[13px] leading-[1.85] text-text/65 mb-5"
-                >
+                <blockquote class="text-[13px] leading-[1.85] text-text/65 mb-5">
                   {t(item.i18n as any)}
                 </blockquote>
                 <figcaption class="flex items-center gap-3">

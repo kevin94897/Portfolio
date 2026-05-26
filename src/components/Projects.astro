@@ -10,9 +10,9 @@ import imgColecciones from "../assets/images/portfolio/KGFront.webp";
 import imgKGStore from "../assets/images/portfolio/KGStore.webp";
 import imgPuntoAzul from "../assets/images/portfolio/Puntoazul.webp";
 import imgCafePlaza from "../assets/images/portfolio/CafePlaza.webp";
-import { useTranslations } from '../i18n/utils';
+import { useTranslations } from "../i18n/utils";
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 
 interface Project {
@@ -25,7 +25,6 @@ interface Project {
   url: string;
   demo?: { user: string; pass: string };
 }
-
 
 // Pre-translate descriptions so the JSON embedded in the page is already localized
 const projects: Project[] = [
@@ -133,8 +132,7 @@ const projects: Project[] = [
 ];
 
 const N = projects.length;
-const viewLabel = t('p.view');
-
+const viewLabel = t("p.view");
 ---
 
 <!-- Sección ocupa 100vh — el scroll hijack la mantiene fija -->
@@ -170,7 +168,7 @@ const viewLabel = t('p.view');
       <p
         class="text-[10px] tracking-[0.25em] uppercase text-lime flex items-center gap-3 mb-2"
       >
-        <span>{t('proj.label')}</span>
+        <span>{t("proj.label")}</span>
         <span class="w-8 h-px bg-lime block" aria-hidden="true"></span>
         <span
           style="color:rgba(180,223,0,0.35); font-size:10px; letter-spacing:0.06em; text-transform:none;"
@@ -182,8 +180,29 @@ const viewLabel = t('p.view');
         class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
         style="font-size: clamp(2rem, 4.5vw, 4.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
       >
-        {t('proj.title')}
+        {t("proj.title")}
       </h2>
+    </div>
+
+    <!-- Navigation arrows — desktop only -->
+    <div
+      class="hidden lg:flex items-center gap-2 self-end pb-1"
+      id="proj-nav-arrows"
+    >
+      <button
+        id="proj-prev"
+        aria-label="Proyecto anterior"
+        class="proj-arrow-btn"
+      >
+        <i class="ph ph-arrow-left text-[16px]" aria-hidden="true"></i>
+      </button>
+      <button
+        id="proj-next"
+        aria-label="Siguiente proyecto"
+        class="proj-arrow-btn"
+      >
+        <i class="ph ph-arrow-right text-[16px]" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 
@@ -201,7 +220,7 @@ const viewLabel = t('p.view');
           projects.map((p) => (
             <div class="flex-[0_0_88%] min-w-0 pl-4 h-full">
               <div
-                class="mob-slide relative h-full rounded-[14px] overflow-hidden"
+                class="mob-slide relative h-full overflow-hidden"
                 data-project={JSON.stringify({
                   name: p.name,
                   category: p.category,
@@ -275,12 +294,12 @@ const viewLabel = t('p.view');
     class="hidden lg:block"
     style="
       position: absolute;
-      width: 200px;
-      height: 260px;
-      top: 30%;
-      left: calc(50% - 100px);
+      width: 260px;
+      height: 338px;
+      top: 28%;
+      left: calc(50% - 130px);
       transform-style: preserve-3d;
-      transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+      transform: perspective(1800px) rotateX(-12deg) rotateY(0deg);
       z-index: 5;
     "
   >
@@ -319,27 +338,6 @@ const viewLabel = t('p.view');
         </div>
       ))
     }
-  </div>
-
-  <!-- Indicador de dirección (dots) -->
-  <div
-    id="proj-nav-hint"
-    class="absolute right-6 md:right-10 inset-y-0 z-20 hidden lg:flex items-center"
-    aria-hidden="true"
-  >
-    <div id="proj-dots-vert" class="flex flex-col gap-[6px]">
-      {
-        projects.map((_, i) => (
-          <div
-            class="proj-dot-v"
-            data-idx={String(i)}
-            style={
-              i === 0 ? "background:rgba(180,223,0,0.5); height:14px;" : ""
-            }
-          />
-        ))
-      }
-    </div>
   </div>
 
   <!-- Scroll hint -->
@@ -405,11 +403,10 @@ const viewLabel = t('p.view');
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-5 py-[10px] bg-lime text-black
-                   text-[10px] tracking-[0.12em] uppercase font-medium no-underline
+                   text-[14px] tracking-wider uppercase font-semibold no-underline
                    transition-all duration-200 hover:opacity-90"
             >
               <span>{viewLabel}</span>
-              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -557,7 +554,7 @@ const viewLabel = t('p.view');
 
   /* Item image */
   .proj-item-img {
-    border-radius: 6px;
+    border-radius: 0;
     transition: box-shadow 0.4s ease;
     display: block;
   }
@@ -582,19 +579,30 @@ const viewLabel = t('p.view');
     transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Vertical dots */
-  .proj-dot-v {
-    width: 3px;
-    height: 3px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.1);
+  /* Nav arrows */
+  .proj-arrow-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    background: transparent;
+    cursor: none;
     transition:
-      background 0.3s ease,
-      height 0.3s ease;
+      border-color 0.2s ease,
+      color 0.2s ease,
+      background 0.2s ease;
   }
-  .proj-dot-v.active {
-    background: rgba(180, 223, 0, 0.5);
-    height: 14px;
+  .proj-arrow-btn:hover {
+    border-color: #b4df00;
+    color: #b4df00;
+    background: rgba(180, 223, 0, 0.05);
+  }
+  .proj-arrow-btn:disabled {
+    opacity: 0.2;
+    pointer-events: none;
   }
 
   /* Scroll hint pulse */
@@ -630,10 +638,10 @@ const viewLabel = t('p.view');
   }
 
   /* Drag cursor on desktop carousel */
-  #proj-slider {
+  #projects.proj-draggable {
     cursor: grab;
   }
-  #proj-slider.dragging {
+  #projects.proj-draggable.dragging {
     cursor: grabbing;
   }
 
@@ -687,6 +695,7 @@ const viewLabel = t('p.view');
   let animating = false; // prevents double-triggering during transition
   let projIdx = 0;
   let crossTimer: ReturnType<typeof setTimeout> | null = null;
+  let lastRotY = 0; // actual accumulated CSS rotateY (for infinite drag)
   // Drag state
   let isDragging = false;
   let dragMoved = false;
@@ -696,7 +705,7 @@ const viewLabel = t('p.view');
   /* ─────────────────────────────────────────────────────────
      CAROUSEL NAVIGATION
   ───────────────────────────────────────────────────────── */
-  function goTo(idx: number): void {
+  function goTo(idx: number, overrideRotY?: number): void {
     if (animating) return;
 
     if (idx < 0) {
@@ -711,9 +720,16 @@ const viewLabel = t('p.view');
     animating = true;
     projIdx = idx;
 
-    // Rotate cylinder so item idx faces viewer
-    const rotateY = -((idx * 360) / N);
-    slider.style.transform = `perspective(1000px) rotateX(-16deg) rotateY(${rotateY.toFixed(2)}deg)`;
+    // Compute target rotation: use override (from drag snap) or shortest path from lastRotY
+    if (overrideRotY !== undefined) {
+      lastRotY = overrideRotY;
+    } else {
+      const canonicalRot = -((idx * 360) / N);
+      const diff = canonicalRot - lastRotY;
+      const normalizedDiff = ((((diff + 180) % 360) + 360) % 360) - 180;
+      lastRotY = lastRotY + normalizedDiff;
+    }
+    slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${lastRotY.toFixed(2)}deg)`;
 
     // Update info panel with crossfade
     infoCont.style.opacity = "0";
@@ -771,7 +787,8 @@ const viewLabel = t('p.view');
     // Suppress transitions during snap, then restore
     slider.style.transition = "none";
     const snapRot = -((startIdx * 360) / N);
-    slider.style.transform = `perspective(1000px) rotateX(-16deg) rotateY(${snapRot.toFixed(2)}deg)`;
+    lastRotY = snapRot;
+    slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${snapRot.toFixed(2)}deg)`;
     requestAnimationFrame(() => {
       slider.style.transition = "";
     });
@@ -801,14 +818,20 @@ const viewLabel = t('p.view');
 
     if (hint) hint.style.opacity = fromBelow ? "0" : "1";
 
-    // Prevent page scroll
+    // Prevent page scroll (native + Lenis)
     document.documentElement.style.overflow = "hidden";
+    document.dispatchEvent(new CustomEvent("lenis:stop"));
+    section.classList.add("proj-draggable");
+    updateArrows();
   }
 
   function releaseDown(): void {
     locked = false;
     cooldown = true;
+    updateArrows();
+    section.classList.remove("proj-draggable", "dragging");
     document.documentElement.style.overflow = "";
+    document.dispatchEvent(new CustomEvent("lenis:start"));
 
     // Scroll to section immediately after projects
     const next = section.nextElementSibling as HTMLElement | null;
@@ -828,7 +851,10 @@ const viewLabel = t('p.view');
   function releaseUp(): void {
     locked = false;
     cooldown = true;
+    updateArrows();
+    section.classList.remove("proj-draggable", "dragging");
     document.documentElement.style.overflow = "";
+    document.dispatchEvent(new CustomEvent("lenis:start"));
 
     // Scroll to the section above
     const prev = section.previousElementSibling as HTMLElement | null;
@@ -938,24 +964,39 @@ const viewLabel = t('p.view');
     }
   });
 
-  // Dot clicks
-  dotsVert.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      if (locked) goTo(i);
-    });
+  // Arrow buttons
+  const prevBtn = document.getElementById(
+    "proj-prev",
+  ) as HTMLButtonElement | null;
+  const nextBtn = document.getElementById(
+    "proj-next",
+  ) as HTMLButtonElement | null;
+
+  function updateArrows() {
+    if (!prevBtn || !nextBtn) return;
+    prevBtn.disabled = !locked;
+    nextBtn.disabled = !locked;
+  }
+
+  prevBtn?.addEventListener("click", () => {
+    if (locked) goTo((((projIdx - 1) % N) + N) % N);
+  });
+  nextBtn?.addEventListener("click", () => {
+    if (locked) goTo((((projIdx + 1) % N) + N) % N);
   });
 
   // ── Mouse drag (desktop 3D carousel) ──────────────────────
   const DRAG_SENS = 0.3; // degrees per pixel
 
-  slider.addEventListener("mousedown", (e: MouseEvent) => {
-    if (isMobile()) return;
+  section.addEventListener("mousedown", (e: MouseEvent) => {
+    if (isMobile() || !locked) return;
+    if ((e.target as HTMLElement).closest("a, button")) return;
     isDragging = true;
     dragMoved = false;
     dragStartX = e.clientX;
-    dragStartRotY = -((projIdx * 360) / N);
+    dragStartRotY = lastRotY;
     slider.style.transition = "none";
-    slider.classList.add("dragging");
+    section.classList.add("dragging");
     e.preventDefault();
   });
 
@@ -964,23 +1005,27 @@ const viewLabel = t('p.view');
     const delta = e.clientX - dragStartX;
     if (Math.abs(delta) > 5) dragMoved = true;
     const rotY = dragStartRotY + delta * DRAG_SENS;
-    slider.style.transform = `perspective(1000px) rotateX(-16deg) rotateY(${rotY.toFixed(2)}deg)`;
+    slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${rotY.toFixed(2)}deg)`;
   });
 
   window.addEventListener("mouseup", (e: MouseEvent) => {
     if (!isDragging) return;
     isDragging = false;
-    slider.classList.remove("dragging");
+    section.classList.remove("dragging");
     slider.style.transition = "";
     if (dragMoved) {
       const delta = e.clientX - dragStartX;
       const currentRotY = dragStartRotY + delta * DRAG_SENS;
       const rawIdx = Math.round((-currentRotY * N) / 360);
-      const nearest = Math.max(0, Math.min(N - 1, rawIdx));
+      const nearest = ((rawIdx % N) + N) % N;
+      const canonicalRot = -((nearest * 360) / N);
+      const diff = canonicalRot - currentRotY;
+      const normalizedDiff = ((((diff + 180) % 360) + 360) % 360) - 180;
+      const targetRotY = currentRotY + normalizedDiff;
       setTimeout(() => {
         dragMoved = false;
       }, 50);
-      goTo(nearest);
+      goTo(nearest, targetRotY);
     }
   });
 

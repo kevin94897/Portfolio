@@ -78,7 +78,7 @@ const isEn = locale === "en";
             href="/files/KevinGomezLazaroCV_2026.pdf"
             download
             aria-label={isEn ? "Download CV 2026" : "Descargar CV 2026"}
-            class="hidden lg:flex border border-border text-white px-4 h-9 text-[10px] no-underline tracking-[0.08em] items-center gap-[7px] transition-all duration-300 hover:border-lime hover:text-lime"
+            class="hidden lg:flex border border-border text-white px-4 h-9 text-[14px] no-underline uppercase items-center gap-[7px] transition-all duration-300 hover:border-lime hover:text-lime"
           >
             <i class="ph ph-download-simple" aria-hidden="true"></i>
             <span>{t("nav.cv")}</span>
@@ -87,7 +87,7 @@ const isEn = locale === "en";
           <!-- CTA — desktop only -->
           <a
             href="#contact"
-            class="hidden lg:flex bg-lime text-black px-5 h-9 text-[10px] font-medium no-underline tracking-[0.08em] items-center transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
+            class="hidden lg:flex bg-lime text-black px-5 h-9 text-[12px] font-semibold no-underline uppercase items-center transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
             >{t("nav.hire")}</a
           >
 
@@ -140,14 +140,13 @@ const isEn = locale === "en";
           <a
             href="/files/KevinGomezLazaroCV_2026.pdf"
             download
-            class="flex-1 flex items-center justify-center gap-2 h-10 border border-border text-[10px] text-muted no-underline tracking-[0.08em] hover:border-lime hover:text-lime transition-all duration-300"
+            class="flex-1 flex items-center justify-center gap-2 h-10 border border-border text-[10px] text-muted no-underline uppercase hover:border-lime hover:text-lime transition-all duration-300"
           >
-            <i class="ph ph-download-simple" aria-hidden="true"></i>
             <span>{t("nav.cv")}</span>
           </a>
           <a
             href="#contact"
-            class="flex-1 flex items-center justify-center bg-lime text-black h-10 text-[10px] font-medium no-underline tracking-[0.08em]"
+            class="flex-1 flex items-center justify-center bg-lime text-black h-10 text-[10px] font-medium no-underline uppercase"
             >{t("nav.hire")}</a
           >
         </div>
@@ -158,7 +157,7 @@ const isEn = locale === "en";
 
 <style>
   .nav-link {
-    @apply text-[11px] text-white no-underline tracking-[0.12em] uppercase
+    @apply text-[12px] text-white no-underline tracking-[0.12em] uppercase
            transition-colors duration-200 relative;
   }
   .nav-link::after {
@@ -181,8 +180,8 @@ const isEn = locale === "en";
   }
 
   .lang-btn {
-    @apply text-[10px] tracking-[0.1em] font-medium px-3 h-full flex items-center justify-center
-           text-muted bg-transparent border-none cursor-none uppercase transition-all duration-[250ms];
+    @apply text-[12px] tracking-wide font-medium px-3 h-full flex items-center justify-center
+           bg-transparent border-none cursor-none uppercase transition-all duration-[250ms];
   }
   .lang-btn[aria-pressed="true"] {
     @apply bg-lime text-black;

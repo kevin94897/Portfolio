@@ -169,7 +169,6 @@ const t = useTranslations(locale);
         iframe.style.opacity = "1";
       };
 
-      // Insert before the gradient so it sits behind
       if (gradientBg) {
         container.insertBefore(iframe, gradientBg);
       } else {
@@ -177,11 +176,11 @@ const t = useTranslations(locale);
       }
     };
 
-    // Load after hero elements appear (event from loader) or fallback after 2.5 s
     document.addEventListener("hero:reveal-spline", loadSpline, { once: true });
-    setTimeout(loadSpline, 2500);
+    setTimeout(loadSpline, 2000);
     window.addEventListener("mousemove", loadSpline, { once: true });
     window.addEventListener("touchstart", loadSpline, { once: true });
     window.addEventListener("scroll", loadSpline, { once: true });
   }
 </script>
+

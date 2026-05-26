@@ -4,7 +4,6 @@
 //  Assembles all sections + client-side scripts
 // ═══════════════════════════════════════════════════════════
 import Layout from "../../layouts/Layout.astro";
-import LoadingScreen from "../../components/LoadingScreen.astro";
 import CircuitBackground from "../../components/CircuitBackground.astro";
 import Nav from "../../components/Nav.astro";
 import Hero from "../../components/Hero.astro";
@@ -28,9 +27,6 @@ import Marquee from "../../components/Marquee.astro";
 
   <!-- Circuit background (scroll-driven PCB animation) -->
   <!-- <CircuitBackground /> -->
-
-  <!-- Loading screen (first paint) -->
-  <LoadingScreen />
 
   <!-- Lang-switch loader: thin bar + page flash -->
   <div id="lang-loader" aria-hidden="true">

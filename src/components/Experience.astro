@@ -90,6 +90,7 @@ const jobs = [
       <div
         class="group grid grid-cols-1 md:grid-cols-[140px_1fr_2fr_auto] items-start border-t border-border py-8 md:py-10 gap-4 md:gap-8 transition-colors duration-300 hover:bg-white/[0.02]"
         role="listitem"
+        data-job-row
       >
         <!-- Year -->
         <time class="text-[11px] text-muted tracking-widest pt-1">
@@ -127,4 +128,21 @@ const jobs = [
   </div>
 
 </section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.querySelectorAll<HTMLElement>("[data-job-row]").forEach((row) => {
+    gsap.from(row, {
+      scrollTrigger: { trigger: row, start: "top 90%" },
+      opacity: 0,
+      y: 32,
+      duration: 0.65,
+      ease: "power2.out",
+    });
+  });
+</script>
 

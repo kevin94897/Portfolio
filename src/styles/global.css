@@ -31,7 +31,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  /* Lenis handles smoothness */
   overflow-x: hidden;
 }
 
@@ -320,12 +321,11 @@ form,
 
 .lang-btn {
   font-family: 'Inter', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.1em;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0 12px;
   height: 100%;
-  color: var(--muted);
   background: transparent;
   border: none;
   cursor: none;
@@ -690,6 +690,7 @@ section {
 
 /* Mobile: never hide reveal elements — animations only for desktop */
 @media (max-width: 767px) {
+
   .reveal,
   .reveal-left,
   .reveal-right {
@@ -1480,7 +1481,7 @@ section {
 
 .testimonial-card {
   background: var(--surface2);
-  border-radius: 16px;
+  /* border-radius: 16px; */
   padding: 34px;
   height: 100%;
   transition: transform 0.3s;
