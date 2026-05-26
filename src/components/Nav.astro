@@ -1,5 +1,6 @@
 ---
 // Nav.astro — Fixed navigation with language toggle, scroll effect and container
+import { Image } from "astro:assets";
 import logo from "../assets/images/logo-kevin.png";
 import { useTranslations } from "../i18n/utils";
 
@@ -25,7 +26,7 @@ const isEn = locale === "en";
           aria-label="Kevin Gómez — Inicio"
           class="nav-logo z-10 relative"
         >
-          <img src={logo.src} alt="Logo KG" class="h-12 w-auto" />
+          <Image src={logo} alt="Logo KG" class="h-12 w-auto" height={48} loading="eager" fetchpriority="high" />
         </a>
 
         <!-- Desktop links -->

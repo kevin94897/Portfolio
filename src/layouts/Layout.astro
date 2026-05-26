@@ -204,20 +204,8 @@ const structuredData = {
     <link rel="alternate" hreflang="en" href={`${siteURL}/en/`} />
     <link rel="alternate" hreflang="x-default" href={`${siteURL}/`} />
 
-    <!-- ─── Fonts: Inter variable — async (non-render-blocking) ─── -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      media="print"
-    />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+    <!-- ─── Fonts: self-hosted woff2 — preloaded, zero external requests ─── -->
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- ─── Icons: Phosphor — async (non-render-blocking) ─── -->
     <link
