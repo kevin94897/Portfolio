@@ -1,11 +1,11 @@
 ---
 // Nav.astro — Fixed navigation with language toggle, scroll effect and container
-import logo from '../assets/images/logo-kevin.png';
-import { useTranslations } from '../i18n/utils';
+import logo from "../assets/images/logo-kevin.png";
+import { useTranslations } from "../i18n/utils";
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
-const isEn = locale === 'en';
+const isEn = locale === "en";
 ---
 
 <header>
@@ -31,19 +31,19 @@ const isEn = locale === 'en';
         <!-- Desktop links -->
         <ul class="hidden lg:flex gap-8 list-none" role="list">
           <li>
-            <a href="#about" class="nav-link">{t('nav.about')}</a>
+            <a href="#about" class="nav-link">{t("nav.about")}</a>
           </li>
           <li>
-            <a href="#experience" class="nav-link">{t('nav.experience')}</a>
+            <a href="#experience" class="nav-link">{t("nav.experience")}</a>
           </li>
           <li>
-            <a href="#projects" class="nav-link">{t('nav.projects')}</a>
+            <a href="#projects" class="nav-link">{t("nav.projects")}</a>
           </li>
           <li>
-            <a href="#workflow" class="nav-link">{t('nav.workflow')}</a>
+            <a href="#workflow" class="nav-link">{t("nav.workflow")}</a>
           </li>
           <li>
-            <a href="#contact" class="nav-link">{t('nav.contact')}</a>
+            <a href="#contact" class="nav-link">{t("nav.contact")}</a>
           </li>
         </ul>
 
@@ -53,40 +53,43 @@ const isEn = locale === 'en';
           <div
             class="hidden sm:flex items-center bg-surface2 border border-border overflow-hidden h-9"
             role="group"
-            aria-label={isEn ? 'Change language' : 'Cambiar idioma'}
+            aria-label={isEn ? "Change language" : "Cambiar idioma"}
           >
             <a
               href="/"
               aria-pressed={!isEn}
               aria-label="Español"
               lang="es"
-              class={`lang-btn ${!isEn ? 'text-black bg-lime' : 'text-white'}`}
-            >ES</a>
+              class={`lang-btn ${!isEn ? "text-black bg-lime" : "text-white"}`}
+              >ES</a
+            >
             <a
               href="/en/"
               aria-pressed={isEn}
               aria-label="English"
               lang="en"
-              class={`lang-btn ${isEn ? 'text-black bg-lime' : 'text-white'}`}
-            >EN</a>
+              class={`lang-btn ${isEn ? "text-black bg-lime" : "text-white"}`}
+              >EN</a
+            >
           </div>
 
           <!-- CV button — desktop only -->
           <a
             href="/files/KevinGomezLazaroCV_2026.pdf"
             download
-            aria-label={isEn ? 'Download CV 2026' : 'Descargar CV 2026'}
+            aria-label={isEn ? "Download CV 2026" : "Descargar CV 2026"}
             class="hidden lg:flex border border-border text-white px-4 h-9 text-[10px] no-underline tracking-[0.08em] items-center gap-[7px] transition-all duration-300 hover:border-lime hover:text-lime"
           >
             <i class="ph ph-download-simple" aria-hidden="true"></i>
-            <span>{t('nav.cv')}</span>
+            <span>{t("nav.cv")}</span>
           </a>
 
           <!-- CTA — desktop only -->
           <a
             href="#contact"
             class="hidden lg:flex bg-lime text-black px-5 h-9 text-[10px] font-medium no-underline tracking-[0.08em] items-center transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
-          >{t('nav.hire')}</a>
+            >{t("nav.hire")}</a
+          >
 
           <!-- Hamburger — mobile/tablet only -->
           <button
@@ -115,16 +118,24 @@ const isEn = locale === 'en';
     <div
       id="mobile-menu"
       aria-hidden="true"
-      class="lg:hidden overflow-hidden max-h-0 transition-[max-height] duration-500 ease-in-out bg-black/95 backdrop-blur-[24px] border-t border-border"
+      class="lg:hidden overflow-hidden max-h-0 transition-[max-height] duration-500 ease-in-out bg-black/95 backdrop-blur-[24px] md:border-t md:border-border"
     >
       <nav
         class="max-w-[1400px] mx-auto px-6 py-6 flex flex-col gap-1"
-        aria-label={isEn ? 'Mobile menu' : 'Menú móvil'}
+        aria-label={isEn ? "Mobile menu" : "Menú móvil"}
       >
-        <a href="#about" class="mobile-link" onclick="closeMobileMenu()">{t('nav.about')}</a>
-        <a href="#experience" class="mobile-link" onclick="closeMobileMenu()">{t('nav.experience')}</a>
-        <a href="#projects" class="mobile-link" onclick="closeMobileMenu()">{t('nav.projects')}</a>
-        <a href="#contact" class="mobile-link" onclick="closeMobileMenu()">{t('nav.contact')}</a>
+        <a href="#about" class="mobile-link" onclick="closeMobileMenu()"
+          >{t("nav.about")}</a
+        >
+        <a href="#experience" class="mobile-link" onclick="closeMobileMenu()"
+          >{t("nav.experience")}</a
+        >
+        <a href="#projects" class="mobile-link" onclick="closeMobileMenu()"
+          >{t("nav.projects")}</a
+        >
+        <a href="#contact" class="mobile-link" onclick="closeMobileMenu()"
+          >{t("nav.contact")}</a
+        >
         <div class="flex gap-3 mt-4 pt-4 border-t border-border">
           <a
             href="/files/KevinGomezLazaroCV_2026.pdf"
@@ -132,12 +143,13 @@ const isEn = locale === 'en';
             class="flex-1 flex items-center justify-center gap-2 h-10 border border-border text-[10px] text-muted no-underline tracking-[0.08em] hover:border-lime hover:text-lime transition-all duration-300"
           >
             <i class="ph ph-download-simple" aria-hidden="true"></i>
-            <span>{t('nav.cv')}</span>
+            <span>{t("nav.cv")}</span>
           </a>
           <a
             href="#contact"
             class="flex-1 flex items-center justify-center bg-lime text-black h-10 text-[10px] font-medium no-underline tracking-[0.08em]"
-          >{t('nav.hire')}</a>
+            >{t("nav.hire")}</a
+          >
         </div>
       </nav>
     </div>

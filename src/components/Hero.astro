@@ -1,8 +1,8 @@
 ---
 import portrait from "../assets/images/foto_portrait_kevin.jpeg";
-import { useTranslations } from '../i18n/utils';
+import { useTranslations } from "../i18n/utils";
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 ---
 
@@ -18,7 +18,8 @@ const t = useTranslations(locale);
       id="hero-gradient-bg"
       class="w-full h-full"
       style="background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(180,223,0,0.08) 0%, rgba(3,3,3,0) 70%), radial-gradient(ellipse 50% 50% at 80% 20%, rgba(180,223,0,0.05) 0%, transparent 60%), #030303;"
-    ></div>
+    >
+    </div>
   </div>
 
   <!-- Canvas particles -->
@@ -46,15 +47,15 @@ const t = useTranslations(locale);
       >
         <span
           class="hero-role hero-role-active text-[clamp(11px,1.3vw,16px)] text-text transition-colors duration-500"
-          >{t('hero.role1')}</span
+          >{t("hero.role1")}</span
         >
         <span
           class="hero-role text-[clamp(11px,1.3vw,16px)] text-white transition-colors duration-500"
-          >{t('hero.role2')}</span
+          >{t("hero.role2")}</span
         >
         <span
           class="hero-role text-[clamp(11px,1.3vw,16px)] text-white transition-colors duration-500"
-          >{t('hero.role3')}</span
+          >{t("hero.role3")}</span
         >
       </div>
     </div>
@@ -100,7 +101,7 @@ const t = useTranslations(locale);
       <h1
         id="hero-heading"
         class="hero-title-anim font-display font-bold leading-[0.88] text-white tracking-tightest uppercase"
-        style="font-size: clamp(3.8rem, 8vw, 12rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
+        style="font-size: clamp(3rem, 8vw, 8rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
       >
         Kevin<span class="text-lime">Gomez.</span>ケビン
       </h1>
@@ -121,7 +122,7 @@ const t = useTranslations(locale);
     data-hero-reveal="secondary"
     aria-hidden="true"
   >
-    <span>{t('hero.scroll')}</span>
+    <span>{t("hero.scroll")}</span>
     <div
       class="w-px h-10 [background:linear-gradient(to_bottom,#b4df00,transparent)] [animation:scrollPulse_2s_ease-in-out_infinite]"
     >
@@ -147,8 +148,8 @@ const t = useTranslations(locale);
 
 <script>
   // ── Spline 3D: defer on all devices ────────────────
-  const container = document.getElementById('hero-spline-container');
-  const gradientBg = document.getElementById('hero-gradient-bg');
+  const container = document.getElementById("hero-spline-container");
+  const gradientBg = document.getElementById("hero-gradient-bg");
 
   if (container) {
     let loaded = false;
@@ -157,12 +158,16 @@ const t = useTranslations(locale);
       if (loaded) return;
       loaded = true;
 
-      const iframe = document.createElement('iframe');
-      iframe.src = 'https://my.spline.design/animatedshapeblend-NZa3aGqZlc4TQObjvJlEW2RU/';
-      iframe.title = 'Animación 3D decorativa';
-      iframe.className = 'w-full h-full border-none pointer-events-auto';
-      iframe.style.cssText = 'position:absolute;inset:0;opacity:0;transition:opacity 1s ease;';
-      iframe.onload = () => { iframe.style.opacity = '1'; };
+      const iframe = document.createElement("iframe");
+      iframe.src =
+        "https://my.spline.design/animatedshapeblend-NZa3aGqZlc4TQObjvJlEW2RU/";
+      iframe.title = "Animación 3D decorativa";
+      iframe.className = "w-full h-full border-none pointer-events-auto";
+      iframe.style.cssText =
+        "position:absolute;inset:0;opacity:0;transition:opacity 1s ease;";
+      iframe.onload = () => {
+        iframe.style.opacity = "1";
+      };
 
       // Insert before the gradient so it sits behind
       if (gradientBg) {
@@ -173,10 +178,10 @@ const t = useTranslations(locale);
     };
 
     // Load after hero elements appear (event from loader) or fallback after 2.5 s
-    document.addEventListener('hero:reveal-spline', loadSpline, { once: true });
+    document.addEventListener("hero:reveal-spline", loadSpline, { once: true });
     setTimeout(loadSpline, 2500);
-    window.addEventListener('mousemove', loadSpline, { once: true });
-    window.addEventListener('touchstart', loadSpline, { once: true });
-    window.addEventListener('scroll', loadSpline, { once: true });
+    window.addEventListener("mousemove", loadSpline, { once: true });
+    window.addEventListener("touchstart", loadSpline, { once: true });
+    window.addEventListener("scroll", loadSpline, { once: true });
   }
 </script>
