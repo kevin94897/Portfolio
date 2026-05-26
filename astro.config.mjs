@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
-  site: 'https://kevin.grupo-gomez.com',
+  site: 'https://kevin-gomez.dev',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

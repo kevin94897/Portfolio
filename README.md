@@ -77,7 +77,7 @@ public/
 
 ## Antes de hacer deploy
 
-1. Reemplaza `https://kevin.grupo-gomez.com` en `astro.config.mjs` y `Layout.astro` con tu dominio real
+1. Reemplaza `https://kevin-gomez.dev` en `astro.config.mjs` y `Layout.astro` con tu dominio real
 2. Agrega el archivo `public/KevinGomezLazaro_CV2026.pdf`
 3. Crea `public/og-image.jpg` (1200×630px) para Open Graph
 4. Agrega `public/icon-192.png` y `public/icon-512.png` para el web manifest

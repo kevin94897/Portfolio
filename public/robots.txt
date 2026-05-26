@@ -5,4 +5,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://kevin.grupo-gomez.com/sitemap-index.xml
+Sitemap: https://kevin-gomez.dev/sitemap-index.xml

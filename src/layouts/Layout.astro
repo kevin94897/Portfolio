@@ -3,7 +3,7 @@
 //  Layout.astro — SEO-optimised base layout with native i18n
 //  Kevin Gómez Lázaro · Full Stack Developer · Lima, Perú
 // ═══════════════════════════════════════════════════════════
-import '../styles/global.css';
+import "../styles/global.css";
 
 export interface Props {
   title?: string;
@@ -11,10 +11,10 @@ export interface Props {
   ogImage?: string;
 }
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
-const isEn = locale === 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
+const isEn = locale === "en";
 
-const siteURL = "https://kevin.grupo-gomez.com";
+const siteURL = "https://kevin-gomez.dev";
 const canonicalURL = isEn ? `${siteURL}/en/` : `${siteURL}/`;
 
 const {
@@ -30,8 +30,6 @@ const {
 const keywords = isEn
   ? "full stack developer lima peru, web developer peru, next.js developer peru, react developer lima, nestjs developer, headless wordpress, laravel developer peru, ecommerce developer, freelance developer peru, kevin gomez"
   : "full stack developer lima peru, desarrollador web lima, next.js developer peru, react developer lima, nestjs developer, wordpress headless, laravel developer peru, ecommerce developer, desarrollador freelance lima, kevin gomez";
-
-
 
 // ─── JSON-LD Structured Data ───
 const structuredData = {
@@ -181,8 +179,8 @@ const structuredData = {
       property="og:image:alt"
       content="Kevin Gómez — Full Stack Developer Lima, Perú"
     />
-    <meta property="og:locale" content={isEn ? 'en_US' : 'es_PE'} />
-    <meta property="og:locale:alternate" content={isEn ? 'es_PE' : 'en_US'} />
+    <meta property="og:locale" content={isEn ? "en_US" : "es_PE"} />
+    <meta property="og:locale:alternate" content={isEn ? "es_PE" : "en_US"} />
 
     <!-- ─── Twitter Card ─── -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -198,7 +196,7 @@ const structuredData = {
     <!-- ─── Geo / Local SEO ─── -->
     <meta name="geo.region" content="PE-LIM" />
     <meta name="geo.placename" content="Lima, Perú" />
-    <meta name="language" content={isEn ? 'English' : 'Spanish'} />
+    <meta name="language" content={isEn ? "English" : "Spanish"} />
     <meta name="revisit-after" content="7 days" />
 
     <!-- ─── hreflang — alternate language URLs ─── -->
@@ -238,12 +236,13 @@ const structuredData = {
       type="application/ld+json"
       set:html={JSON.stringify(structuredData, null, 2)}
     />
-
   </head>
 
   <body>
     <!-- Accessibility: skip to main content -->
-    <a href="#main-content" class="skip-link">{isEn ? 'Skip to main content' : 'Saltar al contenido principal'}</a>
+    <a href="#main-content" class="skip-link"
+      >{isEn ? "Skip to main content" : "Saltar al contenido principal"}</a
+    >
 
     <slot />
 
@@ -266,11 +265,11 @@ const structuredData = {
 
       // ── Lenis smooth scroll ─────────────────────────────────
       const lenis = new Lenis({
-        lerp: 0.09,          // interpolation — lower = smoother/slower
+        lerp: 0.09, // interpolation — lower = smoother/slower
         smoothWheel: true,
         wheelMultiplier: 0.85,
         touchMultiplier: 1.5,
-        syncTouch: false,    // mobile uses native scroll
+        syncTouch: false, // mobile uses native scroll
       });
 
       // Keep GSAP ScrollTrigger in sync with Lenis
@@ -308,19 +307,47 @@ const structuredData = {
 
       // ── Hero sub-elements — ordered reveal after title ────────
       // tech bar → roles → secondary (JP text + scroll) → Spline bg
-      const allHeroEls   = document.querySelectorAll<HTMLElement>("[data-hero-reveal]");
-      const techEl       = document.querySelector<HTMLElement>('[data-hero-reveal="tech"]');
-      const rolesEl      = document.querySelector<HTMLElement>('[data-hero-reveal="roles"]');
-      const secondaryEls = document.querySelectorAll<HTMLElement>('[data-hero-reveal="secondary"]');
+      const allHeroEls =
+        document.querySelectorAll<HTMLElement>("[data-hero-reveal]");
+      const techEl = document.querySelector<HTMLElement>(
+        '[data-hero-reveal="tech"]',
+      );
+      const rolesEl = document.querySelector<HTMLElement>(
+        '[data-hero-reveal="roles"]',
+      );
+      const secondaryEls = document.querySelectorAll<HTMLElement>(
+        '[data-hero-reveal="secondary"]',
+      );
 
       if (allHeroEls.length) {
         gsap.set(allHeroEls, { opacity: 0, y: 18 });
 
         const tl = gsap.timeline({ delay: 0.85 });
 
-        if (techEl)           tl.to(techEl,       { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
-        if (rolesEl)          tl.to(rolesEl,      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.22);
-        if (secondaryEls.length) tl.to(secondaryEls, { opacity: 1, y: 0, stagger: 0.12, duration: 0.55, ease: "power2.out" }, 0.44);
+        if (techEl)
+          tl.to(
+            techEl,
+            { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            0,
+          );
+        if (rolesEl)
+          tl.to(
+            rolesEl,
+            { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            0.22,
+          );
+        if (secondaryEls.length)
+          tl.to(
+            secondaryEls,
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.12,
+              duration: 0.55,
+              ease: "power2.out",
+            },
+            0.44,
+          );
 
         tl.call(
           () => document.dispatchEvent(new CustomEvent("hero:reveal-spline")),
@@ -330,20 +357,22 @@ const structuredData = {
       }
 
       // ── Section titles — fire on scroll (water-emerge from baseline) ──
-      document.querySelectorAll<HTMLElement>(".section-title-anim").forEach((el) => {
-        const split = new SplitText(el, { type: "lines" });
-        wrapLines(split.lines);
-        gsap.from(split.lines, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-          },
-          y: "115%",
-          stagger: 0.1,
-          duration: 1,
-          ease: "power4.out",
+      document
+        .querySelectorAll<HTMLElement>(".section-title-anim")
+        .forEach((el) => {
+          const split = new SplitText(el, { type: "lines" });
+          wrapLines(split.lines);
+          gsap.from(split.lines, {
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+            },
+            y: "115%",
+            stagger: 0.1,
+            duration: 1,
+            ease: "power4.out",
+          });
         });
-      });
     </script>
   </body>
 </html>
