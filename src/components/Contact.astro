@@ -1,6 +1,8 @@
 ---
 // Contact.astro — Contact form + social links + CV download card
-// With: real validation, Gmail SMTP send, honeypot anti-bot, toast feedback
+// Form uses Web3Forms (https://web3forms.com) — free, no backend needed.
+// TODO: replace "YOUR_WEB3FORMS_ACCESS_KEY" below with the key from web3forms.com.
+//       Sign up there with your personal email; all form submissions will arrive there.
 import { useTranslations } from "../i18n/utils";
 
 const locale = (Astro.currentLocale || "es") as "es" | "en";
@@ -37,45 +39,43 @@ const t = useTranslations(locale);
           class="flex flex-col gap-[7px] mb-[18px] lg:mb-[22px]"
           aria-label="Redes y contacto"
         >
-          {
-            [
-              {
-                href: "tel:+51947841355",
-                icon: "ph-phone",
-                label: "+51 947 841 355",
-              },
-              {
-                href: "mailto:kevin94897@gmail.com",
-                icon: "ph-envelope",
-                label: "kevin94897@gmail.com",
-              },
-              {
-                href: "https://kevin-gomez.dev",
-                icon: "ph-globe",
-                label: "kevin.grupo-gomez.com",
-              },
-              {
-                href: "https://github.com/kevin94897/",
-                icon: "ph-github-logo",
-                label: "github.com/kevin94897",
-              },
-            ].map((s) => (
-              <a
-                href={s.href}
-                target={s.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  s.href.startsWith("http") ? "noopener noreferrer" : undefined
-                }
-                class="flex items-center gap-3 px-3 py-[10px] lg:px-4 lg:py-3 bg-surface border border-border  text-text no-underline text-[12px] lg:text-[13px] transition-all duration-300 hover:border-lime/30 hover:translate-x-1 hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.05)]"
-              >
-                <i
-                  class={`ph ${s.icon} text-[17px] text-lime`}
-                  aria-hidden="true"
-                />
-                {s.label}
-              </a>
-            ))
-          }
+          <a
+            href="tel:+51947841355"
+            class="flex items-center gap-3 px-3 py-[10px] lg:px-4 lg:py-3 bg-surface border border-border text-text no-underline text-[12px] lg:text-[13px] transition-all duration-300 hover:border-lime/30 hover:translate-x-1 hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.05)]"
+          >
+            <i class="ph ph-phone text-[17px] text-lime" aria-hidden="true"></i>
+            +51 947 841 355
+          </a>
+          <!-- href and label set by JS — email never appears in static HTML -->
+          <a
+            href="#"
+            id="email-contact-link"
+            class="flex items-center gap-3 px-3 py-[10px] lg:px-4 lg:py-3 bg-surface border border-border text-text no-underline text-[12px] lg:text-[13px] transition-all duration-300 hover:border-lime/30 hover:translate-x-1 hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.05)]"
+          >
+            <i class="ph ph-envelope text-[17px] text-lime" aria-hidden="true"
+            ></i>
+            <span id="email-contact-label">·····@·····</span>
+          </a>
+          <a
+            href="https://kevin-gomez.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-3 py-[10px] lg:px-4 lg:py-3 bg-surface border border-border text-text no-underline text-[12px] lg:text-[13px] transition-all duration-300 hover:border-lime/30 hover:translate-x-1 hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.05)]"
+          >
+            <i class="ph ph-globe text-[17px] text-lime" aria-hidden="true"></i>
+            kevin.grupo-gomez.com
+          </a>
+          <a
+            href="https://github.com/kevin94897/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-3 py-[10px] lg:px-4 lg:py-3 bg-surface border border-border text-text no-underline text-[12px] lg:text-[13px] transition-all duration-300 hover:border-lime/30 hover:translate-x-1 hover:text-lime hover:shadow-[0_0_18px_rgba(180,223,0,0.05)]"
+          >
+            <i
+              class="ph ph-github-logo text-[17px] text-lime"
+              aria-hidden="true"></i>
+            github.com/kevin94897
+          </a>
         </nav>
 
         <div class="p-[22px] bg-lime/[0.04] border border-lime/20">
@@ -126,26 +126,29 @@ const t = useTranslations(locale);
 
         <form
           id="contactForm"
-          method="POST"
-          action="https://acd30d22.sibforms.com/serve/MUIFAGh-q8zzLCPrSIP1HkhRzw6Bl8UDDvmmN-GR-ZmWjAoGxObB_f4TIUg9AMRny5CVHOQNN1l1X23aXGpikYtaWJrlmCQjwDFa4KBQZVc3xC5duBKuSS-vGHRwlrsf1ub4S0WPUelXS0fID-UYoFB119WezMMkYUxgNeyGpA6DRTpmwU0sVmHfewmR41a6M-MuNSYEFzNazgjYtw=="
-          target="brevo_frame"
           novalidate
           aria-label="Formulario de contacto"
+          data-locale={locale}
         >
-          <!-- Brevo honeypot — bots fill this; Brevo discards if set -->
-          <div
-            style="position:absolute;left:-9999px;opacity:0;pointer-events:none;"
-            aria-hidden="true"
-          >
-            <input
-              type="text"
-              name="email_address_check"
-              id="email_address_check"
-              tabindex="-1"
-              autocomplete="off"
-              value=""
-            />
-          </div>
+          <input
+            type="hidden"
+            name="access_key"
+            value="772ee8bc-b3f3-4011-8c6d-9df5b715383c"
+          />
+          <input
+            type="hidden"
+            id="form-subject-hidden"
+            name="subject"
+            value=""
+          />
+          <!-- Honeypot — bots fill this checkbox; submissions with it checked are discarded -->
+          <input
+            type="checkbox"
+            name="botcheck"
+            style="display:none"
+            tabindex="-1"
+            autocomplete="off"
+          />
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[18px] gap-y-0">
             <div class="field-group mb-[14px] sm:mb-[18px]">
@@ -235,25 +238,16 @@ const t = useTranslations(locale);
             <span class="field-error" aria-live="polite"></span>
           </div>
 
-          <!-- Brevo required hidden fields -->
-          <input type="hidden" name="locale" value="es" />
-          <input type="hidden" name="html_type" value="simple" />
-
           <button
             id="submitBtn"
             type="submit"
             class="w-full flex items-center justify-center gap-[9px] py-[13px] sm:py-[15px] bg-lime text-black border-none text-[15px] font-medium tracking- uppercase cursor-none transition-all duration-300 hover:shadow-[0_0_36px_rgba(180,223,0,0.4)] hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none"
           >
-            <span id="submitLabel">{t("form.send")}</span>
+            <span id="submitLabel" data-label={t("form.send")}
+              >{t("form.send")}</span
+            >
           </button>
         </form>
-        <!-- Hidden iframe: receives Brevo's POST response without navigating page -->
-        <iframe
-          id="brevo_frame"
-          name="brevo_frame"
-          style="display:none;"
-          title="Brevo form response"
-          aria-hidden="true"></iframe>
       </div>
     </div>
   </div>
@@ -336,3 +330,142 @@ const t = useTranslations(locale);
     display: inline-block;
   }
 </style>
+
+<script>
+  // ── Email obfuscation — assembled at runtime so bots never see it in HTML ──
+  const emailLink = document.getElementById(
+    "email-contact-link",
+  ) as HTMLAnchorElement | null;
+  const emailLabel = document.getElementById("email-contact-label");
+  if (emailLink && emailLabel) {
+    const u = "kevin94897",
+      d = "gmail.com";
+    emailLink.href = "mailto:" + u + "@" + d;
+    emailLabel.textContent = u + "@" + d;
+  }
+
+  // ── Form: validation + Web3Forms submission ──────────────────────────────
+  const form = document.getElementById("contactForm") as HTMLFormElement | null;
+  const toast = document.getElementById("formToast");
+  const toastIcon = document.getElementById("formToastIcon");
+  const toastMsg = document.getElementById("formToastMsg");
+  const submitBtn = document.getElementById(
+    "submitBtn",
+  ) as HTMLButtonElement | null;
+  const submitLabel = document.getElementById("submitLabel");
+  const subjectHidden = document.getElementById(
+    "form-subject-hidden",
+  ) as HTMLInputElement | null;
+  const isEn = document.documentElement.lang === "en";
+
+  const MSG = {
+    required: isEn ? "This field is required" : "Este campo es requerido",
+    email: isEn ? "Invalid email" : "Email inválido",
+    success: isEn
+      ? "Message sent! I'll get back to you soon."
+      : "Mensaje enviado. Te responderé pronto.",
+    error: isEn
+      ? "Error sending. Try again or write me directly."
+      : "Error al enviar. Intenta de nuevo o escríbeme directamente.",
+    sending: isEn ? "Sending…" : "Enviando…",
+  };
+
+  function showToast(success: boolean, msg: string) {
+    if (!toast || !toastIcon || !toastMsg) return;
+    toast.classList.remove("hidden", "toast-success", "toast-error", "flex");
+    toast.classList.add("flex", success ? "toast-success" : "toast-error");
+    toastIcon.className = `ph ${success ? "ph-check-circle" : "ph-warning"} text-[18px]`;
+    toastMsg.textContent = msg;
+    setTimeout(() => {
+      toast.classList.add("hidden");
+      toast.classList.remove("flex");
+    }, 6000);
+  }
+
+  function validateField(
+    input: HTMLInputElement | HTMLTextAreaElement,
+  ): boolean {
+    const group = input.closest(".field-group");
+    const error = group?.querySelector(".field-error") as HTMLElement | null;
+    let msg = "";
+    if (input.required && !input.value.trim()) {
+      msg = MSG.required;
+    } else if (
+      input.type === "email" &&
+      input.value &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)
+    ) {
+      msg = MSG.email;
+    }
+    input.classList.toggle("is-invalid", !!msg);
+    input.classList.toggle("is-valid", !msg && !!input.value.trim());
+    if (error) error.textContent = msg;
+    return !msg;
+  }
+
+  if (form) {
+    // Real-time validation on blur / input-after-error
+    form
+      .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(".form-input")
+      .forEach((input) => {
+        input.addEventListener("blur", () => validateField(input));
+        input.addEventListener("input", () => {
+          if (input.classList.contains("is-invalid")) validateField(input);
+        });
+      });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Validate all fields
+      const inputs = Array.from(
+        form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+          ".form-input",
+        ),
+      );
+      if (!inputs.every(validateField)) return;
+
+      // Botcheck guard
+      const botcheck =
+        form.querySelector<HTMLInputElement>('[name="botcheck"]');
+      if (botcheck?.checked) return;
+
+      // Build subject from ASUNTO field
+      const asuntoInput =
+        form.querySelector<HTMLInputElement>('[name="ASUNTO"]');
+      if (subjectHidden && asuntoInput) {
+        subjectHidden.value =
+          "Portfolio contact – " + (asuntoInput.value.trim() || "Sin asunto");
+      }
+
+      // UI — loading state
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitLabel)
+        submitLabel.innerHTML = `<i class="ph ph-circle-notch spin text-[18px]"></i> ${MSG.sending}`;
+
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: new FormData(form),
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          showToast(true, MSG.success);
+          form.reset();
+          inputs.forEach((i) => i.classList.remove("is-valid", "is-invalid"));
+        } else {
+          throw new Error(json.message);
+        }
+      } catch {
+        showToast(false, MSG.error);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitLabel)
+          submitLabel.textContent =
+            submitLabel.dataset.label ||
+            (isEn ? "Send message" : "Enviar mensaje");
+      }
+    });
+  }
+</script>
