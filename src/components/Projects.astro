@@ -135,7 +135,7 @@ const N = projects.length;
 const viewLabel = t("p.view");
 ---
 
-<!-- Sección ocupa 100vh — el scroll hijack la mantiene fija -->
+<!-- Section is pinned by ScrollTrigger; cards rotate a full turn while pinned -->
 <section
   id="projects"
   class="relative w-full h-screen overflow-hidden bg-black border-b border-border py-20 flex flex-col"
@@ -430,7 +430,7 @@ const viewLabel = t("p.view");
         </div>
       </div>
     </div><!-- /container -->
-  </div>
+  </div><!-- /info panel -->
 </section>
 
 <!-- Modal -->
@@ -534,8 +534,7 @@ const viewLabel = t("p.view");
       </a>
     </div>
   </div>
-</div>
-
+</div><!-- /modal -->
 <style>
   #projects-heading em {
     color: #b4df00;
@@ -656,6 +655,10 @@ const viewLabel = t("p.view");
 
 <script>
   import EmblaCarousel from "embla-carousel";
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
 
   /* ─────────────────────────────────────────────────────────
      DATA & REFS
@@ -690,312 +693,133 @@ const viewLabel = t("p.view");
   /* ─────────────────────────────────────────────────────────
      STATE
   ───────────────────────────────────────────────────────── */
-  let locked = false; // scroll hijack active
-  let cooldown = false; // prevents re-lock immediately after release
-  let animating = false; // prevents double-triggering during transition
   let projIdx = 0;
+  let lastRotY = 0;
   let crossTimer: ReturnType<typeof setTimeout> | null = null;
-  let lastRotY = 0; // actual accumulated CSS rotateY (for infinite drag)
-  // Drag state
   let isDragging = false;
   let dragMoved = false;
   let dragStartX = 0;
   let dragStartRotY = 0;
 
   /* ─────────────────────────────────────────────────────────
-     CAROUSEL NAVIGATION
+     PANEL UPDATE (crossfade info)
   ───────────────────────────────────────────────────────── */
-  function goTo(idx: number, overrideRotY?: number): void {
-    if (animating) return;
-
-    if (idx < 0) {
-      releaseUp();
-      return;
-    }
-    if (idx >= N) {
-      releaseDown();
-      return;
-    }
-
-    animating = true;
-    projIdx = idx;
-
-    // Compute target rotation: use override (from drag snap) or shortest path from lastRotY
-    if (overrideRotY !== undefined) {
-      lastRotY = overrideRotY;
-    } else {
-      const canonicalRot = -((idx * 360) / N);
-      const diff = canonicalRot - lastRotY;
-      const normalizedDiff = ((((diff + 180) % 360) + 360) % 360) - 180;
-      lastRotY = lastRotY + normalizedDiff;
-    }
-    slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${lastRotY.toFixed(2)}deg)`;
-
-    // Update info panel with crossfade
-    infoCont.style.opacity = "0";
-    if (crossTimer) clearTimeout(crossTimer);
-    crossTimer = setTimeout(() => {
-      const p = PROJECTS[idx];
-      infoCat.textContent = p.category;
-      infoName.textContent = p.name;
-      infoDesc.textContent = p.desc;
-      infoLink.href = p.url;
-
-      infoStack.innerHTML = "";
-      (p.stack as string[]).forEach((t: string) => {
-        const s = document.createElement("span");
-        s.className =
-          "text-[9px] tracking-widest uppercase px-[7px] py-[3px] border border-border text-muted whitespace-nowrap";
-        s.textContent = t;
-        infoStack.appendChild(s);
-      });
-
-      fillBar.style.width = `${(((idx + 1) / N) * 100).toFixed(1)}%`;
-      counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
-
-      // Active item glow
-      items.forEach((item, i) => {
-        item.dataset.active = String(i === idx);
-        item.setAttribute("tabindex", i === idx ? "0" : "-1");
-      });
-
-      // Vertical dots
-      dotsVert.forEach((d, i) => d.classList.toggle("active", i === idx));
-
-      infoCont.style.opacity = "1";
-    }, 160);
-
-    // Hide scroll hint once user starts navigating
-    if (idx > 0 && hint) hint.style.opacity = "0";
-
-    setTimeout(() => {
-      animating = false;
-    }, 750);
-  }
-
-  /* ─────────────────────────────────────────────────────────
-     LOCK / RELEASE
-  ───────────────────────────────────────────────────────── */
-  function lock(fromBelow: boolean = false): void {
-    if (locked || cooldown) return;
-    locked = true;
-
-    // If entering from below, start at last project
-    const startIdx = fromBelow ? N - 1 : 0;
-    projIdx = startIdx;
-
-    // Suppress transitions during snap, then restore
-    slider.style.transition = "none";
-    const snapRot = -((startIdx * 360) / N);
-    lastRotY = snapRot;
-    slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${snapRot.toFixed(2)}deg)`;
-    requestAnimationFrame(() => {
-      slider.style.transition = "";
-    });
-
-    // Init info panel without crossfade
-    infoCont.style.opacity = "1";
-    const p = PROJECTS[startIdx];
-    infoCat.textContent = p.category;
-    infoName.textContent = p.name;
-    infoDesc.textContent = p.desc;
-    infoLink.href = p.url;
-    infoStack.innerHTML = "";
-    (p.stack as string[]).forEach((t: string) => {
+  function buildStack(container: HTMLElement, stack: string[]) {
+    container.innerHTML = "";
+    stack.forEach((t: string) => {
       const s = document.createElement("span");
       s.className =
         "text-[9px] tracking-widest uppercase px-[7px] py-[3px] border border-border text-muted whitespace-nowrap";
       s.textContent = t;
-      infoStack.appendChild(s);
+      container.appendChild(s);
     });
-    fillBar.style.width = `${(((startIdx + 1) / N) * 100).toFixed(1)}%`;
-    counter.textContent = `${String(startIdx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
-    items.forEach((item, i) => {
-      item.dataset.active = String(i === startIdx);
-      item.setAttribute("tabindex", i === startIdx ? "0" : "-1");
-    });
-    dotsVert.forEach((d, i) => d.classList.toggle("active", i === startIdx));
-
-    if (hint) hint.style.opacity = fromBelow ? "0" : "1";
-
-    // Prevent page scroll (native + Lenis)
-    document.documentElement.style.overflow = "hidden";
-    document.dispatchEvent(new CustomEvent("lenis:stop"));
-    section.classList.add("proj-draggable");
-    updateArrows();
   }
 
-  function releaseDown(): void {
-    locked = false;
-    cooldown = true;
-    updateArrows();
-    section.classList.remove("proj-draggable", "dragging");
-    document.documentElement.style.overflow = "";
-    document.dispatchEvent(new CustomEvent("lenis:start"));
+  function updatePanel(idx: number, instant = false) {
+    const p = PROJECTS[idx];
+    const apply = () => {
+      infoCat.textContent = p.category;
+      infoName.textContent = p.name;
+      infoDesc.textContent = p.desc;
+      infoLink.href = p.url;
+      buildStack(infoStack, p.stack);
+      fillBar.style.width = `${(((idx + 1) / N) * 100).toFixed(1)}%`;
+      counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+      items.forEach((item, i) => {
+        item.dataset.active = String(i === idx);
+        item.setAttribute("tabindex", i === idx ? "0" : "-1");
+      });
+      dotsVert.forEach((d, i) => d.classList.toggle("active", i === idx));
+    };
 
-    // Scroll to section immediately after projects
-    const next = section.nextElementSibling as HTMLElement | null;
-    const target = next
-      ? next.getBoundingClientRect().top + window.scrollY
-      : section.offsetTop + section.offsetHeight;
+    if (instant) {
+      infoCont.style.opacity = "1";
+      apply();
+      return;
+    }
 
-    setTimeout(() => {
-      window.scrollTo({ top: target, behavior: "smooth" });
-    }, 40);
-
-    setTimeout(() => {
-      cooldown = false;
-    }, 1800);
-  }
-
-  function releaseUp(): void {
-    locked = false;
-    cooldown = true;
-    updateArrows();
-    section.classList.remove("proj-draggable", "dragging");
-    document.documentElement.style.overflow = "";
-    document.dispatchEvent(new CustomEvent("lenis:start"));
-
-    // Scroll to the section above
-    const prev = section.previousElementSibling as HTMLElement | null;
-    const target = prev
-      ? prev.getBoundingClientRect().top + window.scrollY
-      : Math.max(0, section.offsetTop - window.innerHeight);
-
-    setTimeout(() => {
-      window.scrollTo({ top: target, behavior: "smooth" });
-    }, 40);
-
-    setTimeout(() => {
-      goTo(0); // reset carousel for next time
-      cooldown = false;
-    }, 1800);
+    infoCont.style.opacity = "0";
+    if (crossTimer) clearTimeout(crossTimer);
+    crossTimer = setTimeout(() => {
+      apply();
+      infoCont.style.opacity = "1";
+    }, 160);
   }
 
   /* ─────────────────────────────────────────────────────────
-     TRIGGER LOCK — IntersectionObserver
-     Fires when section is ≥ 90% in viewport.
-     Detects entry direction via scroll position.
+     SCROLL-TO-PROJECT (for arrows & drag)
   ───────────────────────────────────────────────────────── */
-  let lastScrollY = window.scrollY;
-  window.addEventListener(
-    "scroll",
-    () => {
-      lastScrollY = window.scrollY;
-    },
-    { passive: true },
-  );
+  let projST: ScrollTrigger | null = null;
 
-  const lockIO = new IntersectionObserver(
-    ([entry]) => {
-      if (
-        !entry.isIntersecting ||
-        entry.intersectionRatio < 0.9 ||
-        cooldown ||
-        locked
-      )
-        return;
-
-      // Snap section perfectly to viewport top
-      const off = Math.round(section.getBoundingClientRect().top);
-      if (Math.abs(off) > 2) {
-        window.scrollTo({ top: window.scrollY + off });
-      }
-
-      // Determine approach direction
-      const fromBelow =
-        lastScrollY > section.offsetTop + section.offsetHeight * 0.5;
-      lock(fromBelow);
-    },
-    { threshold: [0.9] },
-  );
-  if (!isMobile()) lockIO.observe(section);
-
-  /* ─────────────────────────────────────────────────────────
-     INPUT HANDLERS
-  ───────────────────────────────────────────────────────── */
-
-  // Mouse wheel
-  window.addEventListener(
-    "wheel",
-    (e: WheelEvent) => {
-      if (!locked) return;
-      e.preventDefault();
-      const dir = e.deltaY > 0 ? 1 : -1;
-      goTo(projIdx + dir);
-    },
-    { passive: false },
-  );
-
-  // Touch swipe
-  let touchStartY = 0;
-  window.addEventListener(
-    "touchstart",
-    (e) => {
-      touchStartY = e.touches[0].clientY;
-    },
-    { passive: true },
-  );
-
-  window.addEventListener(
-    "touchmove",
-    (e) => {
-      if (locked) e.preventDefault();
-    },
-    { passive: false },
-  );
-
-  window.addEventListener("touchend", (e) => {
-    if (!locked) return;
-    const delta = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(delta) > 45) goTo(projIdx + (delta > 0 ? 1 : -1));
-  });
-
-  // Keyboard
-  window.addEventListener("keydown", (e: KeyboardEvent) => {
-    if (!locked) return;
-    if (e.key === "ArrowDown" || e.key === "PageDown") {
-      e.preventDefault();
-      goTo(projIdx + 1);
-    }
-    if (e.key === "ArrowUp" || e.key === "PageUp") {
-      e.preventDefault();
-      goTo(projIdx - 1);
-    }
-  });
-
-  // Arrow buttons
-  const prevBtn = document.getElementById(
-    "proj-prev",
-  ) as HTMLButtonElement | null;
-  const nextBtn = document.getElementById(
-    "proj-next",
-  ) as HTMLButtonElement | null;
-
-  function updateArrows() {
-    if (!prevBtn || !nextBtn) return;
-    prevBtn.disabled = !locked;
-    nextBtn.disabled = !locked;
+  function scrollToProject(idx: number) {
+    if (!projST) return;
+    // card idx sits at progress idx/N along the pinned scroll range
+    const target = projST.start + (idx / N) * (projST.end - projST.start);
+    window.scrollTo({ top: target, behavior: "smooth" });
   }
 
-  prevBtn?.addEventListener("click", () => {
-    if (locked) goTo((((projIdx - 1) % N) + N) % N);
-  });
-  nextBtn?.addEventListener("click", () => {
-    if (locked) goTo((((projIdx + 1) % N) + N) % N);
-  });
+  /* ─────────────────────────────────────────────────────────
+     SCROLL-DRIVEN ROTATION — ScrollTrigger scrub
+  ───────────────────────────────────────────────────────── */
+  // Init panel with first project immediately
+  updatePanel(0, true);
+  if (hint) hint.style.opacity = "0"; // hint not needed in free-scroll mode
 
-  // ── Mouse drag (desktop 3D carousel) ──────────────────────
-  const DRAG_SENS = 0.3; // degrees per pixel
+  const PIN_PER_CARD = 560; // px of scroll per card
+
+  if (!isMobile()) {
+    // Remove CSS transition so scrub drives transform frame-by-frame
+    slider.style.transition = "none";
+
+    projST = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => "+=" + N * PIN_PER_CARD,
+      pin: true, // section stays fixed in the viewport while scrolling
+      pinSpacing: true, // pushes following content down by the pin distance
+      anticipatePin: 1,
+      scrub: 0.8, // lag smoothing — higher = more inertia
+      invalidateOnRefresh: true,
+      onUpdate(self) {
+        // Full 360° turn across the whole pinned scroll distance.
+        const rotY = -(self.progress * 360);
+        lastRotY = rotY;
+        slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${rotY.toFixed(2)}deg)`;
+
+        const newIdx = Math.round(self.progress * N) % N;
+        if (newIdx !== projIdx) {
+          projIdx = newIdx;
+          updatePanel(projIdx);
+        }
+      },
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     ARROW BUTTONS — scroll page to that project's position
+  ───────────────────────────────────────────────────────── */
+  const prevBtn = document.getElementById("proj-prev") as HTMLButtonElement | null;
+  const nextBtn = document.getElementById("proj-next") as HTMLButtonElement | null;
+
+  prevBtn?.addEventListener("click", () =>
+    scrollToProject(Math.max(0, projIdx - 1)),
+  );
+  nextBtn?.addEventListener("click", () =>
+    scrollToProject(Math.min(N, projIdx + 1)),
+  );
+
+  /* ─────────────────────────────────────────────────────────
+     MOUSE DRAG — drag carousel, snap via scrollToProject
+  ───────────────────────────────────────────────────────── */
+  const DRAG_SENS = 0.3;
 
   section.addEventListener("mousedown", (e: MouseEvent) => {
-    if (isMobile() || !locked) return;
+    if (isMobile()) return;
     if ((e.target as HTMLElement).closest("a, button")) return;
     isDragging = true;
     dragMoved = false;
     dragStartX = e.clientX;
     dragStartRotY = lastRotY;
-    slider.style.transition = "none";
     section.classList.add("dragging");
     e.preventDefault();
   });
@@ -1012,24 +836,19 @@ const viewLabel = t("p.view");
     if (!isDragging) return;
     isDragging = false;
     section.classList.remove("dragging");
-    slider.style.transition = "";
     if (dragMoved) {
       const delta = e.clientX - dragStartX;
-      const currentRotY = dragStartRotY + delta * DRAG_SENS;
-      const rawIdx = Math.round((-currentRotY * N) / 360);
-      const nearest = ((rawIdx % N) + N) % N;
-      const canonicalRot = -((nearest * 360) / N);
-      const diff = canonicalRot - currentRotY;
-      const normalizedDiff = ((((diff + 180) % 360) + 360) % 360) - 180;
-      const targetRotY = currentRotY + normalizedDiff;
-      setTimeout(() => {
-        dragMoved = false;
-      }, 50);
-      goTo(nearest, targetRotY);
+      const draggedRotY = dragStartRotY + delta * DRAG_SENS;
+      const rawIdx = Math.round((-draggedRotY * N) / 360);
+      const nearest = Math.max(0, Math.min(N - 1, ((rawIdx % N) + N) % N));
+      setTimeout(() => { dragMoved = false; }, 50);
+      scrollToProject(nearest);
     }
   });
 
-  // Item clicks → open modal
+  /* ─────────────────────────────────────────────────────────
+     ITEM CLICKS → MODAL
+  ───────────────────────────────────────────────────────── */
   items.forEach((item) => {
     item.addEventListener("click", () => {
       if (dragMoved) return;

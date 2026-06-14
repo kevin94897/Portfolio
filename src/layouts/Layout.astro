@@ -244,9 +244,37 @@ const structuredData = {
       type="application/ld+json"
       set:html={JSON.stringify(structuredData, null, 2)}
     />
+
+    <!-- ─── Intro preloader: lock scroll early + JS-fail safety net ─── -->
+    <noscript><style>{`#preloader{display:none!important}`}</style></noscript>
+    <script is:inline>
+      try {
+        // Landing on an inner section via anchor (e.g. /#contact) → no intro.
+        // (Scroll isn't locked here so the browser can restore scroll position;
+        //  the module reads scrollY to decide whether to play the intro.)
+        var h = location.hash;
+        var toSection =
+          h && h.length > 1 && h !== "#hero" && h !== "#main-content";
+        if (toSection) {
+          window.__skipIntro = true;
+          var st = document.createElement("style");
+          st.textContent = "#preloader{display:none!important}";
+          document.head.appendChild(st);
+        }
+      } catch (e) {}
+      // If the animation module never runs, force-reveal after 6s.
+      window.__introFallback = setTimeout(function () {
+        var p = document.getElementById("preloader");
+        if (p) p.style.display = "none";
+        document.documentElement.style.overflow = "";
+      }, 6000);
+    </script>
   </head>
 
   <body>
+    <!-- ─── Intro: black backdrop; the hero <h1> itself animates over it ─── -->
+    <div id="preloader" aria-hidden="true"></div>
+
     <!-- Accessibility: skip to main content -->
     <a href="#main-content" class="skip-link"
       >{isEn ? "Skip to main content" : "Saltar al contenido principal"}</a
@@ -264,16 +292,38 @@ const structuredData = {
       gsap.registerPlugin(ScrollTrigger, SplitText);
 
       // ── Lenis smooth scroll ─────────────────────────────────
+      const BASE_LERP = 0.09; // interpolation — lower = smoother/slower
+      const BASE_WHEEL = 0.85;
+      // Near the bottom the scroll eases into a slower, smoother glide.
+      const SLOW_LERP = 0.045;
+      const SLOW_WHEEL = 0.5;
+      const SLOW_FROM = 0.82; // progress (0–1) where the slowdown begins
+
       const lenis = new Lenis({
-        lerp: 0.09, // interpolation — lower = smoother/slower
+        lerp: BASE_LERP,
         smoothWheel: true,
-        wheelMultiplier: 0.85,
+        wheelMultiplier: BASE_WHEEL,
         touchMultiplier: 1.5,
         syncTouch: false, // mobile uses native scroll
       });
 
-      // Keep GSAP ScrollTrigger in sync with Lenis
-      lenis.on("scroll", ScrollTrigger.update);
+      // Keep GSAP ScrollTrigger in sync with Lenis + slow down near the end.
+      lenis.on("scroll", (e: any) => {
+        ScrollTrigger.update();
+        const progress: number =
+          (e && typeof e.progress === "number" ? e.progress : lenis.progress) ||
+          0;
+        if (progress >= SLOW_FROM) {
+          const t = (progress - SLOW_FROM) / (1 - SLOW_FROM); // 0 → 1
+          const eased = t * t * (3 - 2 * t); // smoothstep
+          (lenis as any).options.lerp = BASE_LERP - (BASE_LERP - SLOW_LERP) * eased;
+          (lenis as any).options.wheelMultiplier =
+            BASE_WHEEL - (BASE_WHEEL - SLOW_WHEEL) * eased;
+        } else {
+          (lenis as any).options.lerp = BASE_LERP;
+          (lenis as any).options.wheelMultiplier = BASE_WHEEL;
+        }
+      });
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
 
@@ -291,9 +341,19 @@ const structuredData = {
         });
       }
 
-      // ── Hero title — emerge from baseline on load ────────────
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       const heroTitle = document.querySelector<HTMLElement>(".hero-title-anim");
-      if (heroTitle) {
+      // Hide the hero title until the intro takes over, so it never flashes
+      // in its final spot before the entrance animation runs.
+      if (heroTitle) gsap.set(heroTitle, { autoAlpha: 0 });
+
+      // ── Hero title fallback reveal (used when the intro is skipped) ──
+      function animateHeroTitle() {
+        if (!heroTitle) return;
+        gsap.set(heroTitle, { autoAlpha: 1 });
         const split = new SplitText(heroTitle, { type: "lines" });
         wrapLines(split.lines);
         gsap.from(split.lines, {
@@ -305,55 +365,140 @@ const structuredData = {
         });
       }
 
-      // ── Hero sub-elements — ordered reveal after title ────────
-      // tech bar → roles → secondary (JP text + scroll) → Spline bg
-      const allHeroEls =
-        document.querySelectorAll<HTMLElement>("[data-hero-reveal]");
-      const techEl = document.querySelector<HTMLElement>(
-        '[data-hero-reveal="tech"]',
-      );
-      const rolesEl = document.querySelector<HTMLElement>(
-        '[data-hero-reveal="roles"]',
-      );
-      const secondaryEls = document.querySelectorAll<HTMLElement>(
-        '[data-hero-reveal="secondary"]',
-      );
+      // ── Hero sub-elements — ordered reveal (tech → roles → secondary) ──
+      function animateHeroExtras() {
+        const allHeroEls =
+          document.querySelectorAll<HTMLElement>("[data-hero-reveal]");
+        const techEl = document.querySelector<HTMLElement>(
+          '[data-hero-reveal="tech"]',
+        );
+        const rolesEl = document.querySelector<HTMLElement>(
+          '[data-hero-reveal="roles"]',
+        );
+        const secondaryEls = document.querySelectorAll<HTMLElement>(
+          '[data-hero-reveal="secondary"]',
+        );
 
-      if (allHeroEls.length) {
+        if (!allHeroEls.length) return;
         gsap.set(allHeroEls, { opacity: 0, y: 18 });
 
-        const tl = gsap.timeline({ delay: 0.85 });
-
+        const tl = gsap.timeline();
         if (techEl)
-          tl.to(
-            techEl,
-            { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            0,
-          );
+          tl.to(techEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
         if (rolesEl)
-          tl.to(
-            rolesEl,
-            { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            0.22,
-          );
+          tl.to(rolesEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.22);
         if (secondaryEls.length)
           tl.to(
             secondaryEls,
-            {
-              opacity: 1,
-              y: 0,
-              stagger: 0.12,
-              duration: 0.55,
-              ease: "power2.out",
-            },
+            { opacity: 1, y: 0, stagger: 0.12, duration: 0.55, ease: "power2.out" },
             0.44,
           );
-
         tl.call(
           () => document.dispatchEvent(new CustomEvent("hero:reveal-spline")),
           undefined,
           0.85,
         );
+      }
+
+      // ── Intro entrance — name brightens 0→100, then flows to its place ──
+      clearTimeout((window as any).__introFallback);
+      const preloader = document.getElementById("preloader");
+
+      function unlockScroll() {
+        document.documentElement.style.overflow = "";
+        lenis.start();
+      }
+
+      function hidePreloader() {
+        if (preloader) gsap.set(preloader, { display: "none" });
+      }
+
+      const mainName = heroTitle?.querySelector<HTMLElement>(".hero-name-main");
+      const suffixName =
+        heroTitle?.querySelector<HTMLElement>(".hero-name-suffix");
+
+      // Only play the intro when landing at the very top (hero in view).
+      // If the page is reloaded/opened scrolled into another section, skip it.
+      const atTop =
+        !(window as any).__skipIntro && window.scrollY < 4;
+
+      if (!preloader || !heroTitle || !mainName || prefersReduced || !atTop) {
+        // Skip the cinematic entrance: reduced motion, missing nodes, or
+        // the user isn't at the top of the page.
+        hidePreloader();
+        unlockScroll();
+        animateHeroTitle();
+        animateHeroExtras();
+      } else {
+        document.documentElement.style.overflow = "hidden";
+        lenis.stop();
+
+        // 1 — Lift the real <h1> to the centre of the black screen, scaled up.
+        //     Pin it to its natural box first (fixed) so it sits above the
+        //     backdrop, then translate/scale it to centre — transforms only,
+        //     so removing them later lands it back in its exact spot.
+        const rect = heroTitle.getBoundingClientRect();
+        gsap.set(heroTitle, {
+          position: "fixed",
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          margin: 0,
+          zIndex: 100001,
+          autoAlpha: 1,
+          transformOrigin: "center center",
+        });
+        const dx = window.innerWidth / 2 - (rect.left + rect.width / 2);
+        const dy = window.innerHeight / 2 - (rect.top + rect.height / 2);
+        gsap.set(heroTitle, { x: dx, y: dy, scale: 1.12 });
+
+        // 2 — Hide the ".ケビン" suffix and split the name into letters,
+        //     each starting dim. K = first (0%), z = last (100%).
+        if (suffixName) gsap.set(suffixName, { autoAlpha: 0 });
+        const split = new SplitText(mainName, { type: "chars" });
+        gsap.set(split.chars, { opacity: 0.3 });
+
+        const intro = gsap.timeline();
+        intro
+          // Letters brighten left→right, slow and always fully visible.
+          .to(split.chars, {
+            opacity: 1,
+            duration: 0.55,
+            ease: "power1.out",
+            stagger: { each: 0.22 },
+          })
+          .addLabel("flow", "+=0.45")
+          // 3 — The name flows back to its real position (transforms → 0).
+          .to(
+            heroTitle,
+            { x: 0, y: 0, scale: 1, duration: 1.4, ease: "power3.inOut" },
+            "flow",
+          )
+          // Black backdrop fades, revealing the page behind the moving name.
+          .to(
+            preloader,
+            { autoAlpha: 0, duration: 1, ease: "power2.inOut" },
+            "flow+=0.15",
+          )
+          // The ".ケビン" suffix fades in as the name settles.
+          .to(
+            suffixName,
+            { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
+            "flow+=0.7",
+          )
+          // Hand over: unlock scroll + reveal the rest of the hero.
+          .add(() => {
+            unlockScroll();
+            animateHeroExtras();
+          }, "flow+=0.35")
+          // Cleanup: drop the <h1> back into normal flow (no visual jump).
+          .add(() => {
+            split.revert();
+            gsap.set(heroTitle, {
+              clearProps: "position,top,left,width,margin,zIndex,transform,opacity,visibility",
+            });
+            hidePreloader();
+          });
       }
 
       // ── Section titles — fire on scroll (water-emerge from baseline) ──
@@ -373,6 +518,31 @@ const structuredData = {
             ease: "power4.out",
           });
         });
+
+      // ── "Trabajemos." — letter-by-letter scrubbed reveal ──────────
+      // Tied to scroll position so Lenis's bottom-slowdown makes it
+      // naturally decelerate as the letters finish brightening.
+      const trabajemosEl =
+        document.querySelector<HTMLElement>(".trabajemos-anim");
+      if (trabajemosEl) {
+        const tSplit = new SplitText(trabajemosEl, { type: "chars" });
+        gsap.set(tSplit.chars, { opacity: 0.08 });
+        const tTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: trabajemosEl,
+            start: "top 90%",
+            end: "top 20%",
+            scrub: 1.8,
+          },
+        });
+        tSplit.chars.forEach((char, i) => {
+          tTl.to(
+            char,
+            { opacity: 1, ease: "power1.inOut", duration: 1 },
+            i * 0.18,
+          );
+        });
+      }
     </script>
   </body>
 </html>

@@ -84,6 +84,19 @@ body {
   width: 100%;
 }
 
+/* ─── INTRO — black backdrop for the hero-heading entrance ─── */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: var(--black);
+  will-change: opacity;
+}
+
+/* During the intro each letter of the hero name starts dim, then brightens */
+.hero-title-anim .char {
+  will-change: opacity;
+}
 
 /* ─── CONTAINER ─── */
 .container {
