@@ -262,10 +262,13 @@ const structuredData = {
           document.head.appendChild(st);
         }
       } catch (e) {}
-      // If the animation module never runs, force-reveal after 6s.
+      // If the animation module never runs (or fails after hiding the title),
+      // force-reveal after 6s so the page is never stuck invisible.
       window.__introFallback = setTimeout(function () {
         var p = document.getElementById("preloader");
         if (p) p.style.display = "none";
+        var ht = document.querySelector(".hero-title-anim");
+        if (ht) { ht.style.opacity = "1"; ht.style.visibility = "visible"; }
         document.documentElement.style.overflow = "";
       }, 6000);
     </script>
@@ -336,6 +339,10 @@ const structuredData = {
           const wrap = document.createElement("div");
           wrap.style.overflow = "hidden";
           wrap.style.display = "block";
+          // Extra space below the clip boundary so descenders (y, j, g, p…)
+          // are not cut off. Negative margin keeps the overall layout spacing.
+          wrap.style.paddingBottom = "0.25em";
+          wrap.style.marginBottom = "-0.25em";
           line.parentNode!.insertBefore(wrap, line);
           wrap.appendChild(line);
         });
@@ -433,72 +440,102 @@ const structuredData = {
         document.documentElement.style.overflow = "hidden";
         lenis.stop();
 
-        // 1 — Lift the real <h1> to the centre of the black screen, scaled up.
-        //     Pin it to its natural box first (fixed) so it sits above the
-        //     backdrop, then translate/scale it to centre — transforms only,
-        //     so removing them later lands it back in its exact spot.
-        const rect = heroTitle.getBoundingClientRect();
-        gsap.set(heroTitle, {
-          position: "fixed",
-          top: rect.top,
-          left: rect.left,
-          width: rect.width,
-          margin: 0,
-          zIndex: 100001,
-          autoAlpha: 1,
-          transformOrigin: "center center",
-        });
-        const dx = window.innerWidth / 2 - (rect.left + rect.width / 2);
-        const dy = window.innerHeight / 2 - (rect.top + rect.height / 2);
-        gsap.set(heroTitle, { x: dx, y: dy, scale: 1.12 });
+        // Declared outside try so the catch block can clean it up if needed.
+        let heroPlaceholder: HTMLDivElement | null = null;
 
-        // 2 — Hide the ".ケビン" suffix and split the name into letters,
-        //     each starting dim. K = first (0%), z = last (100%).
-        if (suffixName) gsap.set(suffixName, { autoAlpha: 0 });
-        const split = new SplitText(mainName, { type: "chars" });
-        gsap.set(split.chars, { opacity: 0.3 });
+        try {
+          // 1 — Measure in natural DOM position, then reparent to <body> so
+          //     z-index:100001 lives in the root stacking context (above #preloader
+          //     at z:100000). The parent div has z-index:10 which would otherwise
+          //     cap the effective z-index to 10.
+          const rect = heroTitle.getBoundingClientRect();
+          // Measure the actual rendered text width (not the full h1 box) so we
+          // can center the VISIBLE name on screen rather than the container box.
+          const textWidth = mainName.offsetWidth;
 
-        const intro = gsap.timeline();
-        intro
-          // Letters brighten left→right, slow and always fully visible.
-          .to(split.chars, {
-            opacity: 1,
-            duration: 0.55,
-            ease: "power1.out",
-            stagger: { each: 0.22 },
-          })
-          .addLabel("flow", "+=0.45")
-          // 3 — The name flows back to its real position (transforms → 0).
-          .to(
-            heroTitle,
-            { x: 0, y: 0, scale: 1, duration: 1.4, ease: "power3.inOut" },
-            "flow",
-          )
-          // Black backdrop fades, revealing the page behind the moving name.
-          .to(
-            preloader,
-            { autoAlpha: 0, duration: 1, ease: "power2.inOut" },
-            "flow+=0.15",
-          )
-          // The ".ケビン" suffix fades in as the name settles.
-          .to(
-            suffixName,
-            { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
-            "flow+=0.7",
-          )
-          // Hand over: unlock scroll + reveal the rest of the hero.
-          .add(() => {
-            unlockScroll();
-            animateHeroExtras();
-          }, "flow+=0.35")
-          // Cleanup: drop the <h1> back into normal flow (no visual jump).
-          .add(() => {
-            split.revert();
-            gsap.set(heroTitle, {
-              clearProps: "position,top,left,width,margin,zIndex,transform,opacity,visibility",
-            });
-            hidePreloader();
+          // Insert a same-sized invisible placeholder so the flex siblings
+          // (tech bar, role cycling) keep their position while the <h1> is
+          // animated at body level. replaceWith/replaceWith are synchronous so
+          // the browser sees a single layout change with no visual jump.
+          heroPlaceholder = document.createElement("div");
+          heroPlaceholder.style.cssText = `width:${rect.width}px;height:${rect.height}px;visibility:hidden;flex-shrink:0;`;
+          heroTitle.replaceWith(heroPlaceholder);
+          document.body.appendChild(heroTitle);
+
+          gsap.set(heroTitle, {
+            position: "fixed",
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            margin: 0,
+            zIndex: 100001,
+            autoAlpha: 1,
+            transformOrigin: "center center",
           });
+          // Shift so the visible text (not the full-width h1 box) is centered.
+          const initialX = window.innerWidth / 2 - textWidth / 2 - rect.left;
+          const dy = window.innerHeight / 2 - (rect.top + rect.height / 2);
+          gsap.set(heroTitle, { x: initialX, y: dy, scale: 1.12 });
+
+          // 2 — Hide the ".ケビン" suffix and split the name into letters,
+          //     each starting dim. K = first (0%), z = last (100%).
+          if (suffixName) gsap.set(suffixName, { autoAlpha: 0 });
+          const split = new SplitText(mainName, { type: "chars", charsClass: "char" });
+          gsap.set(split.chars, { opacity: 0.3 });
+
+          const intro = gsap.timeline();
+          intro
+            // Letters brighten left→right, slow and always fully visible.
+            .to(split.chars, {
+              opacity: 1,
+              duration: 0.55,
+              ease: "power1.out",
+              stagger: { each: 0.22 },
+            })
+            .addLabel("flow", "+=0.45")
+            // 3 — The name flows back to its real position (transforms → 0).
+            .to(
+              heroTitle,
+              { x: 0, y: 0, scale: 1, duration: 1.4, ease: "power3.inOut" },
+              "flow",
+            )
+            // Black backdrop fades, revealing the page behind the moving name.
+            .to(
+              preloader,
+              { autoAlpha: 0, duration: 1, ease: "power2.inOut" },
+              "flow+=0.15",
+            )
+            // The ".ケビン" suffix fades in as the name settles.
+            .to(
+              suffixName,
+              { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
+              "flow+=0.7",
+            )
+            // Hand over: unlock scroll + reveal the rest of the hero.
+            .add(() => {
+              unlockScroll();
+              animateHeroExtras();
+            }, "flow+=0.35")
+            // Cleanup: atomically swap placeholder → <h1> back in one frame,
+            // then clear GSAP inline styles so the <h1> returns to normal flow
+            // with no layout jump.
+            .add(() => {
+              split.revert();
+              heroPlaceholder!.replaceWith(heroTitle);
+              gsap.set(heroTitle, {
+                clearProps: "position,top,left,width,margin,zIndex,transform,opacity,visibility",
+              });
+              hidePreloader();
+            });
+        } catch (_err) {
+          // Restore <h1> to the hero section if the placeholder swap already ran.
+          if (heroPlaceholder?.isConnected) heroPlaceholder.replaceWith(heroTitle);
+          gsap.set(heroTitle, { clearProps: "all" });
+          hidePreloader();
+          unlockScroll();
+          animateHeroTitle();
+          animateHeroExtras();
+        }
       }
 
       // ── Section titles — fire on scroll (water-emerge from baseline) ──

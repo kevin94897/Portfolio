@@ -2046,9 +2046,9 @@ body::after {
 
 /* ─── JAPANESE LABEL TAG ────────────────────────────────────────── */
 .jp-tag {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.06em;
-  color: rgba(136, 136, 136, 0.4);
+  color: rgb(136, 136, 136);
   text-transform: none;
   font-weight: 400;
 }
