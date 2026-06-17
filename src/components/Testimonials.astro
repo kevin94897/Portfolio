@@ -25,12 +25,12 @@ const t = useTranslations(locale);
           class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
           style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
         >
-          Lo Que Dicen
+          {t("t.title")}
         </h2>
       </div>
       <div
         class="flex items-center gap-[10px]"
-        aria-label="Controles de testimonios"
+        aria-label={t("t.controls_aria")}
       >
         <div class="flex gap-[5px] items-center" id="emblaTDots" role="tablist">
         </div>

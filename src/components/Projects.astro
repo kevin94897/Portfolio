@@ -780,6 +780,10 @@ const viewLabel = t("p.view");
       anticipatePin: 1,
       scrub: 0.8, // lag smoothing — higher = more inertia
       invalidateOnRefresh: true,
+      // This pin's spacer shifts every trigger below it (e.g. "Trabajemos." in
+      // the footer). A higher refreshPriority guarantees the spacer is in place
+      // before those triggers measure, so their start/end aren't offset.
+      refreshPriority: 1,
       onUpdate(self) {
         // Full 360° turn across the whole pinned scroll distance.
         const rotY = -(self.progress * 360);

@@ -366,12 +366,6 @@ import Marquee from "../../components/Marquee.astro";
         msgES: "El asunto es requerido.",
         msgEN: "Subject is required.",
       },
-      {
-        id: "message",
-        test: (v) => v.trim().length >= 10,
-        msgES: "Mínimo 10 caracteres.",
-        msgEN: "Minimum 10 characters.",
-      },
     ];
 
     function getErrorMsg(rule: Rule): string {
@@ -448,45 +442,60 @@ import Marquee from "../../components/Marquee.astro";
       }
     }
 
-    // ── Form submit → Brevo via hidden iframe ─────────────────
-    const brevoFrame = document.getElementById(
-      "brevo_frame",
-    ) as HTMLIFrameElement | null;
+    // ── Form submit → /api/contact (Brevo API) ───────────────
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    form.addEventListener("submit", (e) => {
       if (!validateAll()) {
-        e.preventDefault();
-        const firstInvalid = form.querySelector(
-          ".is-invalid",
-        ) as HTMLElement | null;
+        const firstInvalid = form.querySelector(".is-invalid") as HTMLElement | null;
         firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
 
-      // Validation passed — let the form POST natively to Brevo iframe
       setLoading(true);
 
-      if (brevoFrame) {
-        brevoFrame.addEventListener(
-          "load",
-          () => {
-            setLoading(false);
-            showToast(
-              "success",
-              currentLang === "en"
-                ? "✓ Message sent! I'll reply within 24 hours."
-                : "✓ ¡Mensaje enviado! Te responderé en menos de 24 horas.",
-            );
-            form.reset();
-            form.querySelectorAll(".form-input").forEach((el) => {
-              el.classList.remove("is-valid", "is-invalid");
-            });
-            form.querySelectorAll(".field-error").forEach((el) => {
-              (el as HTMLElement).textContent = "";
-            });
-          },
-          { once: true },
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nombre: (document.getElementById("fname") as HTMLInputElement).value.trim(),
+            apellidos: (document.getElementById("lname") as HTMLInputElement).value.trim(),
+            email: (document.getElementById("email") as HTMLInputElement).value.trim(),
+            asunto: (document.getElementById("subject") as HTMLInputElement).value.trim(),
+            message: (document.getElementById("message") as HTMLTextAreaElement).value.trim(),
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+          showToast(
+            "success",
+            currentLang === "en"
+              ? "✓ Message sent! I'll reply within 24 hours."
+              : "✓ ¡Mensaje enviado! Te responderé en menos de 24 horas.",
+          );
+          form.reset();
+          form.querySelectorAll(".form-input").forEach((el) => {
+            el.classList.remove("is-valid", "is-invalid");
+          });
+          form.querySelectorAll(".field-error").forEach((el) => {
+            (el as HTMLElement).textContent = "";
+          });
+        } else {
+          throw new Error(data.error ?? "Unknown error");
+        }
+      } catch (err) {
+        showToast(
+          "error",
+          currentLang === "en"
+            ? "Error sending message. Please try again."
+            : "Error al enviar. Por favor intenta de nuevo.",
         );
+        console.error("[contact form]", err);
+      } finally {
+        setLoading(false);
       }
     });
   })();

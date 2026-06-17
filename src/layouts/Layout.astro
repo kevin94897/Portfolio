@@ -245,39 +245,40 @@ const structuredData = {
       set:html={JSON.stringify(structuredData, null, 2)}
     />
 
-    <!-- ─── Intro preloader: lock scroll early + JS-fail safety net ─── -->
-    <noscript><style>{`#preloader{display:none!important}`}</style></noscript>
+    <!-- ─── Hero intro: scroll-restoration setup + JS-fail safety net ─── -->
+    <noscript><style>{`#hero-intro-cover{display:none!important}.hero-title-anim{visibility:visible!important}[data-hero-reveal]{opacity:1!important}`}</style></noscript>
     <script is:inline>
       try {
+        // Take over scroll restoration so the intro decision is deterministic.
+        // The browser's default "auto" restores scrollY only AFTER this
+        // deferred context runs, so reading scrollY in the module would report
+        // 0 on a mid-page reload and wrongly play the hero intro in another
+        // section. With "manual" we restore the saved position ourselves (from
+        // sessionStorage) and gate the intro on whether that position is inside
+        // the #hero section.
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
         // Landing on an inner section via anchor (e.g. /#contact) → no intro.
-        // (Scroll isn't locked here so the browser can restore scroll position;
-        //  the module reads scrollY to decide whether to play the intro.)
         var h = location.hash;
-        var toSection =
-          h && h.length > 1 && h !== "#hero" && h !== "#main-content";
-        if (toSection) {
+        if (h && h.length > 1 && h !== "#hero" && h !== "#main-content") {
           window.__skipIntro = true;
-          var st = document.createElement("style");
-          st.textContent = "#preloader{display:none!important}";
-          document.head.appendChild(st);
         }
       } catch (e) {}
-      // If the animation module never runs (or fails after hiding the title),
-      // force-reveal after 6s so the page is never stuck invisible.
+      // If the animation module never runs, force-reveal the hero pieces after
+      // 6s so the page is never left invisible.
       window.__introFallback = setTimeout(function () {
-        var p = document.getElementById("preloader");
-        if (p) p.style.display = "none";
+        var cv = document.getElementById("hero-intro-cover");
+        if (cv) cv.style.display = "none";
         var ht = document.querySelector(".hero-title-anim");
         if (ht) { ht.style.opacity = "1"; ht.style.visibility = "visible"; }
-        document.documentElement.style.overflow = "";
+        document.querySelectorAll("[data-hero-reveal]").forEach(function (el) {
+          el.style.opacity = "1";
+        });
       }, 6000);
     </script>
   </head>
 
   <body>
-    <!-- ─── Intro: black backdrop; the hero <h1> itself animates over it ─── -->
-    <div id="preloader" aria-hidden="true"></div>
-
     <!-- Accessibility: skip to main content -->
     <a href="#main-content" class="skip-link"
       >{isEn ? "Skip to main content" : "Saltar al contenido principal"}</a
@@ -407,135 +408,125 @@ const structuredData = {
         );
       }
 
-      // ── Intro entrance — name brightens 0→100, then flows to its place ──
+      // ── Intro entrance — hero name brightens in place (no takeover) ──
       clearTimeout((window as any).__introFallback);
-      const preloader = document.getElementById("preloader");
-
-      function unlockScroll() {
-        document.documentElement.style.overflow = "";
-        lenis.start();
-      }
-
-      function hidePreloader() {
-        if (preloader) gsap.set(preloader, { display: "none" });
-      }
 
       const mainName = heroTitle?.querySelector<HTMLElement>(".hero-name-main");
       const suffixName =
-        heroTitle?.querySelector<HTMLElement>(".hero-name-suffix");
+        heroTitle?.querySelector<HTMLElement>(".hero-name-suffix") ?? null;
 
-      // Only play the intro when landing at the very top (hero in view).
-      // If the page is reloaded/opened scrolled into another section, skip it.
-      const atTop =
-        !(window as any).__skipIntro && window.scrollY < 4;
+      // Play the intro only when the saved scroll position lies within the
+      // #hero section (this also covers a fresh load at the very top). The
+      // position comes from sessionStorage — not window.scrollY — because the
+      // browser hasn't applied the restored scroll yet at this point.
+      const heroSection = document.getElementById("hero");
+      const heroBottom = heroSection
+        ? heroSection.offsetTop + heroSection.offsetHeight
+        : window.innerHeight;
+      const hasHash = location.hash.length > 1;
+      let savedY = 0;
+      try {
+        savedY = parseFloat(sessionStorage.getItem("__scrollY") || "0") || 0;
+      } catch (_e) {}
 
-      if (!preloader || !heroTitle || !mainName || prefersReduced || !atTop) {
-        // Skip the cinematic entrance: reduced motion, missing nodes, or
-        // the user isn't at the top of the page.
-        hidePreloader();
-        unlockScroll();
+      // Restore the previous scroll position ourselves (manual restoration
+      // won't), unless an anchor link is already handling the scroll. The page
+      // is never locked, so the intro simply plays wherever #hero ends up.
+      if (!hasHash && savedY > 4) {
+        window.scrollTo(0, savedY);
+        lenis.scrollTo(savedY, { immediate: true });
+      }
+
+      const playIntro =
+        !(window as any).__skipIntro && !hasHash && savedY < heroBottom - 4;
+
+      const cover = document.getElementById("hero-intro-cover");
+
+      if (!heroTitle || !mainName || prefersReduced || !playIntro) {
+        // Reveal the hero without the cinematic entrance (reduced motion,
+        // missing nodes, anchor nav, or we're in another section).
+        if (cover) cover.style.display = "none";
         animateHeroTitle();
         animateHeroExtras();
       } else {
-        document.documentElement.style.overflow = "hidden";
-        lenis.stop();
+        // Cinematic entrance scoped to #hero: a black backdrop covers the
+        // hero, the name brightens centered on it, then flows to its real
+        // position as the backdrop fades. No scroll lock, no full-screen
+        // takeover — the cover lives inside #hero and scrolls with it.
+        const heroRect = heroSection
+          ? heroSection.getBoundingClientRect()
+          : ({ left: 0, top: 0, width: window.innerWidth, height: window.innerHeight } as DOMRect);
+        const titleRect = heroTitle.getBoundingClientRect();
+        // Center the VISIBLE name (text, not the full-width h1 box) in the hero.
+        const dx =
+          heroRect.left + heroRect.width / 2 -
+          (titleRect.left + mainName.offsetWidth / 2);
+        const dy =
+          heroRect.top + heroRect.height / 2 -
+          (titleRect.top + titleRect.height / 2);
 
-        // Declared outside try so the catch block can clean it up if needed.
-        let heroPlaceholder: HTMLDivElement | null = null;
+        // Lift the name's container above the cover (raising the h1 alone is
+        // capped by its z-10 parent's stacking context).
+        const nameWrap =
+          heroTitle.closest<HTMLElement>("[data-hero-name-wrap]");
+        if (nameWrap) gsap.set(nameWrap, { position: "relative", zIndex: 50 });
 
-        try {
-          // 1 — Measure in natural DOM position, then reparent to <body> so
-          //     z-index:100001 lives in the root stacking context (above #preloader
-          //     at z:100000). The parent div has z-index:10 which would otherwise
-          //     cap the effective z-index to 10.
-          const rect = heroTitle.getBoundingClientRect();
-          // Measure the actual rendered text width (not the full h1 box) so we
-          // can center the VISIBLE name on screen rather than the container box.
-          const textWidth = mainName.offsetWidth;
+        gsap.set(heroTitle, {
+          opacity: 1,
+          visibility: "visible",
+          x: dx,
+          y: dy,
+          scale: 1.12,
+          transformOrigin: "center center",
+        });
+        if (suffixName) gsap.set(suffixName, { autoAlpha: 0 });
+        const split = new SplitText(mainName, {
+          type: "chars",
+          charsClass: "char",
+        });
+        gsap.set(split.chars, { opacity: 0.3 });
 
-          // Insert a same-sized invisible placeholder so the flex siblings
-          // (tech bar, role cycling) keep their position while the <h1> is
-          // animated at body level. replaceWith/replaceWith are synchronous so
-          // the browser sees a single layout change with no visual jump.
-          heroPlaceholder = document.createElement("div");
-          heroPlaceholder.style.cssText = `width:${rect.width}px;height:${rect.height}px;visibility:hidden;flex-shrink:0;`;
-          heroTitle.replaceWith(heroPlaceholder);
-          document.body.appendChild(heroTitle);
-
-          gsap.set(heroTitle, {
-            position: "fixed",
-            top: rect.top,
-            left: rect.left,
-            width: rect.width,
-            margin: 0,
-            zIndex: 100001,
-            autoAlpha: 1,
-            transformOrigin: "center center",
-          });
-          // Shift so the visible text (not the full-width h1 box) is centered.
-          const initialX = window.innerWidth / 2 - textWidth / 2 - rect.left;
-          const dy = window.innerHeight / 2 - (rect.top + rect.height / 2);
-          gsap.set(heroTitle, { x: initialX, y: dy, scale: 1.12 });
-
-          // 2 — Hide the ".ケビン" suffix and split the name into letters,
-          //     each starting dim. K = first (0%), z = last (100%).
-          if (suffixName) gsap.set(suffixName, { autoAlpha: 0 });
-          const split = new SplitText(mainName, { type: "chars", charsClass: "char" });
-          gsap.set(split.chars, { opacity: 0.3 });
-
-          const intro = gsap.timeline();
-          intro
-            // Letters brighten left→right, slow and always fully visible.
-            .to(split.chars, {
-              opacity: 1,
-              duration: 0.55,
-              ease: "power1.out",
-              stagger: { each: 0.22 },
-            })
-            .addLabel("flow", "+=0.45")
-            // 3 — The name flows back to its real position (transforms → 0).
-            .to(
-              heroTitle,
-              { x: 0, y: 0, scale: 1, duration: 1.4, ease: "power3.inOut" },
-              "flow",
-            )
-            // Black backdrop fades, revealing the page behind the moving name.
-            .to(
-              preloader,
-              { autoAlpha: 0, duration: 1, ease: "power2.inOut" },
-              "flow+=0.15",
-            )
-            // The ".ケビン" suffix fades in as the name settles.
-            .to(
-              suffixName,
-              { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
-              "flow+=0.7",
-            )
-            // Hand over: unlock scroll + reveal the rest of the hero.
-            .add(() => {
-              unlockScroll();
-              animateHeroExtras();
-            }, "flow+=0.35")
-            // Cleanup: atomically swap placeholder → <h1> back in one frame,
-            // then clear GSAP inline styles so the <h1> returns to normal flow
-            // with no layout jump.
-            .add(() => {
-              split.revert();
-              heroPlaceholder!.replaceWith(heroTitle);
-              gsap.set(heroTitle, {
-                clearProps: "position,top,left,width,margin,zIndex,transform,opacity,visibility",
-              });
-              hidePreloader();
-            });
-        } catch (_err) {
-          // Restore <h1> to the hero section if the placeholder swap already ran.
-          if (heroPlaceholder?.isConnected) heroPlaceholder.replaceWith(heroTitle);
-          gsap.set(heroTitle, { clearProps: "all" });
-          hidePreloader();
-          unlockScroll();
-          animateHeroTitle();
-          animateHeroExtras();
+        const intro = gsap.timeline({
+          onComplete: () => {
+            split.revert();
+            gsap.set(heroTitle, { clearProps: "transform" });
+            if (nameWrap) gsap.set(nameWrap, { clearProps: "zIndex" });
+            if (cover) cover.style.display = "none";
+            ScrollTrigger.refresh();
+          },
+        });
+        intro
+          // Letters brighten left→right, centered on the black backdrop.
+          .to(split.chars, {
+            opacity: 1,
+            duration: 0.55,
+            ease: "power1.out",
+            stagger: { each: 0.16 },
+          })
+          .addLabel("flow", "+=0.4")
+          // Name flows to its real position (transforms → 0).
+          .to(
+            heroTitle,
+            { x: 0, y: 0, scale: 1, duration: 1.3, ease: "power3.inOut" },
+            "flow",
+          );
+        // Backdrop fades, revealing the hero behind the moving name.
+        if (cover) {
+          intro.to(
+            cover,
+            { autoAlpha: 0, duration: 1, ease: "power2.inOut" },
+            "flow+=0.1",
+          );
         }
+        if (suffixName) {
+          intro.to(
+            suffixName,
+            { autoAlpha: 1, duration: 0.6, ease: "power2.out" },
+            "flow+=0.6",
+          );
+        }
+        // Reveal the rest of the hero as the name settles.
+        intro.add(() => animateHeroExtras(), "flow+=0.3");
       }
 
       // ── Section titles — fire on scroll (water-emerge from baseline) ──
@@ -556,20 +547,33 @@ const structuredData = {
           });
         });
 
-      // ── "Trabajemos." — letter-by-letter scrubbed reveal ──────────
-      // Tied to scroll position so Lenis's bottom-slowdown makes it
-      // naturally decelerate as the letters finish brightening.
+      // ── "Trabajemos." — emerge entrance + letter-by-letter scrub ──
       const trabajemosEl =
         document.querySelector<HTMLElement>(".trabajemos-anim");
       if (trabajemosEl) {
-        const tSplit = new SplitText(trabajemosEl, { type: "chars" });
+        // One split for both effects: lines drive the emerge, chars the scrub.
+        const tSplit = new SplitText(trabajemosEl, { type: "lines,chars" });
+        wrapLines(tSplit.lines);
+
+        // Entrance — emerge from the baseline like the other section titles.
+        gsap.from(tSplit.lines, {
+          scrollTrigger: { trigger: trabajemosEl, start: "top 88%" },
+          y: "115%",
+          stagger: 0.1,
+          duration: 1,
+          ease: "power4.out",
+        });
+
+        // Scrubbed reveal — letters illuminate from #contact to the page bottom.
         gsap.set(tSplit.chars, { opacity: 0.08 });
         const tTl = gsap.timeline({
           scrollTrigger: {
-            trigger: trabajemosEl,
-            start: "top 90%",
-            end: "top 20%",
-            scrub: 1.8,
+            trigger: "#contact",
+            start: "top 60%",
+            endTrigger: "footer",
+            end: "bottom bottom",
+            scrub: 1.5,
+            invalidateOnRefresh: true,
           },
         });
         tSplit.chars.forEach((char, i) => {
@@ -580,6 +584,34 @@ const structuredData = {
           );
         });
       }
+
+      // Fonts change text metrics after load → recompute every ScrollTrigger
+      // once the final layout is known (also covers the intro-skipped path).
+      document.fonts?.ready.then(() => ScrollTrigger.refresh());
+      window.addEventListener("load", () => ScrollTrigger.refresh());
+
+      // Lazy-loaded images below the fold grow the page as the user scrolls,
+      // which would otherwise leave scroll-driven triggers (e.g. "Trabajemos.")
+      // mapped to stale positions computed against a shorter page. Refresh
+      // whenever the document height changes (debounced).
+      let refreshTimer: ReturnType<typeof setTimeout>;
+      const sizeObserver = new ResizeObserver(() => {
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+      });
+      sizeObserver.observe(document.body);
+
+      // Persist the scroll position so the next load can gate the intro on it
+      // (we manage restoration manually — see the inline head script).
+      const saveScrollY = () => {
+        try {
+          sessionStorage.setItem("__scrollY", String(window.scrollY));
+        } catch (_e) {}
+      };
+      window.addEventListener("pagehide", saveScrollY);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") saveScrollY();
+      });
     </script>
   </body>
 </html>

@@ -84,13 +84,15 @@ body {
   width: 100%;
 }
 
-/* ─── INTRO — black backdrop for the hero-heading entrance ─── */
-#preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 100000;
-  background: var(--black);
-  will-change: opacity;
+/* ─── INTRO — hero name brightens in place (no full-screen backdrop) ─── */
+/* Hide the animated hero pieces until the deferred script reveals them, so
+   there's no flash of their final state on first paint. The script uses
+   autoAlpha (visibility) for the title and opacity for the reveal elements. */
+.hero-title-anim {
+  visibility: hidden;
+}
+[data-hero-reveal] {
+  opacity: 0;
 }
 
 /* During the intro each letter of the hero name starts dim, then brightens */

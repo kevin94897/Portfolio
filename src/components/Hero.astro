@@ -36,6 +36,15 @@ const t = useTranslations(locale);
   >
   </div>
 
+  <!-- Intro cover: black backdrop for the name entrance, scoped to the hero.
+       Fades away from JS; pointer-events-none so it never blocks scroll. -->
+  <div
+    id="hero-intro-cover"
+    class="absolute inset-0 z-[40] bg-black pointer-events-none"
+    aria-hidden="true"
+  >
+  </div>
+
   <!-- Role cycling — above the green bar -->
   <div class="relative z-10 w-full pointer-events-none py-8">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-[40px]">
@@ -96,7 +105,10 @@ const t = useTranslations(locale);
   </div>
 
   <!-- Big name -->
-  <div class="relative z-10 w-full py-10 md:py-14 pointer-events-none">
+  <div
+    class="relative z-10 w-full py-10 md:py-14 pointer-events-none"
+    data-hero-name-wrap
+  >
     <div class="max-w-[1400px] mx-auto px-6 lg:px-[40px]">
       <h1
         id="hero-heading"
