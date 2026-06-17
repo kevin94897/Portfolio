@@ -7,8 +7,11 @@ const LIST_ID = 2; // Lista Portfolio
 const NOTIFY_EMAIL = "kevin94897@gmail.com";
 const SENDER = { name: "KG Store", email: "kevin94897@gmail.com" };
 
-export const POST: APIRoute = async ({ request }) => {
-  const apiKey = import.meta.env.BREVO_API_KEY;
+export const POST: APIRoute = async ({ request, locals }) => {
+  // import.meta.env works locally; Cloudflare runtime env works in production
+  const runtime = (locals as any).runtime;
+  const apiKey: string | undefined =
+    import.meta.env.BREVO_API_KEY ?? runtime?.env?.BREVO_API_KEY;
   if (!apiKey) {
     return json({ ok: false, error: "Server misconfigured" }, 500);
   }
