@@ -121,11 +121,7 @@ const t = useTranslations(locale);
           <span id="formToastMsg"></span>
         </div>
 
-        <form
-          id="contactForm"
-          novalidate
-          aria-label={t("contact.form_aria")}
-        >
+        <form id="contactForm" novalidate aria-label={t("contact.form_aria")}>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[18px] gap-y-0">
             <div class="field-group mb-[14px] sm:mb-[18px]">
               <label
@@ -216,7 +212,7 @@ const t = useTranslations(locale);
           <button
             id="submitBtn"
             type="submit"
-            class="w-full flex items-center justify-center gap-[9px] py-[13px] sm:py-[15px] bg-lime text-black border-none text-[15px] font-medium tracking- uppercase cursor-none transition-all duration-300 hover:shadow-[0_0_36px_rgba(180,223,0,0.4)] hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none"
+            class="w-full flex items-center justify-center gap-[9px] py-[13px] sm:py-[15px] bg-lime text-black border-none text-[15px] font-medium tracking-tight uppercase cursor-none transition-all duration-300 hover:shadow-[0_0_36px_rgba(180,223,0,0.4)] hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none"
           >
             <i
               id="submitIcon"

@@ -5,7 +5,7 @@ import type { APIRoute } from "astro";
 const BREVO_API = "https://api.brevo.com/v3";
 const LIST_ID = 2; // Lista Portfolio
 const NOTIFY_EMAIL = "kevin94897@gmail.com";
-const SENDER = { name: "KG Store", email: "kevin94897@gmail.com" };
+const SENDER = { name: "Kevin Gómez Portfolio", email: "noreply@kevin-gomez.dev" };
 
 export const POST: APIRoute = async ({ request, locals }) => {
   // import.meta.env works locally; Cloudflare runtime env works in production

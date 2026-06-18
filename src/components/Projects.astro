@@ -403,7 +403,7 @@ const viewLabel = t("p.view");
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-5 py-[10px] bg-lime text-black
-                   text-[14px] tracking-wider uppercase font-semibold no-underline
+                   text-[14px] tracking-tight uppercase font-semibold no-underline
                    transition-all duration-200 hover:opacity-90"
             >
               <span>{viewLabel}</span>
@@ -802,8 +802,12 @@ const viewLabel = t("p.view");
   /* ─────────────────────────────────────────────────────────
      ARROW BUTTONS — scroll page to that project's position
   ───────────────────────────────────────────────────────── */
-  const prevBtn = document.getElementById("proj-prev") as HTMLButtonElement | null;
-  const nextBtn = document.getElementById("proj-next") as HTMLButtonElement | null;
+  const prevBtn = document.getElementById(
+    "proj-prev",
+  ) as HTMLButtonElement | null;
+  const nextBtn = document.getElementById(
+    "proj-next",
+  ) as HTMLButtonElement | null;
 
   prevBtn?.addEventListener("click", () =>
     scrollToProject(Math.max(0, projIdx - 1)),
@@ -845,7 +849,9 @@ const viewLabel = t("p.view");
       const draggedRotY = dragStartRotY + delta * DRAG_SENS;
       const rawIdx = Math.round((-draggedRotY * N) / 360);
       const nearest = Math.max(0, Math.min(N - 1, ((rawIdx % N) + N) % N));
-      setTimeout(() => { dragMoved = false; }, 50);
+      setTimeout(() => {
+        dragMoved = false;
+      }, 50);
       scrollToProject(nearest);
     }
   });

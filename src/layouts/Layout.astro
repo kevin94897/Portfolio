@@ -335,6 +335,18 @@ const structuredData = {
       document.addEventListener("lenis:stop", () => lenis.stop());
       document.addEventListener("lenis:start", () => lenis.start());
 
+      // Route all same-page anchor clicks through Lenis for smooth scroll
+      document.addEventListener("click", (e) => {
+        const a = (e.target as Element).closest<HTMLAnchorElement>("a[href^='#']");
+        if (!a) return;
+        const id = a.getAttribute("href");
+        if (!id || id === "#") return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(target as HTMLElement, { offset: 0, duration: 1.2, easing: (t: number) => 1 - Math.pow(1 - t, 4) });
+      });
+
       function wrapLines(lines: Element[]) {
         lines.forEach((line) => {
           const wrap = document.createElement("div");
