@@ -323,6 +323,7 @@ form,
   overflow: hidden;
   display: flex;
   align-items: center;
+  padding-bottom: 0;
 }
 
 .hero-spline {
