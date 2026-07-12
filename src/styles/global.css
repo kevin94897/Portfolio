@@ -41,7 +41,9 @@
 html {
   scroll-behavior: auto;
   /* Lenis handles smoothness */
-  overflow-x: hidden;
+  /* clip (not hidden) prevents a horizontal scrollbar WITHOUT creating a
+     scroll container — keeps position:sticky working (e.g. Projects track) */
+  overflow-x: clip;
 }
 
 body {
@@ -49,7 +51,7 @@ body {
   color: var(--text);
   font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
-  overflow-x: hidden;
+  overflow-x: clip;
   cursor: none;
 }
 
@@ -110,12 +112,17 @@ body {
 /* Section backgrounds remain static → circuit visible over dark bg  */
 /* Only interactive / card elements are lifted to z:2               */
 article,
-.proj-card,
 form,
 .modal-panel,
 .skill-pill,
 .embla-btn {
   position: relative;
+  z-index: 2;
+}
+
+/* Stack cards are absolute within their 380×520 stage — must not be relative */
+#proj-stack .proj-card {
+  position: absolute;
   z-index: 2;
 }
 
@@ -1130,10 +1137,11 @@ section {
   line-height: 1.5;
 }
 
-/* ─── PROJECTS (EMBLA CAROUSEL) ─── */
+/* ─── PROJECTS ─── */
 #projects {
-  background: var(--surface);
-  overflow: hidden;
+  /* clip (not hidden) keeps horizontal containment WITHOUT creating a scroll
+     container — required so the desktop sticky coverflow track can stick */
+  overflow-x: clip;
 }
 
 .projects-header {

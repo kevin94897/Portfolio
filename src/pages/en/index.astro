@@ -99,7 +99,7 @@ import Marquee from "../../components/Marquee.astro";
 ────────────────────────────────────────────────────────── */
   const canvas = document.getElementById("particles") as HTMLCanvasElement;
   const ctx = canvas.getContext("2d")!;
-  let W: number, H: number;
+  let W = 0, H = 0;
 
   function resizeCanvas() {
     W = canvas.width = window.innerWidth;

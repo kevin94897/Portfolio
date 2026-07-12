@@ -1,7 +1,7 @@
 ---
-import { useTranslations } from '../i18n/utils';
+import { useTranslations } from "../i18n/utils";
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 
 const steps = [
@@ -43,12 +43,11 @@ const steps = [
       class="flex items-center justify-between border-b border-border pb-4 mb-12 lg:mb-16"
     >
       <p class="section-label !mb-0">
-        <span>{t('wf.label')}</span>
+        <span>{t("wf.label")}</span>
         <span class="jp-tag">プロセス</span>
       </p>
-      <span
-        class="text-[9px] tracking-[0.22em] uppercase hidden md:block"
-        style="color:rgba(255,255,255,0.18);">WORK PROCESS</span
+      <span class="text-[9px] tracking-[0.22em] uppercase hidden md:block"
+        >WORK PROCESS</span
       >
     </div>
 
@@ -60,13 +59,10 @@ const steps = [
           id="wf-heading"
           class="section-title-anim font-display font-bold tracking-tightest leading-none text-white mb-4"
           style="font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
-          set:html={t('wf.title')}
-        >
-        </h2>
-        <p
-          class="text-[13px] leading-[1.85] text-text/55 mb-10 lg:mb-12"
-        >
-          {t('wf.desc')}
+          set:html={t("wf.title")}
+        />
+        <p class="text-[13px] leading-[1.85] text-text/55 mb-10 lg:mb-12">
+          {t("wf.desc")}
         </p>
 
         <!-- Step icons -->
@@ -89,9 +85,7 @@ const steps = [
                 >
                   {step.num}
                 </span>
-                <span
-                  class="flex-1 font-syne text-[16px] lg:text-[19px] font-bold text-white group-hover:text-lime transition-colors duration-200"
-                >
+                <span class="flex-1 font-syne text-[16px] lg:text-[19px] font-bold text-white group-hover:text-lime transition-colors duration-200">
                   {t(step.titleKey as any)}
                 </span>
                 <i
@@ -106,9 +100,7 @@ const steps = [
                 role="region"
                 aria-labelledby={`wf-trigger-${i}`}
               >
-                <p
-                  class="text-[13px] leading-[1.85] text-text/55 pb-6 lg:pb-8 pl-[48px] lg:pl-[52px]"
-                >
+                <p class="text-[13px] leading-[1.85] text-text/55 pb-6 lg:pb-8 pl-[48px] lg:pl-[52px]">
                   {t(step.descKey as any)}
                 </p>
               </div>
@@ -129,7 +121,6 @@ const steps = [
     content: "";
     @apply block w-[40px] h-px bg-lime;
   }
-
 
   @media (min-width: 1024px) {
     .reveal-left {

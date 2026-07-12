@@ -1,7 +1,7 @@
 ---
-import { useTranslations } from '../i18n/utils';
+import { useTranslations } from "../i18n/utils";
 
-const locale = (Astro.currentLocale || 'es') as 'es' | 'en';
+const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 
 interface Skill {
@@ -53,7 +53,7 @@ const skills: Skill[] = [
   { name: "Vue.js / Angular", cat: "Desarrollo", level: "Mid", pct: 72 },
 ];
 
-const marqueeText = t('skills.title');
+const marqueeText = t("skills.title");
 ---
 
 <section
@@ -65,19 +65,18 @@ const marqueeText = t('skills.title');
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px] mb-6 reveal">
     <div class="flex items-center justify-between">
       <p class="section-label !mb-0">
-        <span>{t('skills.label')}</span>
+        <span>{t("skills.label")}</span>
         <span class="jp-tag">スキル</span>
       </p>
-      <span
-        class="text-[9px] tracking-[0.22em] uppercase hidden md:block"
-        style="color:rgba(255,255,255,0.18);">TECH SKILLS</span
+      <span class="text-[9px] tracking-[0.22em] uppercase hidden md:block"
+        >TECH SKILLS</span
       >
     </div>
   </div>
 
   <!-- Accessible heading (screen readers) -->
   <h2 id="skills-heading" class="sr-only">
-    {t('skills.title')}
+    {t("skills.title")}
   </h2>
 
   <!-- ── Marquee ── -->
@@ -124,10 +123,10 @@ const marqueeText = t('skills.title');
   <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px] reveal-up">
     <!-- Column headers -->
     <div class="skill-grid border-t border-b border-border py-3 mb-0">
-      <span class="col-th">{t('skills.col.tech')}</span>
-      <span class="col-th hidden sm:block">{t('skills.col.cat')}</span>
-      <span class="col-th hidden md:block">{t('skills.col.level')}</span>
-      <span class="col-th text-right">{t('skills.col.prof')}</span>
+      <span class="col-th">{t("skills.col.tech")}</span>
+      <span class="col-th hidden sm:block">{t("skills.col.cat")}</span>
+      <span class="col-th hidden md:block">{t("skills.col.level")}</span>
+      <span class="col-th text-right">{t("skills.col.prof")}</span>
     </div>
 
     <!-- Skill rows -->

@@ -310,6 +310,8 @@ const structuredData = {
         touchMultiplier: 1.5,
         syncTouch: false, // mobile uses native scroll
       });
+      // Expose for components that need programmatic smooth scroll (e.g. Projects nav)
+      (window as any).__lenis = lenis;
 
       // Keep GSAP ScrollTrigger in sync with Lenis + slow down near the end.
       lenis.on("scroll", (e: any) => {

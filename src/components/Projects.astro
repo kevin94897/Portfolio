@@ -133,12 +133,16 @@ const projects: Project[] = [
 
 const N = projects.length;
 const viewLabel = t("p.view");
+
+// Desktop scroll track height: each project gets ~45vh of natural scroll,
+// plus 100vh for the sticky viewport itself. No pin → scroll never freezes.
+const trackVh = N * 45 + 100;
 ---
 
 <!-- Section is pinned by ScrollTrigger; cards rotate a full turn while pinned -->
 <section
   id="projects"
-  class="relative w-full h-screen overflow-hidden bg-black border-b border-border py-20 flex flex-col"
+  class="relative w-full bg-black border-b border-border"
   aria-labelledby="projects-heading"
 >
   <!-- JSON data para el script -->
@@ -160,207 +164,96 @@ const viewLabel = t("p.view");
     )}
   />
 
-  <!-- Header -->
-  <div
-    class="flex items-start justify-between pb-10 md:pb-0 px-6 md:px-10 pt-10 max-w-[1400px] mx-auto w-full"
-  >
-    <div>
-      <p
-        class="text-[10px] tracking-[0.25em] uppercase text-lime flex items-center gap-3 mb-2"
-      >
-        <span>{t("proj.label")}</span>
-        <span class="w-8 h-px bg-lime block" aria-hidden="true"></span>
-        <span
-          style="color:rgba(180,223,0,0.35); font-size:10px; letter-spacing:0.06em; text-transform:none;"
-          >作品集</span
-        >
-      </p>
-      <h2
-        id="projects-heading"
-        class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
-        style="font-size: clamp(2rem, 4.5vw, 4.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
-      >
-        {t("proj.title")}
-      </h2>
+  <!-- ─── Scroll track + sticky coverflow (all breakpoints) ─── -->
+  <div id="proj-track" class="relative" style={`height: ${trackVh}vh;`}>
+    <div class="sticky top-[75px] h-[calc(100vh-75px)] w-full flex flex-col overflow-hidden">
+
+    <!-- Header row -->
+    <div class="flex items-start justify-between px-5 sm:px-8 lg:px-[60px] pt-8 sm:pt-10 lg:pt-[89px] pb-3 max-w-[1400px] mx-auto w-full flex-shrink-0">
+      <div>
+        <p class="text-[10px] tracking-[0.25em] uppercase text-lime flex items-center gap-3 mb-2">
+          <span>{t("proj.label")}</span>
+          <span class="w-8 h-px bg-lime block" aria-hidden="true"></span>
+          <span style="color:rgba(180,223,0,0.35); font-size:10px; letter-spacing:0.06em; text-transform:none;">作品集</span>
+        </p>
+        <h2
+          id="projects-heading"
+          class="section-title-anim font-display font-bold tracking-tightest leading-none text-white"
+          style="font-size: clamp(1.8rem, 4.5vw, 4.5rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32;"
+        >{t("proj.title")}</h2>
+      </div>
+      <div class="flex items-center gap-2 self-end pb-1" id="proj-nav-arrows">
+        <button id="proj-prev" aria-label="Proyecto anterior" class="proj-arrow-btn">
+          <i class="ph ph-arrow-left text-[16px]" aria-hidden="true"></i>
+        </button>
+        <button id="proj-next" aria-label="Siguiente proyecto" class="proj-arrow-btn">
+          <i class="ph ph-arrow-right text-[16px]" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Navigation arrows — desktop only -->
-    <div
-      class="hidden lg:flex items-center gap-2 self-end pb-1"
-      id="proj-nav-arrows"
-    >
-      <button
-        id="proj-prev"
-        aria-label="Proyecto anterior"
-        class="proj-arrow-btn"
-      >
-        <i class="ph ph-arrow-left text-[16px]" aria-hidden="true"></i>
-      </button>
-      <button
-        id="proj-next"
-        aria-label="Siguiente proyecto"
-        class="proj-arrow-btn"
-      >
-        <i class="ph ph-arrow-right text-[16px]" aria-hidden="true"></i>
-      </button>
-    </div>
-  </div>
+    <!-- Card zone: flex-1 between header and info panel -->
+    <div class="relative flex-1 min-h-0">
 
-  <!-- Mobile Embla slider (lg:hidden) -->
-  <div class="flex-1 lg:hidden min-h-0 flex flex-col">
-    <div
-      id="emblaProj"
-      class="flex-1 min-h-0 overflow-hidden"
-      style="touch-action:pan-y;"
-      role="region"
-      aria-label="Proyectos"
-    >
-      <div class="flex h-full" id="emblaProjContainer">
+      <!-- Ghost background text — desktop only -->
+      <div class="hidden lg:flex absolute inset-0 items-center justify-center pointer-events-none select-none z-[1]" aria-hidden="true">
+        <span class="font-display font-black tracking-tightest leading-none"
+          style="font-size: clamp(6rem, 18vw, 22rem); font-optical-sizing: auto; color: rgba(255,255,255,0.015);">WORKS</span>
+      </div>
+
+      <!-- Vertical Image Stack — responsive width -->
+      <div
+        id="proj-stack"
+        class="absolute z-[5]"
+        style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(580px, calc(100vw - 80px)); height: clamp(240px, 42vh, 520px);"
+      >
         {
-          projects.map((p) => (
-            <div class="flex-[0_0_88%] min-w-0 pl-4 h-full">
-              <div
-                class="mob-slide relative h-full overflow-hidden"
-                data-project={JSON.stringify({
-                  name: p.name,
-                  category: p.category,
-                  descKey: p.descKey,
-                  desc: p.desc,
-                  stack: p.stack,
-                  url: p.url,
-                  img: p.img.src,
-                  demo: p.demo ?? null,
-                })}
-                role="button"
-                tabindex="0"
-                aria-label={`${p.name} — ${p.category}`}
-              >
-                <img
-                  src={p.img.src}
-                  alt={p.name}
-                  class="w-full h-full object-cover object-top"
-                  loading="lazy"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
-                <div class="absolute bottom-0 left-0 right-0 p-5">
-                  <p class="text-[9px] tracking-[0.18em] uppercase text-lime mb-1">
-                    {p.category}
-                  </p>
-                  <h3
-                    class="font-display text-[20px] font-bold text-white leading-tight mb-2"
-                    style="font-optical-sizing:auto;"
-                  >
-                    {p.name}
-                  </h3>
-                  <div class="flex gap-[4px] flex-wrap">
-                    {p.stack.slice(0, 3).map((t) => (
-                      <span class="text-[8px] tracking-widest uppercase px-[6px] py-[2px] border border-border text-muted">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          projects.map((p, i) => (
+            <div
+              class="proj-card absolute inset-0 overflow-hidden"
+              data-index={String(i)}
+              data-active={i === 0 ? "true" : "false"}
+              data-project={JSON.stringify({
+                name: p.name,
+                category: p.category,
+                descKey: p.descKey,
+                desc: p.desc,
+                stack: p.stack,
+                url: p.url,
+                img: p.img.src,
+                demo: p.demo ?? null,
+              })}
+              role="button"
+              tabindex={i === 0 ? "0" : "-1"}
+              aria-label={`${p.name} — ${p.category}`}
+            >
+              <img src={p.img.src} alt={p.name} class="w-full h-full object-cover object-top" loading="lazy" draggable="false" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             </div>
           ))
         }
       </div>
-    </div>
-    <!-- Dots -->
-    <div
-      id="mob-dots"
-      class="flex justify-center items-center gap-[7px]"
-      style="height:44px;"
-    >
-      {projects.map((_, i) => <div class="mob-dot" data-idx={String(i)} />)}
-    </div>
-  </div>
 
-  <!-- Ghost background text -->
-  <div
-    class="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-[1]"
-    aria-hidden="true"
-  >
-    <span
-      class="font-display font-black tracking-tightest leading-none"
-      style="font-size: clamp(6rem, 18vw, 22rem); font-optical-sizing: auto; color: rgba(255,255,255,0.015);"
-      >WORKS</span
-    >
-  </div>
+      <!-- Vertical nav dots — right side -->
+      <div class="hidden sm:flex absolute right-4 lg:right-[50px] top-1/2 -translate-y-1/2 flex-col gap-[10px] z-20">
+        {projects.map((_, i) => (
+          <button class="proj-dot-v" data-idx={String(i)} aria-label={`Proyecto ${i + 1}`} />
+        ))}
+      </div>
 
-  <!-- 3D Slider (LunDev style) -->
-  <div
-    id="proj-slider"
-    class="hidden lg:block"
-    style="
-      position: absolute;
-      width: 260px;
-      height: 338px;
-      top: 28%;
-      left: calc(50% - 130px);
-      transform-style: preserve-3d;
-      transform: perspective(1800px) rotateX(-12deg) rotateY(0deg);
-      z-index: 5;
-    "
-  >
-    {
-      projects.map((p, i) => (
-        <div
-          class="proj-item"
-          style={`
-          position: absolute;
-          inset: 0;
-          transform: rotateY(calc(${i} * (360deg / ${N}))) translateZ(520px);
-        `}
-          data-active={i === 0 ? "true" : "false"}
-          data-index={String(i)}
-          data-project={JSON.stringify({
-            name: p.name,
-            category: p.category,
-            descKey: p.descKey,
-            desc: p.desc,
-            stack: p.stack,
-            url: p.url,
-            img: p.img.src,
-            demo: p.demo ?? null,
-          })}
-          role="button"
-          tabindex={i === 0 ? "0" : "-1"}
-          aria-label={`${p.name} — ${p.category}`}
-        >
-          <img
-            src={p.img.src}
-            alt={p.name}
-            class="proj-item-img w-full h-full object-cover object-top"
-            loading="lazy"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent proj-item-overlay" />
-        </div>
-      ))
-    }
-  </div>
+      <!-- Stack counter — left side -->
+      <div class="hidden sm:flex absolute left-4 lg:left-[50px] top-1/2 -translate-y-1/2 flex-col items-center z-20 pointer-events-none select-none">
+        <span id="stack-counter-curr" class="font-display font-light text-white tabular-nums" style="font-size:clamp(1.5rem,3vw,3rem);">01</span>
+        <div class="my-2 h-px w-8 bg-white/20"></div>
+        <span class="text-[13px] text-muted tabular-nums font-display">{String(N).padStart(2, "0")}</span>
+      </div>
 
-  <!-- Scroll hint -->
-  <div
-    id="proj-scroll-hint"
-    class="absolute z-20 hidden lg:flex flex-col items-center gap-2 pointer-events-none"
-    style="bottom: 220px; left: 50%; transform: translateX(-50%); transition: opacity 0.5s ease;"
-    aria-hidden="true"
-  >
-    <span class="text-[9px] tracking-[0.2em] uppercase text-muted/60"
-      >Scroll para explorar</span
-    >
-    <div
-      class="w-px h-8 bg-gradient-to-b from-lime/60 to-transparent proj-scroll-pulse"
-    >
-    </div>
-  </div>
+    </div><!-- /card zone -->
 
   <!-- Panel info inferior -->
   <div
     id="proj-info-panel"
-    class="hidden lg:block absolute bottom-0 left-0 right-0 z-10
-           bg-gradient-to-t from-black via-black/90 to-transparent"
+    class="flex-shrink-0 z-10 bg-gradient-to-t from-black via-black/90 to-transparent"
   >
     <!-- Container limitado -->
     <div class="max-w-[1400px] mx-auto px-6 md:px-10 pt-6 pb-7">
@@ -431,6 +324,9 @@ const viewLabel = t("p.view");
       </div>
     </div><!-- /container -->
   </div><!-- /info panel -->
+
+  </div><!-- /sticky viewport -->
+  </div><!-- /proj-track -->
 </section>
 
 <!-- Modal -->
@@ -541,28 +437,41 @@ const viewLabel = t("p.view");
     font-style: normal;
   }
 
-  /* 3D slider smooth transition driven by JS */
-  #proj-slider {
-    transition: transform 0.72s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
   /* Info panel crossfade */
   #proj-info-content {
     transition: opacity 0.18s ease;
   }
 
-  /* Item image */
-  .proj-item-img {
-    border-radius: 0;
+  /* Stack cards */
+  .proj-card {
+    transform-style: preserve-3d;
+    cursor: pointer;
+    will-change: transform, opacity;
     transition: box-shadow 0.4s ease;
-    display: block;
   }
-
-  /* Active item: lime glow */
-  .proj-item[data-active="true"] .proj-item-img {
+  .proj-card[data-active="true"] {
     box-shadow:
       0 0 0 2px #b4df00,
-      0 0 40px rgba(180, 223, 0, 0.4);
+      0 0 40px rgba(180, 223, 0, 0.35);
+  }
+
+  /* Vertical nav dots */
+  .proj-dot-v {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.22);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: height 0.3s ease, background 0.3s ease;
+  }
+  .proj-dot-v.active {
+    height: 24px;
+    background: #b4df00;
+  }
+  .proj-dot-v:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.5);
   }
 
   /* Description clamp */
@@ -636,11 +545,11 @@ const viewLabel = t("p.view");
     cursor: pointer;
   }
 
-  /* Drag cursor on desktop carousel */
-  #projects.proj-draggable {
+  /* Drag cursor on stack */
+  #proj-stack {
     cursor: grab;
   }
-  #projects.proj-draggable.dragging {
+  #proj-stack.dragging {
     cursor: grabbing;
   }
 
@@ -654,62 +563,82 @@ const viewLabel = t("p.view");
 </style>
 
 <script>
-  import EmblaCarousel from "embla-carousel";
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
 
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ─────────────────────────────────────────────────────────
-     DATA & REFS
-  ───────────────────────────────────────────────────────── */
+  /* ─── DATA & REFS ─── */
   const PROJECTS: any[] = JSON.parse(
     document.getElementById("proj-data")!.textContent || "[]",
   );
   const N = PROJECTS.length;
 
-  const section = document.getElementById("projects")!;
-  const slider = document.getElementById("proj-slider")!;
-  const items = Array.from(
-    document.querySelectorAll<HTMLElement>(".proj-item"),
-  );
+  const stackEl = document.getElementById("proj-stack")!;
+  const cards = Array.from(document.querySelectorAll<HTMLElement>(".proj-card"));
   const infoCat = document.getElementById("proj-info-cat")!;
   const infoName = document.getElementById("proj-info-name")!;
   const infoDesc = document.getElementById("proj-info-desc")!;
   const infoStack = document.getElementById("proj-info-stack")!;
-  const infoLink = document.getElementById(
-    "proj-info-link",
-  ) as HTMLAnchorElement;
+  const infoLink = document.getElementById("proj-info-link") as HTMLAnchorElement;
   const infoCont = document.getElementById("proj-info-content")!;
   const fillBar = document.getElementById("proj-progress-fill")!;
   const counter = document.getElementById("proj-counter")!;
-  const hint = document.getElementById("proj-scroll-hint")!;
-  const dotsVert = Array.from(
-    document.querySelectorAll<HTMLElement>(".proj-dot-v"),
-  );
+  const stackCounterCurr = document.getElementById("stack-counter-curr");
+  const dotsVert = Array.from(document.querySelectorAll<HTMLElement>(".proj-dot-v"));
 
   const isMobile = () => window.innerWidth < 1024;
 
-  /* ─────────────────────────────────────────────────────────
-     STATE
-  ───────────────────────────────────────────────────────── */
+  /* ─── STATE ─── */
   let projIdx = 0;
-  let lastRotY = 0;
   let crossTimer: ReturnType<typeof setTimeout> | null = null;
   let isDragging = false;
   let dragMoved = false;
   let dragStartX = 0;
-  let dragStartRotY = 0;
 
-  /* ─────────────────────────────────────────────────────────
-     PANEL UPDATE (crossfade info)
-  ───────────────────────────────────────────────────────── */
-  function buildStack(container: HTMLElement, stack: string[]) {
+  /* ─── VERTICAL CARD POSITIONS (one card centered, next peeks from below) ─── */
+  function getCardStyle(index: number) {
+    let diff = index - projIdx;
+    if (diff > N / 2) diff -= N;
+    if (diff < -N / 2) diff += N;
+
+    const cardH = stackEl?.offsetHeight ?? 520;
+    const step = cardH + 40;
+    if (diff === 0)  return { y: 0,           scale: 1,    opacity: 1,   zIndex: 5 };
+    if (diff === 1)  return { y: step,         scale: 0.92, opacity: 0.5, zIndex: 4 };
+    if (diff === -1) return { y: -step,        scale: 0.92, opacity: 0,   zIndex: 3 };
+    return { y: diff > 0 ? step * 2 : -step * 2, scale: 0.8, opacity: 0, zIndex: 0 };
+  }
+
+  function animateCards() {
+    cards.forEach((card, i) => {
+      const s = getCardStyle(i);
+      gsap.to(card, {
+        y: s.y, scale: s.scale, opacity: s.opacity,
+        zIndex: s.zIndex, duration: 0.55, ease: "power3.out", overwrite: "auto",
+      });
+      card.dataset.active = String(i === projIdx);
+      card.setAttribute("tabindex", i === projIdx ? "0" : "-1");
+    });
+    dotsVert.forEach((d, i) => d.classList.toggle("active", i === projIdx));
+    if (stackCounterCurr) stackCounterCurr.textContent = String(projIdx + 1).padStart(2, "0");
+  }
+
+  function initCards() {
+    cards.forEach((card, i) => {
+      const s = getCardStyle(i);
+      gsap.set(card, { y: s.y, scale: s.scale, opacity: s.opacity, zIndex: s.zIndex });
+      card.dataset.active = String(i === 0);
+    });
+    dotsVert.forEach((d, i) => d.classList.toggle("active", i === 0));
+  }
+
+  /* ─── PANEL UPDATE ─── */
+  function buildStackBadges(container: HTMLElement, techStack: string[]) {
     container.innerHTML = "";
-    stack.forEach((t: string) => {
+    techStack.forEach((t: string) => {
       const s = document.createElement("span");
-      s.className =
-        "text-[9px] tracking-widest uppercase px-[7px] py-[3px] border border-border text-muted whitespace-nowrap";
+      s.className = "text-[9px] tracking-widest uppercase px-[7px] py-[3px] border border-border text-muted whitespace-nowrap";
       s.textContent = t;
       container.appendChild(s);
     });
@@ -722,159 +651,115 @@ const viewLabel = t("p.view");
       infoName.textContent = p.name;
       infoDesc.textContent = p.desc;
       infoLink.href = p.url;
-      buildStack(infoStack, p.stack);
+      buildStackBadges(infoStack, p.stack);
       fillBar.style.width = `${(((idx + 1) / N) * 100).toFixed(1)}%`;
       counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
-      items.forEach((item, i) => {
-        item.dataset.active = String(i === idx);
-        item.setAttribute("tabindex", i === idx ? "0" : "-1");
-      });
-      dotsVert.forEach((d, i) => d.classList.toggle("active", i === idx));
     };
 
-    if (instant) {
-      infoCont.style.opacity = "1";
-      apply();
-      return;
-    }
+    if (instant) { infoCont.style.opacity = "1"; apply(); return; }
 
     infoCont.style.opacity = "0";
     if (crossTimer) clearTimeout(crossTimer);
-    crossTimer = setTimeout(() => {
-      apply();
-      infoCont.style.opacity = "1";
-    }, 160);
+    crossTimer = setTimeout(() => { apply(); infoCont.style.opacity = "1"; }, 160);
   }
 
-  /* ─────────────────────────────────────────────────────────
-     SCROLL-TO-PROJECT (for arrows & drag)
-  ───────────────────────────────────────────────────────── */
+  /* ─── SCROLL-DRIVEN COVERFLOW (sticky track, no pin → no hijack) ─── */
+  const track = document.getElementById("proj-track");
   let projST: ScrollTrigger | null = null;
 
-  function scrollToProject(idx: number) {
-    if (!projST) return;
-    // card idx sits at progress idx/N along the pinned scroll range
-    const target = projST.start + (idx / N) * (projST.end - projST.start);
-    window.scrollTo({ top: target, behavior: "smooth" });
-  }
-
-  /* ─────────────────────────────────────────────────────────
-     SCROLL-DRIVEN ROTATION — ScrollTrigger scrub
-  ───────────────────────────────────────────────────────── */
-  // Init panel with first project immediately
-  updatePanel(0, true);
-  if (hint) hint.style.opacity = "0"; // hint not needed in free-scroll mode
-
-  const PIN_PER_CARD = 560; // px of scroll per card
-
-  if (!isMobile()) {
-    // Remove CSS transition so scrub drives transform frame-by-frame
-    slider.style.transition = "none";
-
+  if (track) {
     projST = ScrollTrigger.create({
-      trigger: section,
+      trigger: track,
       start: "top top",
-      end: () => "+=" + N * PIN_PER_CARD,
-      pin: true, // section stays fixed in the viewport while scrolling
-      pinSpacing: true, // pushes following content down by the pin distance
-      anticipatePin: 1,
-      scrub: 0.8, // lag smoothing — higher = more inertia
+      end: "bottom bottom",
       invalidateOnRefresh: true,
-      // This pin's spacer shifts every trigger below it (e.g. "Trabajemos." in
-      // the footer). A higher refreshPriority guarantees the spacer is in place
-      // before those triggers measure, so their start/end aren't offset.
-      refreshPriority: 1,
       onUpdate(self) {
-        // Full 360° turn across the whole pinned scroll distance.
-        const rotY = -(self.progress * 360);
-        lastRotY = rotY;
-        slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${rotY.toFixed(2)}deg)`;
-
-        const newIdx = Math.round(self.progress * N) % N;
+        const newIdx = Math.min(N - 1, Math.floor(self.progress * N));
         if (newIdx !== projIdx) {
           projIdx = newIdx;
+          animateCards();
           updatePanel(projIdx);
         }
       },
     });
   }
 
-  /* ─────────────────────────────────────────────────────────
-     ARROW BUTTONS — scroll page to that project's position
-  ───────────────────────────────────────────────────────── */
-  const prevBtn = document.getElementById(
-    "proj-prev",
-  ) as HTMLButtonElement | null;
-  const nextBtn = document.getElementById(
-    "proj-next",
-  ) as HTMLButtonElement | null;
+  // Manual nav scrolls the page to the project's slice within the track; the
+  // ScrollTrigger above then drives the visual. Scroll stays natural (no pin).
+  function goToProject(idx: number) {
+    const clamped = Math.max(0, Math.min(N - 1, idx));
+    if (!projST) {
+      if (clamped === projIdx) return;
+      projIdx = clamped;
+      animateCards();
+      updatePanel(projIdx);
+      return;
+    }
+    const frac = (clamped + 0.5) / N;
+    const target = projST.start + frac * (projST.end - projST.start);
+    const lenis = (window as any).__lenis;
+    if (lenis) lenis.scrollTo(target, { duration: 0.9 });
+    else window.scrollTo({ top: target, behavior: "smooth" });
+  }
 
-  prevBtn?.addEventListener("click", () =>
-    scrollToProject(Math.max(0, projIdx - 1)),
-  );
-  nextBtn?.addEventListener("click", () =>
-    scrollToProject(Math.min(N, projIdx + 1)),
-  );
+  /* ─── INIT ─── */
+  updatePanel(0, true);
+  initCards();
 
-  /* ─────────────────────────────────────────────────────────
-     MOUSE DRAG — drag carousel, snap via scrollToProject
-  ───────────────────────────────────────────────────────── */
-  const DRAG_SENS = 0.3;
+  /* ─── ARROWS ─── */
+  const prevBtn = document.getElementById("proj-prev") as HTMLButtonElement | null;
+  const nextBtn = document.getElementById("proj-next") as HTMLButtonElement | null;
+  prevBtn?.addEventListener("click", () => goToProject(projIdx - 1));
+  nextBtn?.addEventListener("click", () => goToProject(projIdx + 1));
 
-  section.addEventListener("mousedown", (e: MouseEvent) => {
+  /* ─── DOTS ─── */
+  dotsVert.forEach((dot, i) => {
+    dot.addEventListener("click", () => goToProject(i));
+  });
+
+  /* ─── DRAG on stack (vertical: drag up = next, drag down = prev) ─── */
+  stackEl?.addEventListener("mousedown", (e: MouseEvent) => {
     if (isMobile()) return;
     if ((e.target as HTMLElement).closest("a, button")) return;
     isDragging = true;
     dragMoved = false;
-    dragStartX = e.clientX;
-    dragStartRotY = lastRotY;
-    section.classList.add("dragging");
+    dragStartX = e.clientY;
+    stackEl.classList.add("dragging");
     e.preventDefault();
   });
 
   window.addEventListener("mousemove", (e: MouseEvent) => {
     if (!isDragging) return;
-    const delta = e.clientX - dragStartX;
-    if (Math.abs(delta) > 5) dragMoved = true;
-    const rotY = dragStartRotY + delta * DRAG_SENS;
-    slider.style.transform = `perspective(1800px) rotateX(-12deg) rotateY(${rotY.toFixed(2)}deg)`;
+    if (Math.abs(e.clientY - dragStartX) > 8) dragMoved = true;
   });
 
   window.addEventListener("mouseup", (e: MouseEvent) => {
     if (!isDragging) return;
     isDragging = false;
-    section.classList.remove("dragging");
+    stackEl.classList.remove("dragging");
     if (dragMoved) {
-      const delta = e.clientX - dragStartX;
-      const draggedRotY = dragStartRotY + delta * DRAG_SENS;
-      const rawIdx = Math.round((-draggedRotY * N) / 360);
-      const nearest = Math.max(0, Math.min(N - 1, ((rawIdx % N) + N) % N));
-      setTimeout(() => {
-        dragMoved = false;
-      }, 50);
-      scrollToProject(nearest);
+      const delta = e.clientY - dragStartX;
+      if (delta < -50) goToProject(projIdx + 1);
+      else if (delta > 50) goToProject(projIdx - 1);
+      setTimeout(() => { dragMoved = false; }, 50);
     }
   });
 
-  /* ─────────────────────────────────────────────────────────
-     ITEM CLICKS → MODAL
-  ───────────────────────────────────────────────────────── */
-  items.forEach((item) => {
-    item.addEventListener("click", () => {
+  /* ─── CARD CLICKS → MODAL ─── */
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
       if (dragMoved) return;
-      openModal(JSON.parse(item.dataset.project!));
+      openModal(JSON.parse(card.dataset.project!));
     });
-    item.addEventListener("keydown", (e: KeyboardEvent) => {
+    card.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openModal(JSON.parse(item.dataset.project!));
+        openModal(JSON.parse(card.dataset.project!));
       }
     });
   });
 
-  /* ─────────────────────────────────────────────────────────
-     MODAL
-  ───────────────────────────────────────────────────────── */
+  /* ─── MODAL ─── */
   const modal = document.getElementById("proj-modal")!;
   const backdrop = document.getElementById("modal-backdrop")!;
   const closeBtn = document.getElementById("modal-close")!;
@@ -898,8 +783,7 @@ const viewLabel = t("p.view");
     modalStack.innerHTML = "";
     (data.stack as string[]).forEach((t: string) => {
       const s = document.createElement("span");
-      s.className =
-        "text-[10px] tracking-widest uppercase px-[8px] py-[4px] border border-border text-muted";
+      s.className = "text-[10px] tracking-widest uppercase px-[8px] py-[4px] border border-border text-muted";
       s.textContent = t;
       modalStack.appendChild(s);
     });
@@ -911,51 +795,12 @@ const viewLabel = t("p.view");
       modalDemo.classList.add("hidden");
     }
     modal.classList.add("open");
-    // Don't change body overflow — scroll hijack manages it
   }
 
-  function closeModal() {
-    modal.classList.remove("open");
-  }
+  function closeModal() { modal.classList.remove("open"); }
 
   closeBtn.addEventListener("click", closeModal);
   backdrop.addEventListener("click", closeModal);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
-  // ── Mobile Embla slider ──────────────────────────────────────
-  if (isMobile()) {
-    const emblaViewport = document.getElementById("emblaProj")!;
-    const mobDotEls = Array.from(
-      document.querySelectorAll<HTMLElement>(".mob-dot"),
-    );
-
-    if (mobDotEls[0]) mobDotEls[0].classList.add("active");
-
-    const emblaProj = EmblaCarousel(emblaViewport, {
-      align: "center",
-      loop: false,
-      dragFree: false,
-    });
-
-    emblaProj.on("select", () => {
-      const idx = emblaProj.selectedScrollSnap();
-      mobDotEls.forEach((d, i) => d.classList.toggle("active", i === idx));
-    });
-
-    emblaProj.slideNodes().forEach((slideWrapper) => {
-      const card = slideWrapper.querySelector<HTMLElement>(".mob-slide");
-      if (!card) return;
-      card.addEventListener("click", () => {
-        openModal(JSON.parse(card.dataset.project!));
-      });
-      card.addEventListener("keydown", (e: KeyboardEvent) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          openModal(JSON.parse(card.dataset.project!));
-        }
-      });
-    });
-  }
 </script>
