@@ -27,6 +27,12 @@ const {
   ogImage = `${siteURL}/og-image.jpg`,
 } = Astro.props;
 
+// ─── Analytics ───
+// Overridable per-environment with PUBLIC_GA_ID; only injected in builds so
+// dev traffic never reaches the property.
+const GA_ID = import.meta.env.PUBLIC_GA_ID ?? "G-STGT1YLEVC";
+const enableAnalytics = import.meta.env.PROD && Boolean(GA_ID);
+
 const keywords = isEn
   ? "full stack developer lima peru, web developer peru, next.js developer peru, react developer lima, nestjs developer, headless wordpress, laravel developer peru, ecommerce developer, freelance developer peru, kevin gomez"
   : "full stack developer lima peru, desarrollador web lima, next.js developer peru, react developer lima, nestjs developer, wordpress headless, laravel developer peru, ecommerce developer, desarrollador freelance lima, kevin gomez";
@@ -148,6 +154,24 @@ const structuredData = {
     <!-- ─── Charset & Viewport ─── -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ─── Google Analytics (GA4) ─── -->
+    {
+      enableAnalytics && (
+        <Fragment>
+          <link rel="preconnect" href="https://www.googletagmanager.com" />
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+          <script is:inline define:vars={{ GA_ID }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", GA_ID);
+          </script>
+        </Fragment>
+      )
+    }
 
     <!-- ─── Primary SEO ─── -->
     <title>{title}</title>
@@ -571,7 +595,12 @@ const structuredData = {
 
         // Entrance — emerge from the baseline like the other section titles.
         gsap.from(tSplit.lines, {
-          scrollTrigger: { trigger: trabajemosEl, start: "top 88%" },
+          // Trigger on the static wrapper, not the headline: the headline is
+          // inside a parallax layer whose transform would shift its rect.
+          scrollTrigger: {
+            trigger: document.getElementById("footer-cta") || trabajemosEl,
+            start: "top 88%",
+          },
           y: "115%",
           stagger: 0.1,
           duration: 1,
@@ -597,6 +626,53 @@ const structuredData = {
             i * 0.18,
           );
         });
+      }
+
+      // ── Big CTA parallax — headline and button scroll at different rates ──
+      const ctaWrap = document.getElementById("footer-cta");
+      if (ctaWrap && !prefersReduced) {
+        const small = () => window.innerWidth < 768;
+        // Function-based values + invalidateOnRefresh → re-read on resize.
+        const parallax = (
+          el: Element | null,
+          fromY: () => number,
+          toY: () => number,
+          scrub: number,
+        ) => {
+          if (!el) return;
+          gsap.fromTo(
+            el,
+            { yPercent: fromY },
+            {
+              yPercent: toY,
+              ease: "none",
+              scrollTrigger: {
+                trigger: ctaWrap,
+                // The footer is the last thing on the page, so "bottom top"
+                // would never be reached and the travel would stay truncated.
+                start: "top bottom",
+                end: "bottom bottom",
+                scrub,
+                invalidateOnRefresh: true,
+              },
+            },
+          );
+        };
+
+        // Headline travels furthest and lags the page (background layer).
+        parallax(
+          ctaWrap.querySelector(".cta-parallax"),
+          () => (small() ? 14 : 22),
+          () => (small() ? -10 : -16),
+          1,
+        );
+        // Button moves less and tighter to the scroll (foreground layer).
+        parallax(
+          ctaWrap.querySelector(".cta-parallax-btn"),
+          () => (small() ? -6 : -12),
+          () => (small() ? 6 : 12),
+          0.6,
+        );
       }
 
       // Fonts change text metrics after load → recompute every ScrollTrigger

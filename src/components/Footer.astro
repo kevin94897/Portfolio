@@ -11,20 +11,24 @@ const year = new Date().getFullYear();
   class="px-6 md:px-10 pt-24 pb-10 border-t border-border"
   role="contentinfo"
 >
-  <!-- Big CTA -->
-  <div class="mb-20 text-center">
-    <h2
-      class="trabajemos-anim font-display font-semibold leading-none select-none cursor-default mb-8 transition-colors duration-500 tracking-tighter"
-      style="font-size: clamp(3rem, 12vw, 14rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32; color: rgba(232,232,232,232);"
-    >
-      {t("footer.trabajemos")}
-    </h2>
-    <a
-      href="#contact"
-      class="inline-flex items-center gap-2 bg-lime px-6 py-3 text-sm tracking-tight uppercase font-semibold text-black no-underline transition-all duration-300 hover:bg-lime-glow hover:text-black"
-    >
-      <span>{t("footer.cta")}</span>
-    </a>
+  <!-- Big CTA — parallax layers (see Layout.astro), static wrapper = ST trigger -->
+  <div id="footer-cta" class="relative mb-20 text-center">
+    <div class="cta-parallax">
+      <h2
+        class="trabajemos-anim font-display font-semibold leading-none select-none cursor-default mb-8 transition-colors duration-500 tracking-tighter"
+        style="font-size: clamp(3rem, 12vw, 14rem); font-optical-sizing: auto; font-variation-settings: 'opsz' 32; color: rgba(232,232,232,232);"
+      >
+        {t("footer.trabajemos")}
+      </h2>
+    </div>
+    <div class="cta-parallax-btn">
+      <a
+        href="#contact"
+        class="inline-flex items-center gap-2 bg-lime px-6 py-3 text-sm tracking-tight uppercase font-semibold text-black no-underline transition-all duration-300 hover:bg-lime-glow hover:text-black"
+      >
+        <span>{t("footer.cta")}</span>
+      </a>
+    </div>
   </div>
 
   <!-- <div class="grid md:grid-cols-4 gap-12 pt-12 border-t border-border">
@@ -102,3 +106,19 @@ const year = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<style>
+  /* Parallax layers — transforms are driven by GSAP in Layout.astro. */
+  .cta-parallax,
+  .cta-parallax-btn {
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-parallax,
+    .cta-parallax-btn {
+      will-change: auto;
+      transform: none !important;
+    }
+  }
+</style>
