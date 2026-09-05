@@ -415,7 +415,10 @@ const structuredData = {
       function animateHeroExtras() {
         const allHeroEls =
           document.querySelectorAll<HTMLElement>("[data-hero-reveal]");
-        const techEl = document.querySelector<HTMLElement>(
+        // querySelectorAll: the tech bar has a desktop and a mobile variant.
+        // With a singular query the other one would be left at opacity 0 by
+        // the gsap.set() below and never revealed.
+        const techEls = document.querySelectorAll<HTMLElement>(
           '[data-hero-reveal="tech"]',
         );
         const rolesEl = document.querySelector<HTMLElement>(
@@ -429,8 +432,8 @@ const structuredData = {
         gsap.set(allHeroEls, { opacity: 0, y: 18 });
 
         const tl = gsap.timeline();
-        if (techEl)
-          tl.to(techEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
+        if (techEls.length)
+          tl.to(techEls, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
         if (rolesEl)
           tl.to(rolesEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.22);
         if (secondaryEls.length)

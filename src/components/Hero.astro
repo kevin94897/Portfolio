@@ -4,6 +4,18 @@ import { useTranslations } from "../i18n/utils";
 
 const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
+
+const techStack = [
+  "Next.js",
+  "React",
+  "NestJS",
+  "Astro",
+  "Laravel",
+  "WordPress Headless",
+  "TypeScript",
+  "Node.js",
+  "Pug",
+];
 ---
 
 <section
@@ -70,7 +82,34 @@ const t = useTranslations(locale);
     </div>
   </div>
 
-  <!-- Tech stack bar — static, inside container -->
+  <!-- Tech stack marquee — mobile only, centered in the hero.
+       The centering lives on the wrapper because GSAP writes `y` onto the
+       [data-hero-reveal] element, which would wipe a -translate-y-1/2. -->
+  <div
+    class="md:hidden absolute inset-0 z-10 flex items-center pointer-events-none"
+    aria-hidden="true"
+  >
+    <!-- Tilt lives on its own node: the reveal element below gets a GSAP `y`
+         transform, which would overwrite a rotate here. Over-wide + offset so
+         the rotated band still reaches both edges of the viewport. -->
+    <div class="w-[130%] -ml-[15%] rotate-[-6deg]">
+      <div
+        class="w-full bg-lime py-[10px] overflow-hidden"
+        data-hero-reveal="tech"
+      >
+        <div class="marquee-track flex items-center" style="animation-duration: 20s;">
+          {[...techStack, ...techStack].map((item: string) => (
+            <span class="flex items-center text-[11px] tracking-widest uppercase text-black font-semibold whitespace-nowrap">
+              {item}
+              <span class="text-black/30 text-[10px] mx-5">/</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tech stack bar — static, inside container, desktop only -->
   <div
     class="relative z-10 w-full py-3 pointer-events-none md:block hidden"
     data-hero-reveal="tech"
@@ -79,17 +118,7 @@ const t = useTranslations(locale);
     <div class="max-w-[1400px] mx-auto px-6 py-2 lg:px-[60px] bg-lime">
       <div class="flex items-center gap-6 md:gap-8 flex-nowrap overflow-hidden">
         {
-          [
-            "Next.js",
-            "React",
-            "NestJS",
-            "Astro",
-            "Laravel",
-            "WordPress Headless",
-            "TypeScript",
-            "Node.js",
-            "Pug",
-          ].map((item: string, i: number, arr: string[]) => (
+          techStack.map((item: string, i: number, arr: string[]) => (
             <span class="flex items-center gap-6 md:gap-8">
               <span class="text-[11px] md:text-[12px] tracking-widest uppercase text-black font-semibold whitespace-nowrap">
                 {item}
@@ -157,7 +186,11 @@ const t = useTranslations(locale);
 </style>
 
 <script>
-  // ── Spline 3D: defer on all devices ────────────────
+  // ── Spline 3D: desktop only, deferred ────────────────
+  // The scene is an iframe pulling Spline's WebGL runtime — too heavy for
+  // phones/tablets, where the CSS gradient fallback stands in for it.
+  const SPLINE_MQ = "(min-width: 1024px)";
+  const desktopMQ = window.matchMedia(SPLINE_MQ);
   const container = document.getElementById("hero-spline-container");
   const gradientBg = document.getElementById("hero-gradient-bg");
 
@@ -165,7 +198,9 @@ const t = useTranslations(locale);
     let loaded = false;
 
     const loadSpline = () => {
-      if (loaded) return;
+      // Re-checked here too: the idle callback can fire long after it was
+      // scheduled, by which point the viewport may have shrunk.
+      if (loaded || !desktopMQ.matches) return;
       loaded = true;
 
       const iframe = document.createElement("iframe");
@@ -189,6 +224,7 @@ const t = useTranslations(locale);
     // Load during browser idle time so Spline's heavy runtime doesn't block TTI.
     // requestIdleCallback fires when the main thread is free; 10 s hard timeout as fallback.
     const scheduleSpline = () => {
+      if (!desktopMQ.matches) return;
       if ("requestIdleCallback" in window) {
         (window as any).requestIdleCallback(loadSpline, { timeout: 10000 });
       } else {
@@ -198,6 +234,12 @@ const t = useTranslations(locale);
 
     document.addEventListener("hero:reveal-spline", scheduleSpline, { once: true });
     scheduleSpline();
+
+    // Viewport can cross the breakpoint after load (rotation, window resize):
+    // pick the scene up then, but never tear it down on the way back.
+    desktopMQ.addEventListener("change", (e) => {
+      if (e.matches) scheduleSpline();
+    });
   }
 </script>
 
