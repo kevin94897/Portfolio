@@ -168,9 +168,9 @@ const viewLabel = t("p.view");
   <div
     id="proj-track"
     class="relative"
-    style={`--proj-count: ${N}; height: calc(var(--proj-count) * var(--proj-slice) + 100vh);`}
+    style={`--proj-count: ${N};`}
   >
-    <div class="sticky top-[75px] h-[calc(100vh-75px)] w-full flex flex-col overflow-hidden">
+    <div class="proj-sticky sticky top-[75px] w-full flex flex-col overflow-hidden">
 
     <!-- Header row -->
     <div class="relative z-20 flex items-start justify-between px-5 sm:px-8 lg:px-[60px] pt-8 sm:pt-10 lg:pt-[89px] pb-3 max-w-[1400px] mx-auto w-full flex-shrink-0">
@@ -208,8 +208,7 @@ const viewLabel = t("p.view");
       <!-- Vertical Image Stack — responsive width -->
       <div
         id="proj-stack"
-        class="absolute z-[5]"
-        style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(580px, calc(100vw - 40px)); height: min(100%, clamp(200px, 42vh, 520px));"
+        class="proj-stack-size absolute z-[5]"
       >
         {
           projects.map((p, i) => (
@@ -437,14 +436,38 @@ const viewLabel = t("p.view");
 </div><!-- /modal -->
 <style>
   /* Scroll distance allotted to each project. Mobile momentum scrolling covers
-     far more distance per gesture than a wheel tick, hence the wider slice. */
+     far more distance per gesture than a wheel tick, hence the wider slice.
+
+     Every unit here is svh, not vh: on mobile the URL bar collapsing changes
+     vh mid-scroll, and with a ~1000vh track that resizes the page by hundreds
+     of pixels while the user is swiping — the sticky viewport reads that as
+     violent vertical shaking. svh is fixed to the *largest* UI state, so it
+     never changes. The vh line above each is the fallback for old browsers. */
   #proj-track {
     --proj-slice: 45vh;
+    --proj-slice: 45svh;
+    height: calc(var(--proj-count) * var(--proj-slice) + 100vh);
+    height: calc(var(--proj-count) * var(--proj-slice) + 100svh);
   }
   @media (max-width: 1023px) {
     #proj-track {
       --proj-slice: 85vh;
+      --proj-slice: 85svh;
     }
+  }
+
+  .proj-sticky {
+    height: calc(100vh - 75px);
+    height: calc(100svh - 75px);
+  }
+
+  .proj-stack-size {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(580px, calc(100vw - 40px));
+    height: min(100%, clamp(200px, 42vh, 520px));
+    height: min(100%, clamp(200px, 42svh, 520px));
   }
 
   #projects-heading em {
@@ -687,31 +710,16 @@ const viewLabel = t("p.view");
   const track = document.getElementById("proj-track");
   let projST: ScrollTrigger | null = null;
 
-  // Center of each project's slice, in trigger progress (0–1).
-  const snapPoints = Array.from({ length: N }, (_, i) => (i + 0.5) / N);
-
   if (track) {
     projST = ScrollTrigger.create({
       trigger: track,
       start: "top top",
       end: "bottom bottom",
       invalidateOnRefresh: true,
-      // Mobile only: a flick would otherwise coast across 2+ slices. Snapping
-      // to the nearest slice center makes one swipe land on one project.
-      // Returning the untouched progress = no snap (desktop, and the entry /
-      // exit margins so the section can still be scrolled past freely).
-      snap: {
-        snapTo: (progress: number) => {
-          if (!isMobile()) return progress;
-          if (progress <= snapPoints[0] || progress >= snapPoints[N - 1]) return progress;
-          return snapPoints.reduce((a, b) =>
-            Math.abs(b - progress) < Math.abs(a - progress) ? b : a,
-          );
-        },
-        duration: { min: 0.15, max: 0.4 },
-        delay: 0.06,
-        ease: "power2.out",
-      },
+      // No snap here on purpose: a snap tween drives window scroll, which on
+      // mobile fights both native momentum and Lenis and makes the section
+      // judder. The wider mobile slice (see --proj-slice) is what keeps a
+      // single swipe from crossing several projects.
       onUpdate(self) {
         const newIdx = Math.min(N - 1, Math.floor(self.progress * N));
         if (newIdx !== projIdx) {
@@ -747,16 +755,15 @@ const viewLabel = t("p.view");
 
   /* ─── RESIZE ───
      getCardStyle() derives the stack step from the live stack height, so the
-     offsets go stale whenever the viewport changes. Mobile browsers also fire
-     resize every time the URL bar collapses, so ignore small height-only
-     changes to avoid the stack jumping mid-scroll. */
+     offsets go stale when the viewport width changes. */
   let resizeRaf: number | null = null;
   let lastW = window.innerWidth;
-  let lastH = window.innerHeight;
   window.addEventListener("resize", () => {
-    if (window.innerWidth === lastW && Math.abs(window.innerHeight - lastH) < 120) return;
+    // Width only. Mobile fires resize on every URL-bar collapse; the layout is
+    // in svh so nothing actually moved, and refreshing mid-scroll would yank
+    // the scroll position. Orientation changes come through as width changes.
+    if (window.innerWidth === lastW) return;
     lastW = window.innerWidth;
-    lastH = window.innerHeight;
     if (resizeRaf) cancelAnimationFrame(resizeRaf);
     resizeRaf = requestAnimationFrame(() => {
       cards.forEach((card, i) => {
