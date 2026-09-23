@@ -509,13 +509,20 @@ const viewLabel = t("p.view");
     #proj-track {
       height: auto;
     }
+    /* Fill the screen below the nav; min-height (not height) so a short
+       viewport simply grows the section instead of overlapping content. */
     .proj-sticky {
       position: static;
       height: auto;
+      min-height: calc(100vh - 75px);
+      min-height: calc(100svh - 75px);
       overflow: visible;
     }
     .proj-sticky > .flex-1 {
-      flex: none;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       overflow: visible;
     }
   }
