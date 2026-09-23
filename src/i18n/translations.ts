@@ -70,6 +70,14 @@ export const translations: Record<'es' | 'en', Record<string, string>> = {
       "Certificación SFPC con 95 puntos. Trabajo activo en equipos ágiles con Git, Jira y ClickUp.",
     "proj.label": "04 — Portfolio",
     "proj.title": "Proyectos Reales",
+    "proj.prev": "Proyecto anterior",
+    "proj.next": "Siguiente proyecto",
+    "proj.nth": "Proyecto",
+    "proj.close": "Cerrar",
+    "proj.stack": "Stack Tecnológico",
+    "proj.demo": "Acceso demo",
+    "p.neorun.desc":
+      "Experiencia interactiva de tótem para un evento de NEOingredients. Onboarding de marca, runner endless con Phaser 3, resultados y certificado descargable con React + Supabase.",
     "p.colecciones.desc":
       "Arquitectura BaaS + Edge. React SPA con PostgreSQL vía Supabase, Cloudflare CDN (HTTP/3 + RUM) y Apache como servidor origen.",
     "p.kgstore.desc":
@@ -245,6 +253,14 @@ export const translations: Record<'es' | 'en', Record<string, string>> = {
       "SFPC certification with a score of 95. Active work in agile teams using Git, Jira, and ClickUp.",
     "proj.label": "04 — Portfolio",
     "proj.title": "Real Projects",
+    "proj.prev": "Previous project",
+    "proj.next": "Next project",
+    "proj.nth": "Project",
+    "proj.close": "Close",
+    "proj.stack": "Tech Stack",
+    "proj.demo": "Demo Access",
+    "p.neorun.desc":
+      "Interactive kiosk experience for a NEOingredients event. Brand onboarding, Phaser 3 endless runner, results and downloadable certificate built with React + Supabase.",
     "p.colecciones.desc":
       "BaaS + Edge architecture. React SPA with PostgreSQL via Supabase, Cloudflare CDN (HTTP/3 + RUM), and Apache as origin server.",
     "p.kgstore.desc":

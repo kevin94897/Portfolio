@@ -23,11 +23,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ ok: false, error: "Invalid request" }, 400);
   }
 
-  const { nombre, apellidos, email, asunto, message } = body;
+  const str = (v: unknown, max: number) =>
+    typeof v === "string" ? v.trim().slice(0, max) : "";
+  const nombre = str(body.nombre, 100);
+  const apellidos = str(body.apellidos, 100);
+  const email = str(body.email, 200);
+  const asunto = str(body.asunto, 200);
+  const message = str(body.message, 5000);
 
-  if (!nombre || !email || !asunto) {
+  if (!nombre || !email || !asunto || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ ok: false, error: "Missing required fields" }, 400);
   }
+
+  const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
+    );
 
   const headers = {
     "api-key": apiKey,
@@ -59,10 +70,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // 2. Send notification email to owner
   const emailBody = `
-<p><strong>Nombre:</strong> ${nombre} ${apellidos ?? ""}</p>
-<p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-<p><strong>Asunto:</strong> ${asunto}</p>
-${message ? `<p><strong>Mensaje:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>` : ""}
+<p><strong>Nombre:</strong> ${esc(nombre)} ${esc(apellidos)}</p>
+<p><strong>Email:</strong> <a href="mailto:${esc(email)}">${esc(email)}</a></p>
+<p><strong>Asunto:</strong> ${esc(asunto)}</p>
+${message ? `<p><strong>Mensaje:</strong></p><p>${esc(message).replace(/\n/g, "<br>")}</p>` : ""}
 `.trim();
 
   const notifyRes = await fetch(`${BREVO_API}/smtp/email`, {

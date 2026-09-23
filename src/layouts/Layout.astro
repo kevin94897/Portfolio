@@ -270,7 +270,7 @@ const structuredData = {
     />
 
     <!-- ─── Hero intro: scroll-restoration setup + JS-fail safety net ─── -->
-    <noscript><style>{`#hero-intro-cover{display:none!important}.hero-title-anim{visibility:visible!important}[data-hero-reveal]{opacity:1!important}`}</style></noscript>
+    <noscript><style is:inline>#hero-intro-cover{display:none!important}.hero-title-anim{visibility:visible!important}[data-hero-reveal]{opacity:1!important}</style></noscript>
     <script is:inline>
       try {
         // Take over scroll restoration so the intro decision is deterministic.
@@ -364,7 +364,7 @@ const structuredData = {
       // Route all same-page anchor clicks through Lenis for smooth scroll
       document.addEventListener("click", (e) => {
         const a = (e.target as Element).closest<HTMLAnchorElement>("a[href^='#']");
-        if (!a) return;
+        if (!a || a.classList.contains("skip-link")) return;
         const id = a.getAttribute("href");
         if (!id || id === "#") return;
         const target = document.querySelector(id);
