@@ -215,10 +215,46 @@ const viewLabel = t("p.view");
           style="font-size: clamp(6rem, 18vw, 22rem); font-optical-sizing: auto; color: rgba(255,255,255,0.015);">WORKS</span>
       </div>
 
-      <!-- Vertical Image Stack — responsive width -->
+      <!-- Mobile/tablet: horizontal Embla carousel. Vertical swipes scroll
+           the page, horizontal swipes change project — no fight with Lenis. -->
+      <div id="proj-embla" class="lg:hidden overflow-hidden py-2">
+        <div class="proj-embla-container flex">
+          {
+            projects.map((p, i) => (
+              <div
+                class="proj-slide flex-[0_0_82%] sm:flex-[0_0_64%] min-w-0 px-2"
+                data-index={String(i)}
+                data-project={JSON.stringify({
+                  name: p.name,
+                  category: p.category,
+                  descKey: p.descKey,
+                  desc: p.desc,
+                  stack: p.stack,
+                  url: p.url,
+                  img: p.img.src,
+                  demo: p.demo ?? null,
+                })}
+                role="button"
+                tabindex="0"
+                aria-label={`${p.name} — ${p.category}`}
+              >
+                <img
+                  src={p.img.src}
+                  alt={p.name}
+                  class="w-full h-auto aspect-[1605/1215] object-contain bg-surface"
+                  loading="lazy"
+                  draggable="false"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Desktop: vertical image stack driven by page scroll -->
       <div
         id="proj-stack"
-        class="proj-stack-size absolute z-[5]"
+        class="proj-stack-size absolute z-[5] hidden lg:block"
       >
         {
           projects.map((p, i) => (
@@ -248,14 +284,14 @@ const viewLabel = t("p.view");
       </div>
 
       <!-- Vertical nav dots — right side -->
-      <div class="hidden sm:flex absolute right-4 lg:right-[50px] top-1/2 -translate-y-1/2 flex-col gap-[10px] z-20">
+      <div class="hidden lg:flex absolute right-4 lg:right-[50px] top-1/2 -translate-y-1/2 flex-col gap-[10px] z-20">
         {projects.map((_, i) => (
           <button class="proj-dot-v" data-idx={String(i)} aria-label={`${t("proj.nth")} ${i + 1}`} />
         ))}
       </div>
 
       <!-- Stack counter — left side -->
-      <div class="hidden sm:flex absolute left-4 lg:left-[50px] top-1/2 -translate-y-1/2 flex-col items-center z-20 pointer-events-none select-none">
+      <div class="hidden lg:flex absolute left-4 lg:left-[50px] top-1/2 -translate-y-1/2 flex-col items-center z-20 pointer-events-none select-none">
         <span id="stack-counter-curr" class="font-display font-light text-white tabular-nums" style="font-size:clamp(1.5rem,3vw,3rem);">01</span>
         <div class="my-2 h-px w-8 bg-white/20"></div>
         <span class="text-[13px] text-muted tabular-nums font-display">{String(N).padStart(2, "0")}</span>
@@ -461,20 +497,31 @@ const viewLabel = t("p.view");
     height: calc(var(--proj-count) * var(--proj-slice) + 100vh);
     height: calc(var(--proj-count) * var(--proj-slice) + 100svh);
   }
-  @media (max-width: 1023px) {
-    #proj-track {
-      --proj-slice: 85vh;
-      --proj-slice: 85svh;
-    }
-  }
 
   .proj-sticky {
     height: calc(100vh - 75px);
     height: calc(100svh - 75px);
   }
 
-  /* Card keeps the screenshots' native 1605×1215 ratio so nothing is cropped.
-     Desktop: height-driven (width follows the ratio). Mobile: width-driven. */
+  /* Below lg the section is a plain block: no sticky stage, no scroll track.
+     Page scroll stays vertical; the Embla carousel owns horizontal swipes. */
+  @media (max-width: 1023px) {
+    #proj-track {
+      height: auto;
+    }
+    .proj-sticky {
+      position: static;
+      height: auto;
+      overflow: visible;
+    }
+    .proj-sticky > .flex-1 {
+      flex: none;
+      overflow: visible;
+    }
+  }
+
+  /* Card keeps the screenshots' native 1605×1215 ratio so nothing is cropped:
+     height-driven, width follows the ratio. */
   .proj-stack-size {
     top: 50%;
     left: 50%;
@@ -485,11 +532,31 @@ const viewLabel = t("p.view");
     height: min(100%, clamp(200px, 46vh, 560px));
     height: min(100%, clamp(200px, 46svh, 560px));
   }
-  @media (max-width: 1023px) {
-    .proj-stack-size {
-      width: min(560px, calc(100vw - 40px));
-      height: auto;
-      max-height: 100%;
+
+  /* Mobile carousel */
+  .proj-embla-container {
+    touch-action: pan-y pinch-zoom;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .proj-slide {
+    cursor: pointer;
+    opacity: 0.4;
+    transform: scale(0.94);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+  .proj-slide.is-selected {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .proj-slide img {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  }
+  /* Phone landscape: keep the whole card inside the short viewport */
+  @media (max-width: 1023px) and (max-height: 500px) {
+    .proj-slide {
+      flex: 0 0 46%;
     }
   }
 
@@ -594,24 +661,6 @@ const viewLabel = t("p.view");
     animation: proj-pulse 1.6s ease-in-out infinite;
   }
 
-  /* Mobile Embla slider */
-  .mob-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.18);
-    transition:
-      width 0.3s ease,
-      background 0.3s ease;
-  }
-  .mob-dot.active {
-    width: 20px;
-    background: #b4df00;
-  }
-  .mob-slide {
-    cursor: pointer;
-  }
-
   /* Drag cursor on stack */
   #proj-stack {
     cursor: grab;
@@ -637,12 +686,12 @@ const viewLabel = t("p.view");
   /* Short viewports (phone landscape, small laptops): the sticky stage is
      100svh - nav, and header + info panel alone can eat all of it, leaving
      the card zone at 0px. Compact both so the card always has room. */
-  @media (max-height: 760px) {
+  @media (min-width: 1024px) and (max-height: 760px) {
     #proj-header {
       padding-top: 2rem;
     }
   }
-  @media (max-height: 560px) {
+  @media (min-width: 1024px) and (max-height: 560px) {
     #proj-header {
       padding-top: 0.75rem;
       padding-bottom: 0.5rem;
@@ -686,6 +735,7 @@ const viewLabel = t("p.view");
 <script>
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import EmblaCarousel, { type EmblaCarouselType } from "embla-carousel";
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -786,20 +836,19 @@ const viewLabel = t("p.view");
     crossTimer = setTimeout(() => { apply(); infoCont.style.opacity = "1"; }, 160);
   }
 
-  /* ─── SCROLL-DRIVEN COVERFLOW (sticky track, no pin → no hijack) ─── */
+  /* ─── DESKTOP: SCROLL-DRIVEN COVERFLOW (sticky track, no pin → no hijack) ─── */
   const track = document.getElementById("proj-track");
   let projST: ScrollTrigger | null = null;
 
-  if (track) {
+  function setupDesktop() {
+    if (!track || projST) return;
+    initCards();
     projST = ScrollTrigger.create({
       trigger: track,
       start: "top top",
       end: "bottom bottom",
       invalidateOnRefresh: true,
-      // No snap here on purpose: a snap tween drives window scroll, which on
-      // mobile fights both native momentum and Lenis and makes the section
-      // judder. The wider mobile slice (see --proj-slice) is what keeps a
-      // single swipe from crossing several projects.
+      // No snap on purpose: a snap tween drives window scroll and fights Lenis.
       onUpdate(self) {
         const newIdx = Math.min(N - 1, Math.floor(self.progress * N));
         if (newIdx !== projIdx) {
@@ -811,10 +860,51 @@ const viewLabel = t("p.view");
     });
   }
 
-  // Manual nav scrolls the page to the project's slice within the track; the
-  // ScrollTrigger above then drives the visual. Scroll stays natural (no pin).
+  function teardownDesktop() {
+    projST?.kill();
+    projST = null;
+  }
+
+  /* ─── MOBILE: HORIZONTAL EMBLA CAROUSEL ───
+     The page keeps its native vertical scroll; the carousel only reacts to
+     horizontal swipes (touch-action: pan-y), so the two never compete. */
+  const emblaVp = document.getElementById("proj-embla");
+  const slides = Array.from(document.querySelectorAll<HTMLElement>(".proj-slide"));
+  let embla: EmblaCarouselType | null = null;
+
+  function markSlides() {
+    slides.forEach((s, i) => s.classList.toggle("is-selected", i === projIdx));
+  }
+
+  function setupMobile() {
+    if (!emblaVp || embla) return;
+    embla = EmblaCarousel(emblaVp, {
+      align: "center",
+      containScroll: false,
+      startIndex: projIdx,
+      skipSnaps: false,
+    });
+    markSlides();
+    embla.on("select", () => {
+      const idx = embla!.selectedScrollSnap();
+      if (idx === projIdx) return;
+      projIdx = idx;
+      markSlides();
+      updatePanel(projIdx);
+    });
+  }
+
+  function teardownMobile() {
+    embla?.destroy();
+    embla = null;
+  }
+
   function goToProject(idx: number) {
     const clamped = Math.max(0, Math.min(N - 1, idx));
+    if (embla) {
+      embla.scrollTo(clamped);
+      return;
+    }
     if (!projST) {
       if (clamped === projIdx) return;
       projIdx = clamped;
@@ -822,6 +912,7 @@ const viewLabel = t("p.view");
       updatePanel(projIdx);
       return;
     }
+    // Scroll the page to the project's slice; ScrollTrigger drives the visual.
     const frac = (clamped + 0.5) / N;
     const target = projST.start + frac * (projST.end - projST.start);
     const lenis = (window as any).__lenis;
@@ -829,20 +920,32 @@ const viewLabel = t("p.view");
     else window.scrollTo({ top: target, behavior: "smooth" });
   }
 
-  /* ─── INIT ─── */
+  /* ─── INIT + BREAKPOINT SWITCH ─── */
+  const desktopMq = window.matchMedia("(min-width: 1024px)");
   updatePanel(0, true);
-  initCards();
+  if (desktopMq.matches) setupDesktop();
+  else setupMobile();
 
-  /* ─── RESIZE ───
+  desktopMq.addEventListener("change", (e) => {
+    if (e.matches) {
+      teardownMobile();
+      setupDesktop();
+    } else {
+      teardownDesktop();
+      setupMobile();
+    }
+    updatePanel(projIdx, true);
+    ScrollTrigger.refresh();
+  });
+
+  /* ─── RESIZE (desktop) ───
      getCardStyle() derives the stack step from the live stack height, so the
-     offsets go stale when the viewport width changes. */
+     offsets go stale when the viewport width changes. Width only: mobile fires
+     resize on every URL-bar collapse and refreshing mid-scroll would yank it. */
   let resizeRaf: number | null = null;
   let lastW = window.innerWidth;
   window.addEventListener("resize", () => {
-    // Width only. Mobile fires resize on every URL-bar collapse; the layout is
-    // in svh so nothing actually moved, and refreshing mid-scroll would yank
-    // the scroll position. Orientation changes come through as width changes.
-    if (window.innerWidth === lastW) return;
+    if (window.innerWidth === lastW || !projST) return;
     lastW = window.innerWidth;
     if (resizeRaf) cancelAnimationFrame(resizeRaf);
     resizeRaf = requestAnimationFrame(() => {
@@ -894,21 +997,23 @@ const viewLabel = t("p.view");
   });
 
   /* ─── TOUCH: a swipe that scrolls the page must not open the modal ─── */
-  stackEl?.addEventListener("touchstart", (e: TouchEvent) => {
-    touchMoved = false;
-    dragStartX = e.touches[0].clientY;
-    dragStartY = e.touches[0].clientX;
-  }, { passive: true });
+  [stackEl, emblaVp].forEach((el) => {
+    el?.addEventListener("touchstart", (e: TouchEvent) => {
+      touchMoved = false;
+      dragStartX = e.touches[0].clientY;
+      dragStartY = e.touches[0].clientX;
+    }, { passive: true });
 
-  stackEl?.addEventListener("touchmove", (e: TouchEvent) => {
-    const t = e.touches[0];
-    if (Math.abs(t.clientY - dragStartX) > 10 || Math.abs(t.clientX - dragStartY) > 10) {
-      touchMoved = true;
-    }
-  }, { passive: true });
+    el?.addEventListener("touchmove", (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (Math.abs(t.clientY - dragStartX) > 10 || Math.abs(t.clientX - dragStartY) > 10) {
+        touchMoved = true;
+      }
+    }, { passive: true });
+  });
 
-  /* ─── CARD CLICKS → MODAL ─── */
-  cards.forEach((card) => {
+  /* ─── CARD / SLIDE CLICKS → MODAL ─── */
+  [...cards, ...slides].forEach((card) => {
     card.addEventListener("click", () => {
       if (dragMoved || touchMoved) return;
       openModal(JSON.parse(card.dataset.project!));
