@@ -1,0 +1,169 @@
+/* ═══════════════════════════════════════════════════════════
+   prose.css — long-form reading styles for Markdown (blog posts).
+   Imported only by pages/blog/[slug].astro.
+   ═══════════════════════════════════════════════════════════ */
+
+.prose-kg {
+  color: rgba(232, 232, 232, 0.86);
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+.prose-kg > * + * {
+  margin-top: 1.25em;
+}
+
+.prose-kg h2 {
+  color: var(--white);
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 2.4em;
+  padding-top: 0.2em;
+  scroll-margin-top: 110px;
+}
+
+.prose-kg h3 {
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  margin-top: 1.9em;
+  scroll-margin-top: 110px;
+}
+
+.prose-kg h2 + *,
+.prose-kg h3 + * {
+  margin-top: 0.7em;
+}
+
+.prose-kg strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.prose-kg a {
+  color: var(--lime);
+  text-decoration: underline;
+  text-decoration-color: rgba(180, 223, 0, 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s;
+}
+
+.prose-kg a:hover {
+  text-decoration-color: var(--lime);
+}
+
+.prose-kg ul,
+.prose-kg ol {
+  padding-left: 1.3em;
+}
+
+.prose-kg ul {
+  list-style: none;
+}
+
+.prose-kg ul > li {
+  position: relative;
+}
+
+.prose-kg ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.05em;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  background: var(--lime);
+}
+
+.prose-kg ol {
+  list-style: decimal;
+}
+
+.prose-kg ol > li::marker {
+  color: var(--lime);
+  font-weight: 600;
+}
+
+.prose-kg li + li {
+  margin-top: 0.45em;
+}
+
+.prose-kg li > ul,
+.prose-kg li > ol {
+  margin-top: 0.45em;
+}
+
+.prose-kg blockquote {
+  border-left: 2px solid var(--lime);
+  padding: 0.2em 0 0.2em 1.2em;
+  color: var(--text);
+  font-style: italic;
+}
+
+.prose-kg hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5em 0;
+}
+
+.prose-kg code {
+  font-size: 0.88em;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  padding: 0.1em 0.4em;
+}
+
+.prose-kg pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 1em 1.2em;
+  overflow-x: auto;
+  font-size: 14px;
+}
+
+.prose-kg pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* Tables scroll sideways on phones instead of overflowing the page. */
+.prose-kg table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.prose-kg th,
+.prose-kg td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.65em 0.9em;
+  text-align: left;
+  vertical-align: top;
+  min-width: 120px;
+}
+
+.prose-kg th {
+  background: var(--surface2);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.prose-kg tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+@media (max-width: 640px) {
+  .prose-kg {
+    font-size: 16px;
+  }
+}

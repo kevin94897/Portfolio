@@ -7,6 +7,19 @@ import { useTranslations } from "../i18n/utils";
 const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 const isEn = locale === "en";
+
+interface Props {
+  /** Language versions of the current page; a missing one falls back to that language's home. */
+  alternates?: { es?: string; en?: string };
+}
+const { alternates = { es: "/", en: "/en/" } } = Astro.props;
+const esHref = alternates.es ?? "/";
+const enHref = alternates.en ?? "/en/";
+
+// Section links are plain anchors on the home page and point back to it elsewhere.
+const homePath = isEn ? "/en/" : "/";
+const onHome = Astro.url.pathname === homePath;
+const home = (hash: string) => (onHome ? hash : `${homePath}${hash}`);
 ---
 
 <header>
@@ -22,7 +35,7 @@ const isEn = locale === "en";
       >
         <!-- Logo -->
         <a
-          href="#hero"
+          href={home("#hero")}
           aria-label="Kevin Gómez — Inicio"
           class="nav-logo z-10 relative"
         >
@@ -40,19 +53,19 @@ const isEn = locale === "en";
         <!-- Desktop links -->
         <ul class="hidden lg:flex gap-8 list-none" role="list">
           <li>
-            <a href="#about" class="nav-link">{t("nav.about")}</a>
+            <a href={home("#about")} class="nav-link">{t("nav.about")}</a>
           </li>
           <li>
-            <a href="#experience" class="nav-link">{t("nav.experience")}</a>
+            <a href={home("#experience")} class="nav-link">{t("nav.experience")}</a>
           </li>
           <li>
-            <a href="#projects" class="nav-link">{t("nav.projects")}</a>
+            <a href={home("#projects")} class="nav-link">{t("nav.projects")}</a>
           </li>
           <li>
-            <a href="#workflow" class="nav-link">{t("nav.workflow")}</a>
+            <a href="/blog/" class="nav-link">Blog</a>
           </li>
           <li>
-            <a href="#contact" class="nav-link">{t("nav.contact")}</a>
+            <a href={home("#contact")} class="nav-link">{t("nav.contact")}</a>
           </li>
         </ul>
 
@@ -65,7 +78,7 @@ const isEn = locale === "en";
             aria-label={isEn ? "Change language" : "Cambiar idioma"}
           >
             <a
-              href="/"
+              href={esHref}
               aria-current={!isEn ? "page" : undefined}
               aria-label="Español"
               lang="es"
@@ -73,7 +86,7 @@ const isEn = locale === "en";
               >ES</a
             >
             <a
-              href="/en/"
+              href={enHref}
               aria-current={isEn ? "page" : undefined}
               aria-label="English"
               lang="en"
@@ -95,7 +108,7 @@ const isEn = locale === "en";
 
           <!-- CTA — desktop only -->
           <a
-            href="#contact"
+            href={home("#contact")}
             class="hidden lg:flex bg-lime text-black px-5 h-9 text-[12px] font-semibold no-underline uppercase items-center transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
             >{t("nav.hire")}</a
           >
@@ -127,19 +140,21 @@ const isEn = locale === "en";
     <div
       id="mobile-menu"
       aria-hidden="true"
+      inert
       class="lg:hidden overflow-hidden max-h-0 transition-[max-height] duration-500 ease-in-out bg-black/95 backdrop-blur-[24px] md:border-t md:border-border"
     >
       <nav
         class="max-w-[1400px] mx-auto px-6 py-6 flex flex-col gap-1"
         aria-label={isEn ? "Mobile menu" : "Menú móvil"}
       >
-        <a href="#about" class="mobile-link"          >{t("nav.about")}</a
+        <a href={home("#about")} class="mobile-link"          >{t("nav.about")}</a
         >
-        <a href="#experience" class="mobile-link"          >{t("nav.experience")}</a
+        <a href={home("#experience")} class="mobile-link"          >{t("nav.experience")}</a
         >
-        <a href="#projects" class="mobile-link"          >{t("nav.projects")}</a
+        <a href={home("#projects")} class="mobile-link"          >{t("nav.projects")}</a
         >
-        <a href="#contact" class="mobile-link"          >{t("nav.contact")}</a
+        <a href="/blog/" class="mobile-link">Blog</a>
+        <a href={home("#contact")} class="mobile-link"          >{t("nav.contact")}</a
         >
         <div class="flex gap-3 mt-4 pt-4 border-t border-border">
           <a
@@ -150,7 +165,7 @@ const isEn = locale === "en";
             <span>{t("nav.cv")}</span>
           </a>
           <a
-            href="#contact"
+            href={home("#contact")}
             class="flex-1 flex items-center justify-center bg-lime text-black h-10 text-[12px] font-medium no-underline uppercase tracking-tight"
             >{t("nav.hire")}</a
           >
@@ -232,6 +247,8 @@ const isEn = locale === "en";
     menuBtn.setAttribute("aria-expanded", "false");
     menuBtn.setAttribute("aria-label", "Abrir menú");
     mobileMenu.setAttribute("aria-hidden", "true");
+    // inert keeps the collapsed menu's links out of the tab order.
+    mobileMenu.setAttribute("inert", "");
     mobileMenu.style.maxHeight = "0";
   }
 
@@ -244,6 +261,7 @@ const isEn = locale === "en";
       menuBtn.setAttribute("aria-expanded", "true");
       menuBtn.setAttribute("aria-label", "Cerrar menú");
       mobileMenu.setAttribute("aria-hidden", "false");
+      mobileMenu.removeAttribute("inert");
       mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
     }
   });

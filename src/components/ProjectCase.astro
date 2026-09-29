@@ -1,0 +1,311 @@
+---
+// ProjectCase.astro — case-study page body, shared by
+// pages/proyectos/[slug].astro (es) and pages/en/projects/[slug].astro (en).
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import Nav from "./Nav.astro";
+import Footer from "./Footer.astro";
+import Cursor from "./Cursor.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import { projects, projectUrl, type Project, type Lang } from "../data/projects";
+import { getPosts, postUrl, breadcrumbSchema, SITE_URL } from "../lib/blog";
+
+interface Props {
+  project: Project;
+  lang: Lang;
+}
+
+const { project, lang } = Astro.props;
+const cs = project.caseStudy[lang];
+const isEn = lang === "en";
+
+const L = isEn
+  ? {
+      home: "Home",
+      projects: "Projects",
+      crumbsLabel: "Breadcrumb",
+      caseStudy: "Case study",
+      challenge: "The challenge",
+      solution: "The solution",
+      delivered: "What was delivered",
+      results: "Results",
+      sector: "Sector",
+      stack: "Tech stack",
+      live: "Visit the site",
+      demo: "Demo access",
+      reading: "Related reading (in Spanish)",
+      more: "More projects",
+      prev: "Previous",
+      next: "Next",
+      ctaTitle: "Have a similar project in mind?",
+      ctaText: "Tell me what you need and I'll get back to you with a clear proposal: scope, timeline and the right technology.",
+      ctaBtn: "Let's talk",
+    }
+  : {
+      home: "Inicio",
+      projects: "Proyectos",
+      crumbsLabel: "Ruta de navegación",
+      caseStudy: "Caso de estudio",
+      challenge: "El reto",
+      solution: "La solución",
+      delivered: "Qué se entregó",
+      results: "Resultados",
+      sector: "Sector",
+      stack: "Stack tecnológico",
+      live: "Ver sitio en vivo",
+      demo: "Acceso demo",
+      reading: "Artículos relacionados",
+      more: "Más proyectos",
+      prev: "Anterior",
+      next: "Siguiente",
+      ctaTitle: "¿Tienes un proyecto parecido?",
+      ctaText: "Cuéntame qué necesitas y te respondo con una propuesta clara: alcance, plazos y la tecnología adecuada.",
+      ctaBtn: "Hablemos",
+    };
+
+const homePath = isEn ? "/en/" : "/";
+const path = projectUrl(project.slug, lang);
+const category = isEn ? project.category : project.categoryEs;
+
+const idx = projects.findIndex((p) => p.slug === project.slug);
+const prev = projects[(idx - 1 + projects.length) % projects.length];
+const next = projects[(idx + 1) % projects.length];
+
+const posts = await getPosts();
+const relatedPosts = project.blog
+  .map((slug) => posts.find((p) => p.slug === slug))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const crumbs = [
+  { name: L.home, href: homePath },
+  { name: L.projects, href: `${homePath}#projects` },
+  { name: project.name, href: path },
+];
+
+const schema = [
+  {
+    "@type": "CreativeWork",
+    "@id": `${SITE_URL}${path}#work`,
+    name: project.name,
+    headline: cs.seoTitle,
+    description: cs.seoDescription,
+    url: `${SITE_URL}${path}`,
+    inLanguage: isEn ? "en" : "es-PE",
+    genre: category,
+    keywords: project.stack.join(", "),
+    image: `${SITE_URL}${project.img.src}`,
+    creator: { "@id": `${SITE_URL}/#person` },
+    sameAs: project.url,
+  },
+  breadcrumbSchema(crumbs),
+];
+
+const alternates = {
+  es: projectUrl(project.slug, "es"),
+  en: projectUrl(project.slug, "en"),
+};
+---
+
+<Layout
+  title={`${cs.seoTitle} | Kevin Gómez`}
+  description={cs.seoDescription}
+  path={path}
+  alternates={alternates}
+  ogType="article"
+  schema={schema}
+>
+  <Cursor />
+  <Nav alternates={alternates} />
+
+  <main id="main-content" class="bg-black pt-28 md:pt-36 pb-20">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+      <Breadcrumbs items={crumbs} label={L.crumbsLabel} />
+
+      <!-- Header -->
+      <header class="mb-10 md:mb-14 max-w-[1000px]">
+        <p class="text-[11px] tracking-[0.2em] uppercase text-lime mb-5">{L.caseStudy} · {category}</p>
+        <h1
+          class="font-display font-bold text-white tracking-tightest leading-none mb-6"
+          style="font-size: clamp(2.6rem, 7vw, 6rem);"
+        >
+          {project.name}
+        </h1>
+        <p class="text-[18px] md:text-[21px] leading-relaxed text-text/75 max-w-[820px]">
+          {cs.seoDescription}
+        </p>
+      </header>
+
+      <!-- Hero image -->
+      <div class="mb-14 md:mb-20 border border-border bg-surface overflow-hidden">
+        <Image
+          src={project.img}
+          alt={`${project.name} — ${category}`}
+          widths={[640, 1024, 1400]}
+          sizes="(max-width: 1400px) 100vw, 1400px"
+          loading="eager"
+          fetchpriority="high"
+          class="w-full h-auto"
+        />
+      </div>
+
+      <div class="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-12 xl:gap-20">
+        <!-- Story -->
+        <div class="min-w-0 max-w-[760px] flex flex-col gap-12">
+          <section aria-labelledby="challenge">
+            <h2 id="challenge" class="case-h2">{L.challenge}</h2>
+            <p class="case-p">{cs.challenge}</p>
+          </section>
+          <section aria-labelledby="solution">
+            <h2 id="solution" class="case-h2">{L.solution}</h2>
+            <p class="case-p">{cs.solution}</p>
+          </section>
+          <section aria-labelledby="delivered">
+            <h2 id="delivered" class="case-h2">{L.delivered}</h2>
+            <ul class="list-none flex flex-col gap-3">
+              {
+                cs.highlights.map((h) => (
+                  <li class="flex gap-4 text-[17px] leading-relaxed text-text/85">
+                    <span class="mt-[0.6em] w-[6px] h-[6px] bg-lime flex-shrink-0" aria-hidden="true" />
+                    <span>{h}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
+          {
+            cs.results && cs.results.length > 0 && (
+              <section aria-labelledby="results">
+                <h2 id="results" class="case-h2">{L.results}</h2>
+                <ul class="list-none flex flex-col gap-3">
+                  {cs.results.map((r) => (
+                    <li class="flex gap-4 text-[17px] leading-relaxed text-text/85">
+                      <span class="mt-[0.6em] w-[6px] h-[6px] bg-lime flex-shrink-0" aria-hidden="true" />
+                      <span>{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+        </div>
+
+        <!-- Facts -->
+        <aside class="lg:sticky lg:top-28 self-start flex flex-col gap-8 p-6 md:p-8 border border-border bg-surface">
+          <div>
+            <p class="fact-label">{L.sector}</p>
+            <p class="text-white text-[16px]">{cs.sector}</p>
+          </div>
+          <div>
+            <p class="fact-label">{L.stack}</p>
+            <div class="flex flex-wrap gap-[6px]">
+              {
+                project.stack.map((s) => (
+                  <span class="text-[10px] tracking-widest uppercase px-[8px] py-[4px] border border-border text-muted">
+                    {s}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+          {
+            project.demo && (
+              <div>
+                <p class="fact-label">{L.demo}</p>
+                <p class="text-[13px] text-text/85">
+                  user: <span class="text-white">{project.demo.user}</span>
+                </p>
+                <p class="text-[13px] text-text/85 break-all">
+                  pass: <span class="text-white">{project.demo.pass}</span>
+                </p>
+              </div>
+            )
+          }
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center justify-center gap-2 bg-lime text-black px-5 py-3 text-[13px] font-semibold uppercase tracking-tight no-underline transition-opacity duration-200 hover:opacity-90"
+          >
+            {L.live}
+            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+          </a>
+        </aside>
+      </div>
+
+      <!-- Related posts -->
+      {
+        relatedPosts.length > 0 && (
+          <section class="mt-24" aria-labelledby="related-reading">
+            <h2 id="related-reading" class="text-white font-bold text-[24px] md:text-[28px] tracking-tight mb-8">
+              {L.reading}
+            </h2>
+            <div class="grid md:grid-cols-3 gap-5">
+              {relatedPosts.map((p) => (
+                <a
+                  href={postUrl(p)}
+                  hreflang="es"
+                  class="group flex flex-col p-6 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+                >
+                  <p class="text-[10px] tracking-[0.2em] uppercase text-lime mb-3">{p.data.category}</p>
+                  <p class="text-white font-semibold text-[18px] leading-snug group-hover:text-lime transition-colors duration-300">
+                    {p.data.title}
+                  </p>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- CTA -->
+      <section class="mt-24 p-8 md:p-14 border border-lime/20 bg-lime/[0.03]" aria-labelledby="case-cta">
+        <h2 id="case-cta" class="font-display font-bold text-white tracking-tight leading-tight mb-4" style="font-size: clamp(1.6rem, 3.4vw, 2.6rem);">
+          {L.ctaTitle}
+        </h2>
+        <p class="text-text/75 text-[17px] leading-relaxed max-w-[640px] mb-8">{L.ctaText}</p>
+        <a
+          href={`${homePath}#contact`}
+          class="inline-flex items-center gap-2 bg-lime text-black px-6 py-3 text-[13px] font-semibold uppercase tracking-tight no-underline transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
+        >
+          {L.ctaBtn}
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </a>
+      </section>
+
+      <!-- Prev / next -->
+      <nav class="mt-16 grid grid-cols-2 gap-5" aria-label={L.more}>
+        <a href={projectUrl(prev.slug, lang)} class="pager group">
+          <span class="pager-label"><i class="ph ph-arrow-left" aria-hidden="true"></i> {L.prev}</span>
+          <span class="pager-name">{prev.name}</span>
+        </a>
+        <a href={projectUrl(next.slug, lang)} class="pager group text-right items-end">
+          <span class="pager-label">{L.next} <i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+          <span class="pager-name">{next.name}</span>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .case-h2 {
+    @apply text-white font-bold text-[26px] md:text-[32px] tracking-tight leading-tight mb-4;
+  }
+  .case-p {
+    @apply text-[17px] md:text-[18px] leading-[1.75] text-text/85;
+  }
+  .fact-label {
+    @apply text-[10px] tracking-[0.2em] uppercase text-muted mb-3;
+  }
+  .pager {
+    @apply flex flex-col gap-2 p-5 md:p-6 border border-border no-underline transition-colors duration-300 hover:border-lime/40;
+  }
+  .pager-label {
+    @apply inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-muted;
+  }
+  .pager-name {
+    @apply text-white font-semibold text-[16px] md:text-[20px] group-hover:text-lime transition-colors duration-300;
+  }
+</style>

@@ -101,6 +101,7 @@ export const translations: Record<'es' | 'en', Record<string, string>> = {
     "p.cafeplaza.desc":
       "Sitio corporativo para restaurante en Puerto Rico. WordPress + Elementor con animaciones GSAP, slider Swiper, Cloudflare CDN y hosting en Kinsta.",
     "p.view": "Ver proyecto",
+    "p.case": "Ver caso completo",
     "p.demo": "Ver demo",
     "skills.label": "05 — Proficiency",
     "skills.title": "Habilidades Técnicas",
@@ -284,6 +285,7 @@ export const translations: Record<'es' | 'en', Record<string, string>> = {
     "p.cafeplaza.desc":
       "Corporate site for a Puerto Rico restaurant. WordPress + Elementor with GSAP animations, Swiper slider, Cloudflare CDN, and Kinsta hosting.",
     "p.view": "View Project",
+    "p.case": "View case study",
     "p.demo": "View Demo",
     "skills.label": "05 — Proficiency",
     "skills.title": "Technical Skills",

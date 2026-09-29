@@ -9,13 +9,21 @@ export interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Path of this page, e.g. "/blog/mi-post/". Defaults to the home page. */
+  path?: string;
+  /** Language versions of this page, by path. Omit a language it doesn't exist in. */
+  alternates?: { es?: string; en?: string };
+  ogType?: "website" | "article";
+  /** Extra JSON-LD nodes appended to the site-wide @graph. */
+  schema?: Record<string, unknown>[];
+  /** ISO date, only for ogType "article". */
+  publishedTime?: string;
 }
 
 const locale = (Astro.currentLocale || "es") as "es" | "en";
 const isEn = locale === "en";
 
 const siteURL = "https://kevin-gomez.dev";
-const canonicalURL = isEn ? `${siteURL}/en/` : `${siteURL}/`;
 
 const {
   title = isEn
@@ -25,7 +33,16 @@ const {
     ? "Full Stack Developer with 8+ years of experience in Lima, Peru. Specialist in Next.js, React, NestJS, Headless WordPress, Laravel and E-Commerce. Projects for Entel, NERD, Well-Done. Available for freelance."
     : "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y E-Commerce. Proyectos para Entel, NERD, Well-Done. Disponible para freelance.",
   ogImage = `${siteURL}/og-image.jpg`,
+  path = isEn ? "/en/" : "/",
+  alternates = { es: "/", en: "/en/" },
+  ogType = "website",
+  schema = [],
+  publishedTime,
 } = Astro.props;
+
+const canonicalURL = `${siteURL}${path}`;
+const altLocale = isEn ? "es" : "en";
+const hasAlternate = Boolean(alternates[altLocale]);
 
 // ─── Analytics ───
 // Overridable per-environment with PUBLIC_GA_ID; only injected in builds so
@@ -144,6 +161,7 @@ const structuredData = {
       inLanguage: ["es-PE", "en"],
       author: { "@id": `${siteURL}/#person` },
     },
+    ...schema,
   ],
 };
 ---
@@ -204,7 +222,8 @@ const structuredData = {
     <link rel="canonical" href={canonicalURL} />
 
     <!-- ─── Open Graph ─── -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     <meta property="og:url" content={canonicalURL} />
     <meta
       property="og:site_name"
@@ -220,7 +239,7 @@ const structuredData = {
       content="Kevin Gómez — Full Stack Developer Lima, Perú"
     />
     <meta property="og:locale" content={isEn ? "en_US" : "es_PE"} />
-    <meta property="og:locale:alternate" content={isEn ? "es_PE" : "en_US"} />
+    {hasAlternate && <meta property="og:locale:alternate" content={isEn ? "es_PE" : "en_US"} />}
 
     <!-- ─── Twitter Card ─── -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -240,9 +259,9 @@ const structuredData = {
     <meta name="revisit-after" content="7 days" />
 
     <!-- ─── hreflang — alternate language URLs ─── -->
-    <link rel="alternate" hreflang="es" href={`${siteURL}/`} />
-    <link rel="alternate" hreflang="en" href={`${siteURL}/en/`} />
-    <link rel="alternate" hreflang="x-default" href={`${siteURL}/`} />
+    {hasAlternate && alternates.es && <link rel="alternate" hreflang="es" href={`${siteURL}${alternates.es}`} />}
+    {hasAlternate && alternates.en && <link rel="alternate" hreflang="en" href={`${siteURL}${alternates.en}`} />}
+    {hasAlternate && <link rel="alternate" hreflang="x-default" href={`${siteURL}${alternates.es ?? alternates.en}`} />}
 
     <!-- ─── Fonts: self-hosted woff2 — preloaded, zero external requests ─── -->
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -250,7 +269,7 @@ const structuredData = {
     <!-- ─── Icons: Phosphor — self-hosted subset (see "Phosphor icons" in global.css) ─── -->
 
     <!-- ─── Favicon ─── -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="256x256" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
@@ -362,10 +381,14 @@ const structuredData = {
         if (!a || a.classList.contains("skip-link")) return;
         const id = a.getAttribute("href");
         if (!id || id === "#") return;
-        const target = document.querySelector(id);
+        // getElementById, not querySelector: heading ids generated from
+        // Markdown can start with a digit, which is an invalid CSS selector.
+        const target = document.getElementById(decodeURIComponent(id.slice(1)));
         if (!target) return;
         e.preventDefault();
-        lenis.scrollTo(target as HTMLElement, { offset: 0, duration: 1.2, easing: (t: number) => 1 - Math.pow(1 - t, 4) });
+        // Honour scroll-margin-top so headings clear the fixed nav.
+        const offset = -(parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+        lenis.scrollTo(target, { offset, duration: 1.2, easing: (t: number) => 1 - Math.pow(1 - t, 4) });
       });
 
       function wrapLines(lines: Element[]) {
@@ -467,7 +490,7 @@ const structuredData = {
       const hasHash = location.hash.length > 1;
       let savedY = 0;
       try {
-        savedY = parseFloat(sessionStorage.getItem("__scrollY") || "0") || 0;
+        savedY = parseFloat(sessionStorage.getItem("__scrollY:" + location.pathname) || "0") || 0;
       } catch (_e) {}
 
       // Restore the previous scroll position ourselves (manual restoration
@@ -613,24 +636,28 @@ const structuredData = {
         });
 
         // Scrubbed reveal — letters illuminate from #contact to the page bottom.
-        gsap.set(tSplit.chars, { opacity: 0.08 });
-        const tTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: "#contact",
-            start: "top 60%",
-            endTrigger: "footer",
-            end: "bottom bottom",
-            scrub: 1.5,
-            invalidateOnRefresh: true,
-          },
-        });
-        tSplit.chars.forEach((char, i) => {
-          tTl.to(
-            char,
-            { opacity: 1, ease: "power1.inOut", duration: 1 },
-            i * 0.18,
-          );
-        });
+        // Pages without the contact section (blog, case studies) keep the
+        // headline fully lit.
+        if (document.getElementById("contact")) {
+          gsap.set(tSplit.chars, { opacity: 0.08 });
+          const tTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: "#contact",
+              start: "top 60%",
+              endTrigger: "footer",
+              end: "bottom bottom",
+              scrub: 1.5,
+              invalidateOnRefresh: true,
+            },
+          });
+          tSplit.chars.forEach((char, i) => {
+            tTl.to(
+              char,
+              { opacity: 1, ease: "power1.inOut", duration: 1 },
+              i * 0.18,
+            );
+          });
+        }
       }
 
       // ── Big CTA parallax — headline and button scroll at different rates ──
@@ -700,7 +727,7 @@ const structuredData = {
       // (we manage restoration manually — see the inline head script).
       const saveScrollY = () => {
         try {
-          sessionStorage.setItem("__scrollY", String(window.scrollY));
+          sessionStorage.setItem("__scrollY:" + location.pathname, String(window.scrollY));
         } catch (_e) {}
       };
       window.addEventListener("pagehide", saveScrollY);

@@ -1,0 +1,30 @@
+---
+// Breadcrumbs.astro — visible trail for inner pages. The matching
+// BreadcrumbList JSON-LD comes from breadcrumbSchema() in the page.
+interface Props {
+  items: { name: string; href: string }[];
+  label?: string;
+}
+const { items, label = "Breadcrumb" } = Astro.props;
+---
+
+<nav aria-label={label} class="mb-8">
+  <ol class="flex flex-wrap items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-muted list-none">
+    {
+      items.map((item, i) => (
+        <li class="flex items-center gap-2">
+          {i < items.length - 1 ? (
+            <>
+              <a href={item.href} class="no-underline text-muted hover:text-lime transition-colors duration-200">
+                {item.name}
+              </a>
+              <span aria-hidden="true" class="text-white/30">/</span>
+            </>
+          ) : (
+            <span aria-current="page" class="text-text/80 line-clamp-1">{item.name}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

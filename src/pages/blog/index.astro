@@ -1,0 +1,169 @@
+---
+// Blog index — Spanish only.
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Cursor from "../../components/Cursor.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import {
+  getPosts,
+  postUrl,
+  readingTime,
+  formatDate,
+  breadcrumbSchema,
+  SITE_URL,
+} from "../../lib/blog";
+
+const posts = await getPosts();
+const [featured, ...rest] = posts;
+const categories = [...new Set(posts.map((p) => p.data.category))];
+
+const path = "/blog/";
+const crumbs = [
+  { name: "Inicio", href: "/" },
+  { name: "Blog", href: path },
+];
+
+const schema = [
+  {
+    "@type": "Blog",
+    "@id": `${SITE_URL}${path}#blog`,
+    name: "Blog de Kevin Gómez — Desarrollo web para empresas",
+    url: `${SITE_URL}${path}`,
+    inLanguage: "es-PE",
+    author: { "@id": `${SITE_URL}/#person` },
+    blogPost: posts.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.data.title,
+      url: `${SITE_URL}${postUrl(p)}`,
+      datePublished: p.data.pubDate.toISOString(),
+    })),
+  },
+  breadcrumbSchema(crumbs),
+];
+---
+
+<Layout
+  title="Blog de desarrollo web para empresas en Perú | Kevin Gómez"
+  description="Guías prácticas sobre precios de páginas web, tiendas virtuales, pasarelas de pago, SEO y velocidad para empresas en Perú. Escritas por un Full Stack Developer."
+  path={path}
+  alternates={{ es: path }}
+  schema={schema}
+>
+  <Cursor />
+  <Nav alternates={{ es: path }} />
+
+  <main id="main-content" class="bg-black pt-28 md:pt-36 pb-24">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+      <Breadcrumbs items={crumbs} label="Ruta de navegación" />
+
+      <header class="mb-14 md:mb-20 max-w-[900px]">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-[10px] tracking-widest uppercase text-muted">Blog</span>
+          <span class="text-[10px] text-muted/90 tracking-[0.06em]">ブログ</span>
+        </div>
+        <h1
+          class="font-display font-bold text-white tracking-tightest leading-none mb-6"
+          style="font-size: clamp(2.6rem, 6vw, 5.5rem);"
+        >
+          Desarrollo web para empresas
+        </h1>
+        <p class="text-[18px] md:text-[20px] leading-relaxed text-text/75">
+          Lo que necesitas saber antes de invertir en tu página web, tu tienda virtual o tu
+          posicionamiento en Google: precios reales, comparativas y guías paso a paso.
+        </p>
+      </header>
+
+      <!-- Category filter -->
+      <div class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filtrar por categoría">
+        <button type="button" class="blog-filter is-active" data-cat="all" aria-pressed="true">Todos</button>
+        {
+          categories.map((c) => (
+            <button type="button" class="blog-filter" data-cat={c} aria-pressed="false">
+              {c}
+            </button>
+          ))
+        }
+      </div>
+
+      <!-- Featured -->
+      {
+        featured && (
+          <a
+            href={postUrl(featured)}
+            data-cat={featured.data.category}
+            class="blog-card group block mb-5 p-7 md:p-12 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+          >
+            <p class="text-[11px] tracking-[0.2em] uppercase text-lime mb-4">
+              Destacado · {featured.data.category}
+            </p>
+            <h2
+              class="font-display font-bold text-white tracking-tight leading-[1.1] mb-4 max-w-[900px] group-hover:text-lime transition-colors duration-300"
+              style="font-size: clamp(1.6rem, 3.2vw, 2.6rem);"
+            >
+              {featured.data.title}
+            </h2>
+            <p class="text-muted text-[16px] leading-relaxed max-w-[760px] mb-6">
+              {featured.data.description}
+            </p>
+            <p class="text-[13px] text-muted">
+              {formatDate(featured.data.pubDate)} · {readingTime(featured.body)} min de lectura
+            </p>
+          </a>
+        )
+      }
+
+      <!-- Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {
+          rest.map((p) => (
+            <a
+              href={postUrl(p)}
+              data-cat={p.data.category}
+              class="blog-card group flex flex-col p-6 md:p-7 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+            >
+              <p class="text-[10px] tracking-[0.2em] uppercase text-lime mb-4">{p.data.category}</p>
+              <h2 class="text-white font-semibold text-[20px] leading-snug mb-3 group-hover:text-lime transition-colors duration-300">
+                {p.data.title}
+              </h2>
+              <p class="text-muted text-[15px] leading-relaxed line-clamp-3 mb-6">{p.data.description}</p>
+              <p class="mt-auto text-[12px] text-muted">{readingTime(p.body)} min de lectura</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .blog-filter {
+    @apply h-9 px-4 border border-border bg-transparent text-[12px] font-medium uppercase tracking-wide text-muted
+           cursor-none transition-colors duration-200 hover:text-white hover:border-white/30;
+  }
+  .blog-filter.is-active {
+    @apply bg-lime text-black border-lime;
+  }
+</style>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>(".blog-filter")];
+  const cards = [...document.querySelectorAll<HTMLElement>(".blog-card")];
+  buttons.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      const cat = btn.dataset.cat;
+      buttons.forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      // Inline display, not the `hidden` attribute: the cards' `flex`/`block`
+      // utilities would override it.
+      cards.forEach((c) => {
+        c.style.display = cat !== "all" && c.dataset.cat !== cat ? "none" : "";
+      });
+    }),
+  );
+</script>

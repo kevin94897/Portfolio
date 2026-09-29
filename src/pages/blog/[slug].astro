@@ -1,0 +1,244 @@
+---
+// Blog post page — Spanish only (the blog targets businesses in Peru).
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Cursor from "../../components/Cursor.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import {
+  getPosts,
+  postUrl,
+  readingTime,
+  relatedPosts,
+  formatDate,
+  breadcrumbSchema,
+  SITE_URL,
+  type Post,
+} from "../../lib/blog";
+import { projects, projectUrl } from "../../data/projects";
+import "../../styles/prose.css";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post, posts } }));
+}
+
+interface Props {
+  post: Post;
+  posts: Post[];
+}
+
+const { post, posts } = Astro.props;
+const { title, description, pubDate, updatedDate, category, tags } = post.data;
+const { Content, headings } = await post.render();
+
+const path = postUrl(post);
+const minutes = readingTime(post.body);
+const toc = headings.filter((h) => h.depth === 2);
+const related = relatedPosts(post, posts, 3);
+const relatedProjects = projects.filter((p) => p.blog.includes(post.slug)).slice(0, 3);
+
+const crumbs = [
+  { name: "Inicio", href: "/" },
+  { name: "Blog", href: "/blog/" },
+  { name: title, href: path },
+];
+
+const schema = [
+  {
+    "@type": "BlogPosting",
+    "@id": `${SITE_URL}${path}#article`,
+    headline: title,
+    description,
+    datePublished: pubDate.toISOString(),
+    dateModified: (updatedDate ?? pubDate).toISOString(),
+    inLanguage: "es-PE",
+    mainEntityOfPage: `${SITE_URL}${path}`,
+    image: `${SITE_URL}/og-image.jpg`,
+    articleSection: category,
+    keywords: tags.join(", "),
+    wordCount: post.body.split(/\s+/).length,
+    author: { "@id": `${SITE_URL}/#person` },
+    publisher: { "@id": `${SITE_URL}/#person` },
+  },
+  breadcrumbSchema(crumbs),
+];
+---
+
+<Layout
+  title={`${title} | Kevin Gómez`}
+  description={description}
+  path={path}
+  alternates={{ es: path }}
+  ogType="article"
+  publishedTime={pubDate.toISOString()}
+  schema={schema}
+>
+  <Cursor />
+  <Nav alternates={{ es: path }} />
+
+  <main id="main-content" class="bg-black pt-28 md:pt-36 pb-20">
+    <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+      <Breadcrumbs items={crumbs} label="Ruta de navegación" />
+
+      <!-- Header -->
+      <header class="max-w-[820px] mb-12 md:mb-16">
+        <p class="text-[11px] tracking-[0.2em] uppercase text-lime mb-5">{category}</p>
+        <h1
+          class="font-display font-bold text-white tracking-tightest leading-[1.05] mb-6"
+          style="font-size: clamp(2rem, 4.6vw, 3.6rem);"
+        >
+          {title}
+        </h1>
+        <p class="text-[18px] md:text-[20px] leading-relaxed text-text/75 mb-8">{description}</p>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-muted">
+          <span>Por <a href="/#about" class="text-text no-underline hover:text-lime">Kevin Gómez</a></span>
+          <span aria-hidden="true" class="hidden sm:inline text-white/20">·</span>
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+          <span aria-hidden="true" class="hidden sm:inline text-white/20">·</span>
+          <span>{minutes} min de lectura</span>
+        </div>
+      </header>
+
+      <div class="grid lg:grid-cols-[minmax(0,1fr)_260px] gap-12 xl:gap-20">
+        <!-- Article -->
+        <article class="min-w-0 max-w-[720px]">
+          <div class="prose-kg">
+            <Content />
+          </div>
+
+          <!-- Author / CTA -->
+          <aside
+            class="mt-16 p-6 md:p-8 border border-border bg-surface flex flex-col md:flex-row gap-6 md:items-center"
+            aria-label="Sobre el autor"
+          >
+            <div class="flex-1">
+              <p class="text-[11px] tracking-[0.2em] uppercase text-lime mb-2">Sobre el autor</p>
+              <p class="text-white font-semibold text-[18px] mb-2">Kevin Gómez — Full Stack Developer en Lima</p>
+              <p class="text-muted text-[15px] leading-relaxed">
+                Más de 8 años creando webs, tiendas virtuales y aplicaciones para empresas en Perú y el
+                extranjero con Next.js, WordPress, Shopify y NestJS. Si estás evaluando un proyecto,
+                te ayudo a elegir la opción que realmente necesitas.
+              </p>
+            </div>
+            <a
+              href="/#contact"
+              class="self-start md:self-center inline-flex items-center gap-2 bg-lime text-black px-6 py-3 text-[13px] font-semibold uppercase tracking-tight no-underline whitespace-nowrap transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px"
+            >
+              Cuéntame tu proyecto
+              <i class="ph ph-arrow-right" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </article>
+
+        <!-- Table of contents -->
+        {
+          toc.length > 2 && (
+            <aside class="hidden lg:block" aria-label="Contenido del artículo">
+              <nav class="sticky top-28">
+                <p class="text-[11px] tracking-[0.2em] uppercase text-muted mb-4">En este artículo</p>
+                <ol class="list-none flex flex-col gap-3 border-l border-border">
+                  {toc.map((h) => (
+                    <li>
+                      <a
+                        href={`#${h.slug}`}
+                        class="toc-link block pl-4 -ml-px border-l border-transparent text-[13px] leading-snug text-muted no-underline hover:text-white transition-colors duration-200"
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </aside>
+          )
+        }
+      </div>
+
+      <!-- Related case studies -->
+      {
+        relatedProjects.length > 0 && (
+          <section class="mt-24" aria-labelledby="related-projects">
+            <h2 id="related-projects" class="text-white font-bold text-[24px] md:text-[28px] tracking-tight mb-8">
+              Proyectos relacionados
+            </h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {relatedProjects.map((p) => (
+                <a
+                  href={projectUrl(p.slug, "es")}
+                  class="group block border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+                >
+                  <div class="aspect-[16/10] overflow-hidden bg-surface2">
+                    <img
+                      src={p.img.src}
+                      alt={p.name}
+                      width={p.img.width}
+                      height={p.img.height}
+                      loading="lazy"
+                      decoding="async"
+                      class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div class="p-5">
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-lime mb-2">{p.categoryEs}</p>
+                    <p class="text-white font-semibold text-[17px]">{p.name}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Related posts -->
+      <section class="mt-20" aria-labelledby="related-posts">
+        <h2 id="related-posts" class="text-white font-bold text-[24px] md:text-[28px] tracking-tight mb-8">
+          Sigue leyendo
+        </h2>
+        <div class="grid md:grid-cols-3 gap-5">
+          {
+            related.map((p) => (
+              <a
+                href={postUrl(p)}
+                class="group flex flex-col p-6 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+              >
+                <p class="text-[10px] tracking-[0.2em] uppercase text-lime mb-3">{p.data.category}</p>
+                <p class="text-white font-semibold text-[18px] leading-snug mb-3 group-hover:text-lime transition-colors duration-300">
+                  {p.data.title}
+                </p>
+                <p class="text-muted text-[14px] leading-relaxed line-clamp-3">{p.data.description}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  // Highlight the table-of-contents entry for the section being read.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>(".toc-link")];
+  if (links.length) {
+    const byId = new Map(links.map((a) => [decodeURIComponent(a.hash.slice(1)), a]));
+    const setActive = (id: string) =>
+      links.forEach((a) => {
+        const on = a === byId.get(id);
+        a.classList.toggle("text-lime", on);
+        a.classList.toggle("border-lime", on);
+      });
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length) setActive(visible[0].target.id);
+      },
+      { rootMargin: "-100px 0px -65% 0px" },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  }
+</script>

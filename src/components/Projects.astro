@@ -1,148 +1,20 @@
 ---
-import imgLiwilu from "../assets/images/portfolio/Liwilu.webp";
-import imgAstra from "../assets/images/portfolio/Astramedical.webp";
-import imgWisec from "../assets/images/portfolio/Aiconstruye.webp";
-import imgGustos from "../assets/images/portfolio/Gustoscoffee.webp";
-import imgWhaticket from "../assets/images/portfolio/whaticket.webp";
-import imgChapa from "../assets/images/portfolio/Chapatubeca.webp";
-import imgSegway from "../assets/images/portfolio/Segwaysports.webp";
-import imgColecciones from "../assets/images/portfolio/KGFront.webp";
-import imgKGStore from "../assets/images/portfolio/KGStore.webp";
-import imgPuntoAzul from "../assets/images/portfolio/Puntoazul.webp";
-import imgCafePlaza from "../assets/images/portfolio/CafePlaza.webp";
-import imgNeoRun from "../assets/images/portfolio/NeoRun.webp";
+import { projects as projectData, projectUrl } from "../data/projects";
 import { useTranslations } from "../i18n/utils";
 
 const locale = (Astro.currentLocale || "es") as "es" | "en";
 const t = useTranslations(locale);
 
-interface Project {
-  img: ImageMetadata;
-  category: string;
-  name: string;
-  descKey: string;
-  desc: string;
-  stack: string[];
-  url: string;
-  demo?: { user: string; pass: string };
-}
-
 // Pre-translate descriptions so the JSON embedded in the page is already localized
-const projects: Project[] = [
-  {
-    img: imgNeoRun,
-    category: "Interactive Game",
-    name: "NEOrun",
-    descKey: "p.neorun.desc",
-    desc: t("p.neorun.desc"),
-    stack: ["React", "Phaser 3", "Supabase", "Vite"],
-    url: "https://neorun.neoingredients.com.pe/",
-  },
-  {
-    img: imgColecciones,
-    category: "SPA",
-    name: "Colecciones Grupo Gómez",
-    descKey: "p.colecciones.desc",
-    desc: t("p.colecciones.desc"),
-    stack: ["React", "React Router", "Lucide", "Vercel"],
-    url: "https://colecciones.grupo-gomez.com/",
-  },
-  {
-    img: imgLiwilu,
-    category: "Headless E-Commerce",
-    name: "Liwilu",
-    descKey: "p.liwilu.desc",
-    desc: t("p.liwilu.desc"),
-    stack: ["Next.js", "NestJS", "PrestaShop", "Tailwind"],
-    url: "https://liwilu-staging.vercel.app/",
-  },
-  {
-    img: imgKGStore,
-    category: "PWA",
-    name: "KG Store Admin",
-    descKey: "p.kgstore.desc",
-    desc: t("p.kgstore.desc"),
-    stack: ["React", "Supabase", "PostgreSQL", "Cloudflare"],
-    url: "https://kg-admin-delta.vercel.app/",
-    demo: { user: "demo", pass: "QCyJ iNW7 sFpl BPPS FoAR cka8" },
-  },
-  {
-    img: imgCafePlaza,
-    category: "Corporate",
-    name: "Café de la Plaza",
-    descKey: "p.cafeplaza.desc",
-    desc: t("p.cafeplaza.desc"),
-    stack: ["WordPress", "Elementor", "GSAP", "Kinsta"],
-    url: "https://cafedelaplazapr.com/",
-  },
-  {
-    img: imgGustos,
-    category: "E-Commerce",
-    name: "Gustos Coffee Co.",
-    descKey: "p.gustos.desc",
-    desc: t("p.gustos.desc"),
-    stack: ["Shopify", "Vue.js", "Cloudflare", "Apple Pay"],
-    url: "https://www.gustoscoffeeco.com/",
-  },
-  {
-    img: imgWisec,
-    category: "SSG Landing",
-    name: "AIcon",
-    descKey: "p.aicon.desc",
-    desc: t("p.aicon.desc"),
-    stack: ["Astro", "Alpine.js", "Vercel", "AWS"],
-    url: "https://landing-wisec.vercel.app/",
-  },
-  {
-    img: imgWhaticket,
-    category: "SaaS",
-    name: "Whaticket",
-    descKey: "p.whaticket.desc",
-    desc: t("p.whaticket.desc"),
-    stack: ["WordPress", "Elementor", "WP Rocket", "GTM"],
-    url: "https://whaticket.com/",
-  },
-  {
-    img: imgAstra,
-    category: "Corporate",
-    name: "Astra Medical",
-    descKey: "p.astra.desc",
-    desc: t("p.astra.desc"),
-    stack: ["WordPress", "WooCommerce", "PHP", "Yoast SEO"],
-    url: "https://www.astra-medical.com/",
-  },
-  {
-    img: imgChapa,
-    category: "Education",
-    name: "Chapa Tu Beca",
-    descKey: "p.chapa.desc",
-    desc: t("p.chapa.desc"),
-    stack: ["WordPress Multisite", "Elementor", "PHP", "SEO"],
-    url: "https://www.chapatubeca.org/",
-  },
-  {
-    img: imgSegway,
-    category: "E-Commerce",
-    name: "Segway Powersports",
-    descKey: "p.segway.desc",
-    desc: t("p.segway.desc"),
-    stack: ["WordPress", "Elementor", "RankMath", "jQuery"],
-    url: "https://segwaypowersports.com.pe/",
-  },
-  {
-    img: imgPuntoAzul,
-    category: "SPA",
-    name: "Panel PuntoAzul",
-    descKey: "p.puntoazul.desc",
-    desc: t("p.puntoazul.desc"),
-    stack: ["React", "Vite", "Tailwind", "react-day-picker"],
-    url: "https://staging.puntoazulrestaurante.com/",
-    demo: { user: "demo", pass: "QCyJ iNW7 sFpl BPPS FoAR cka8" },
-  },
-];
+const projects = projectData.map((p) => ({
+  ...p,
+  desc: t(p.descKey),
+  caseUrl: projectUrl(p.slug, locale),
+}));
 
 const N = projects.length;
 const viewLabel = t("p.view");
+const caseLabel = t("p.case");
 
 // Scroll track height: each project gets one "slice" of natural scroll, plus
 // 100vh for the sticky viewport itself. No pin → scroll never freezes.
@@ -168,6 +40,7 @@ const viewLabel = t("p.view");
         desc: p.desc,
         stack: p.stack,
         url: p.url,
+        caseUrl: p.caseUrl,
         img: p.img.src,
         demo: p.demo ?? null,
       })),
@@ -183,7 +56,7 @@ const viewLabel = t("p.view");
     <div class="proj-sticky sticky top-[75px] w-full flex flex-col overflow-hidden">
 
     <!-- Header row -->
-    <div id="proj-header" class="relative z-20 flex items-start justify-between px-5 sm:px-8 lg:px-[60px] pt-8 sm:pt-10 lg:pt-[89px] pb-3 max-w-[1400px] mx-auto w-full flex-shrink-0">
+    <div id="proj-header" class="relative z-20 flex items-start justify-between px-5 sm:px-8 lg:px-[60px] pt-8 sm:pt-10 pb-12 max-w-[1400px] mx-auto w-full flex-shrink-0">
       <div>
         <p class="proj-eyebrow text-[10px] tracking-[0.25em] uppercase text-lime flex items-center gap-3 mb-2">
           <span>{t("proj.label")}</span>
@@ -231,6 +104,7 @@ const viewLabel = t("p.view");
                   desc: p.desc,
                   stack: p.stack,
                   url: p.url,
+                  caseUrl: p.caseUrl,
                   img: p.img.src,
                   demo: p.demo ?? null,
                 })}
@@ -269,6 +143,7 @@ const viewLabel = t("p.view");
                 desc: p.desc,
                 stack: p.stack,
                 url: p.url,
+                caseUrl: p.caseUrl,
                 img: p.img.src,
                 demo: p.demo ?? null,
               })}
@@ -305,7 +180,7 @@ const viewLabel = t("p.view");
     class="flex-shrink-0 z-10 bg-gradient-to-t from-black via-black/90 to-transparent"
   >
     <!-- Container limitado -->
-    <div class="max-w-[1400px] mx-auto px-6 md:px-10 pt-6 pb-7">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10 pt-6 pb-10">
       <div id="proj-info-content">
         <!-- Category -->
         <p
@@ -349,6 +224,15 @@ const viewLabel = t("p.view");
                    transition-all duration-200 hover:opacity-90"
             >
               <span>{viewLabel}</span>
+            </a>
+            <a
+              id="proj-info-case"
+              href="#"
+              class="hidden md:inline-flex items-center gap-2 text-[13px] tracking-tight uppercase font-semibold
+                     text-white no-underline border-b border-white/30 pb-[2px]
+                     transition-colors duration-200 hover:text-lime hover:border-lime"
+            >
+              <span>{caseLabel}</span>
             </a>
           </div>
         </div>
@@ -478,6 +362,16 @@ const viewLabel = t("p.view");
       >
         <span>{viewLabel}</span>
         <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+      </a>
+      <a
+        id="modal-case"
+        href="#"
+        class="inline-flex items-center gap-[8px] ml-2 px-6 py-[13px] border border-border text-white
+               text-[11px] font-medium tracking-[0.1em] uppercase no-underline
+               transition-colors duration-200 hover:border-lime hover:text-lime"
+      >
+        <span>{caseLabel}</span>
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </a>
     </div>
   </div>
@@ -759,6 +653,7 @@ const viewLabel = t("p.view");
   const infoDesc = document.getElementById("proj-info-desc")!;
   const infoStack = document.getElementById("proj-info-stack")!;
   const infoLink = document.getElementById("proj-info-link") as HTMLAnchorElement;
+  const infoCase = document.getElementById("proj-info-case") as HTMLAnchorElement;
   const infoCont = document.getElementById("proj-info-content")!;
   const fillBar = document.getElementById("proj-progress-fill")!;
   const counter = document.getElementById("proj-counter")!;
@@ -831,6 +726,7 @@ const viewLabel = t("p.view");
       infoName.textContent = p.name;
       infoDesc.textContent = p.desc;
       infoLink.href = p.url;
+      infoCase.href = p.caseUrl;
       buildStackBadges(infoStack, p.stack);
       fillBar.style.transform = `scaleX(${((idx + 1) / N).toFixed(3)})`;
       counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
@@ -1046,6 +942,7 @@ const viewLabel = t("p.view");
   const modalDemoU = document.getElementById("modal-demo-user")!;
   const modalDemoP = document.getElementById("modal-demo-pass")!;
   const modalLink = document.getElementById("modal-link") as HTMLAnchorElement;
+  const modalCase = document.getElementById("modal-case") as HTMLAnchorElement;
   const modalPanel = modal.querySelector<HTMLElement>(".modal-panel")!;
 
   let modalOpener: HTMLElement | null = null;
@@ -1058,6 +955,7 @@ const viewLabel = t("p.view");
     modalTitle.textContent = data.name;
     modalDesc.textContent = data.desc;
     modalLink.href = data.url;
+    modalCase.href = data.caseUrl;
     modalStack.innerHTML = "";
     (data.stack as string[]).forEach((t: string) => {
       const s = document.createElement("span");
