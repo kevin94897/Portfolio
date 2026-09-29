@@ -13,6 +13,58 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* ── Phosphor icons (@phosphor-icons/web 2.1.1) ──
+   Subset fonts holding only the glyphs this site uses (~3 KB instead of the
+   148 KB full font from unpkg). Adding a new icon: add its codepoint from the
+   package's style.css below, then regenerate the woff2 with pyftsubset. */
+@font-face {
+  font-family: 'Phosphor';
+  font-style: normal;
+  font-weight: normal;
+  font-display: block;
+  src: url('/fonts/phosphor-subset.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Phosphor-Bold';
+  font-style: normal;
+  font-weight: normal;
+  font-display: block;
+  src: url('/fonts/phosphor-bold-subset.woff2') format('woff2');
+}
+.ph,
+.ph-bold {
+  font-family: 'Phosphor' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.ph-bold {
+  font-family: 'Phosphor-Bold' !important;
+}
+.ph-arrow-left::before { content: '\e058'; }
+.ph-arrow-right::before { content: '\e06c'; }
+.ph-arrow-up-right::before { content: '\e092'; }
+.ph-check::before { content: '\e182'; }
+.ph-check-circle::before { content: '\e184'; }
+.ph-code::before { content: '\e1bc'; }
+.ph-download-simple::before { content: '\e20c'; }
+.ph-envelope::before { content: '\e214'; }
+.ph-figma-logo::before { content: '\e22e'; }
+.ph-globe::before { content: '\e288'; }
+.ph-plus::before { content: '\e3d4'; }
+.ph-paper-plane-tilt::before { content: '\e398'; }
+.ph-phone::before { content: '\e3b8'; }
+.ph-rocket-launch::before { content: '\e3fe'; }
+.ph-warning::before { content: '\e4e0'; }
+.ph-x::before { content: '\e4f6'; }
+.ph-github-logo::before { content: '\e576'; }
+.ph-handshake::before { content: '\e582'; }
+
 :root {
   --lime: #b4df00;
   --lime-dim: rgba(180, 223, 0, 0.12);
@@ -96,6 +148,38 @@ body {
 }
 
 /* During the intro each letter of the hero name starts dim, then brightens */
+/* ─── Mobile hero entrance ───
+   Below 1024px the cinematic GSAP intro is skipped (see Layout.astro): the
+   name is painted on the first frame and eases in with CSS, so the LCP
+   element doesn't wait for the JS bundle. Uses `translate` (not transform)
+   so it never clashes with Tailwind or GSAP transforms on the same nodes. */
+@media (max-width: 1023px) {
+  #hero-intro-cover {
+    display: none;
+  }
+  .hero-title-anim {
+    animation: heroNameRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  [data-hero-reveal] {
+    animation: heroExtraIn 0.6s ease-out both;
+  }
+  [data-hero-reveal='tech'] { animation-delay: 0.15s; }
+  [data-hero-reveal='roles'] { animation-delay: 0.35s; }
+  [data-hero-reveal='secondary'] { animation-delay: 0.55s; }
+}
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .hero-title-anim,
+  [data-hero-reveal] {
+    animation: none;
+  }
+}
+@keyframes heroNameRise {
+  from { translate: 0 0.3em; }
+}
+@keyframes heroExtraIn {
+  from { opacity: 0; translate: 0 18px; }
+}
+
 .hero-title-anim .char {
   will-change: opacity;
 }

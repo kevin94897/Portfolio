@@ -159,8 +159,6 @@ const structuredData = {
     {
       enableAnalytics && (
         <Fragment>
-          <link rel="preconnect" href="https://www.googletagmanager.com" />
-          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
           <script is:inline define:vars={{ GA_ID }}>
             window.dataLayer = window.dataLayer || [];
             function gtag() {
@@ -168,6 +166,24 @@ const structuredData = {
             }
             gtag("js", new Date());
             gtag("config", GA_ID);
+            // gtag.js (~180 KB) is fetched after the first interaction, or 4 s
+            // after load at the latest, so it stays off the critical path. Calls
+            // made before then queue in dataLayer and are replayed on load.
+            (function () {
+              var done = false;
+              var evs = ["pointerdown", "keydown", "scroll", "touchstart"];
+              function load() {
+                if (done) return;
+                done = true;
+                evs.forEach(function (e) { removeEventListener(e, load); });
+                var s = document.createElement("script");
+                s.async = true;
+                s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+                document.head.appendChild(s);
+              }
+              evs.forEach(function (e) { addEventListener(e, load, { passive: true }); });
+              addEventListener("load", function () { setTimeout(load, 4000); });
+            })();
           </script>
         </Fragment>
       )
@@ -231,28 +247,7 @@ const structuredData = {
     <!-- ─── Fonts: self-hosted woff2 — preloaded, zero external requests ─── -->
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- ─── Icons: Phosphor — async (non-render-blocking) ─── -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
-      media="print"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css"
-      media="print"
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
-      <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
-    </noscript>
-    <!-- Switch media to 'all' after load so icons/fonts apply without blocking -->
-    <script is:inline>
-      document.querySelectorAll('link[media="print"]').forEach(function(l){
-        l.addEventListener('load', function(){ l.media = 'all'; });
-        if(l.sheet) l.media = 'all';
-      });
-    </script>
+    <!-- ─── Icons: Phosphor — self-hosted subset (see "Phosphor icons" in global.css) ─── -->
 
     <!-- ─── Favicon ─── -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -391,10 +386,15 @@ const structuredData = {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
+      // Below 1024px the hero entrance is pure CSS (global.css, "Mobile hero
+      // entrance") so the name — the LCP element — paints without waiting
+      // for this bundle. Keep in sync with that media query.
+      const cssHeroEntrance = !window.matchMedia("(min-width: 1024px)").matches;
+
       const heroTitle = document.querySelector<HTMLElement>(".hero-title-anim");
       // Hide the hero title until the intro takes over, so it never flashes
       // in its final spot before the entrance animation runs.
-      if (heroTitle) gsap.set(heroTitle, { autoAlpha: 0 });
+      if (heroTitle && !cssHeroEntrance) gsap.set(heroTitle, { autoAlpha: 0 });
 
       // ── Hero title fallback reveal (used when the intro is skipped) ──
       function animateHeroTitle() {
@@ -483,7 +483,9 @@ const structuredData = {
 
       const cover = document.getElementById("hero-intro-cover");
 
-      if (!heroTitle || !mainName || prefersReduced || !playIntro) {
+      if (cssHeroEntrance) {
+        // Already visible and animating via CSS; nothing to do here.
+      } else if (!heroTitle || !mainName || prefersReduced || !playIntro) {
         // Reveal the hero without the cinematic entrance (reduced motion,
         // missing nodes, anchor nav, or we're in another section).
         if (cover) cover.style.display = "none";

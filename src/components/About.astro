@@ -30,10 +30,9 @@ const t = useTranslations(locale);
           src={portrait}
           alt="Kevin Gómez Lázaro — Full Stack Developer"
           class="w-full h-full object-cover object-top grayscale transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-          loading="eager"
-          fetchpriority="high"
-          widths={[400, 800]}
-          sizes="(max-width: 768px) 100vw, 50vw"
+          loading="lazy"
+          widths={[384, 640, 768]}
+          sizes="(max-width: 767px) calc(100vw - 48px), 384px"
         />
         <div class="absolute bottom-5 left-5 z-20">
           <span
@@ -51,7 +50,7 @@ const t = useTranslations(locale);
           <span class="text-[10px] tracking-widest uppercase text-muted"
             >{t("about.label")}</span
           >
-          <span class="text-[10px] text-muted/40 tracking-[0.06em]"
+          <span class="text-[10px] text-muted/90 tracking-[0.06em]"
             >プロフィール</span
           >
         </div>
@@ -246,17 +245,20 @@ const t = useTranslations(locale);
       cx = 0,
       cy = 0;
 
+    // Loop runs only while the image is catching up to the pointer.
+    let raf = 0;
+    function loop() {
+      cx += (tx - cx) * 0.1;
+      cy += (ty - cy) * 0.1;
+      floatEl!.style.transform = `translate(${cx}px, ${cy}px)`;
+      raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.5 ? requestAnimationFrame(loop) : 0;
+    }
+
     document.addEventListener("mousemove", (e) => {
       tx = e.clientX - 80;
       ty = e.clientY - 105;
+      if (!raf) raf = requestAnimationFrame(loop);
     });
-
-    (function loop() {
-      cx += (tx - cx) * 0.1;
-      cy += (ty - cy) * 0.1;
-      floatEl.style.transform = `translate(${cx}px, ${cy}px)`;
-      requestAnimationFrame(loop);
-    })();
 
     section.addEventListener("mouseenter", () => {
       floatEl.style.opacity = "1";

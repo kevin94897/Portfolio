@@ -188,7 +188,7 @@ const viewLabel = t("p.view");
         <p class="proj-eyebrow text-[10px] tracking-[0.25em] uppercase text-lime flex items-center gap-3 mb-2">
           <span>{t("proj.label")}</span>
           <span class="w-8 h-px bg-lime block" aria-hidden="true"></span>
-          <span style="color:rgba(180,223,0,0.35); font-size:10px; letter-spacing:0.06em; text-transform:none;">作品集</span>
+          <span style="color:rgba(180,223,0,0.6); font-size:10px; letter-spacing:0.06em; text-transform:none;">作品集</span>
         </p>
         <h2
           id="projects-heading"
@@ -358,8 +358,8 @@ const viewLabel = t("p.view");
           <div class="flex-1 h-px bg-border relative overflow-hidden">
             <div
               id="proj-progress-fill"
-              class="absolute left-0 top-0 h-full bg-lime"
-              style="width: 0%;"
+              class="absolute inset-0 bg-lime origin-left"
+              style="transform: scaleX(0);"
             >
             </div>
           </div>
@@ -625,7 +625,7 @@ const viewLabel = t("p.view");
 
   /* Progress bar transition */
   #proj-progress-fill {
-    transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   /* Nav arrows */
@@ -832,7 +832,7 @@ const viewLabel = t("p.view");
       infoDesc.textContent = p.desc;
       infoLink.href = p.url;
       buildStackBadges(infoStack, p.stack);
-      fillBar.style.width = `${(((idx + 1) / N) * 100).toFixed(1)}%`;
+      fillBar.style.transform = `scaleX(${((idx + 1) / N).toFixed(3)})`;
       counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
     };
 

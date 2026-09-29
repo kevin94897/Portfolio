@@ -31,6 +31,7 @@ const isEn = locale === "en";
             alt="Logo KG"
             class="h-12 w-auto"
             height={48}
+            densities={[1, 2, 3]}
             loading="eager"
             fetchpriority="high"
           />
@@ -65,7 +66,7 @@ const isEn = locale === "en";
           >
             <a
               href="/"
-              aria-pressed={!isEn}
+              aria-current={!isEn ? "page" : undefined}
               aria-label="Español"
               lang="es"
               class={`lang-btn ${!isEn ? "text-black bg-lime" : "text-white"}`}
@@ -73,7 +74,7 @@ const isEn = locale === "en";
             >
             <a
               href="/en/"
-              aria-pressed={isEn}
+              aria-current={isEn ? "page" : undefined}
               aria-label="English"
               lang="en"
               class={`lang-btn ${isEn ? "text-black bg-lime" : "text-white"}`}
@@ -187,10 +188,10 @@ const isEn = locale === "en";
     @apply text-[12px] tracking-wide font-medium px-3 h-full flex items-center justify-center
            bg-transparent border-none cursor-none uppercase transition-all duration-[250ms];
   }
-  .lang-btn[aria-pressed="true"] {
+  .lang-btn[aria-current="page"] {
     @apply bg-lime text-black;
   }
-  .lang-btn:hover:not([aria-pressed="true"]) {
+  .lang-btn:hover:not([aria-current="page"]) {
     @apply text-white;
   }
 
