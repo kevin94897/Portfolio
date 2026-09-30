@@ -48,6 +48,7 @@ const hasAlternate = Boolean(alternates[altLocale]);
 // Overridable per-environment with PUBLIC_GA_ID; only injected in builds so
 // dev traffic never reaches the property.
 const GA_ID = import.meta.env.PUBLIC_GA_ID ?? "G-STGT1YLEVC";
+const CLARITY_ID = import.meta.env.PUBLIC_CLARITY_ID ?? "yqfz3wn5zh";
 const enableAnalytics = import.meta.env.PROD && Boolean(GA_ID);
 
 const keywords = isEn
@@ -173,20 +174,25 @@ const structuredData = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- ─── Google Analytics (GA4) ─── -->
+    <!-- ─── Google Analytics (GA4) + Microsoft Clarity ─── -->
     {
       enableAnalytics && (
         <Fragment>
-          <script is:inline define:vars={{ GA_ID }}>
+          <script is:inline define:vars={{ GA_ID, CLARITY_ID }}>
             window.dataLayer = window.dataLayer || [];
             function gtag() {
               dataLayer.push(arguments);
             }
             gtag("js", new Date());
             gtag("config", GA_ID);
-            // gtag.js (~180 KB) is fetched after the first interaction, or 4 s
-            // after load at the latest, so it stays off the critical path. Calls
-            // made before then queue in dataLayer and are replayed on load.
+            if (CLARITY_ID) {
+              window.clarity = window.clarity || function () {
+                (window.clarity.q = window.clarity.q || []).push(arguments);
+              };
+            }
+            // gtag.js (~180 KB) and Clarity are fetched after the first
+            // interaction, or 4 s after load at the latest, so they stay off the
+            // critical path. Calls made before then queue and are replayed.
             (function () {
               var done = false;
               var evs = ["pointerdown", "keydown", "scroll", "touchstart"];
@@ -198,6 +204,12 @@ const structuredData = {
                 s.async = true;
                 s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
                 document.head.appendChild(s);
+                if (CLARITY_ID) {
+                  var c = document.createElement("script");
+                  c.async = true;
+                  c.src = "https://www.clarity.ms/tag/" + CLARITY_ID;
+                  document.head.appendChild(c);
+                }
               }
               evs.forEach(function (e) { addEventListener(e, load, { passive: true }); });
               addEventListener("load", function () { setTimeout(load, 4000); });
