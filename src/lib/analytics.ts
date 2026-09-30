@@ -20,6 +20,7 @@
 //   read_complete      reached end with enough time spent    {content_type, content_id, seconds}
 //   form_start / form_error / generate_lead  contact form
 //   cookie_consent     choice in the cookie notice           {choice}
+//   page_not_found     404 page view                         {path, referrer}
 
 type Params = Record<string, string | number | undefined>;
 

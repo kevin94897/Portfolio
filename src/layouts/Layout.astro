@@ -20,6 +20,8 @@ export interface Props {
   schema?: Record<string, unknown>[];
   /** ISO date, only for ogType "article". */
   publishedTime?: string;
+  /** Keep the page out of search results (e.g. the 404 page). */
+  noindex?: boolean;
 }
 
 const locale = (Astro.currentLocale || "es") as "es" | "en";
@@ -40,6 +42,7 @@ const {
   ogType = "website",
   schema = [],
   publishedTime,
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = `${siteURL}${path}`;
@@ -248,12 +251,14 @@ const structuredData = {
     <meta name="author" content="Kevin Gómez Lázaro" />
     <meta
       name="robots"
-      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+      content={noindex
+        ? "noindex, follow"
+        : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"}
     />
     <meta name="theme-color" content="#b4df00" />
 
     <!-- ─── Canonical ─── -->
-    <link rel="canonical" href={canonicalURL} />
+    {!noindex && <link rel="canonical" href={canonicalURL} />}
 
     <!-- ─── Open Graph ─── -->
     <meta property="og:type" content={ogType} />

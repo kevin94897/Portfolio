@@ -1,0 +1,125 @@
+---
+// 404 — served for every unknown URL (es and /en/). It is prerendered once,
+// so the English copy is swapped in client-side for /en/* paths via the
+// data-en / data-en-href attributes. Logs page_not_found to find broken links.
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import Cursor from "../components/Cursor.astro";
+
+const links = [
+  {
+    href: "/#projects",
+    en: "/en/#projects",
+    label: "Proyectos",
+    labelEn: "Projects",
+    desc: "Webs, tiendas virtuales y apps que he construido.",
+    descEn: "Websites, online stores and apps I've built.",
+  },
+  {
+    href: "/blog/",
+    en: "/blog/",
+    label: "Blog",
+    labelEn: "Blog",
+    desc: "Guías sobre precios, e-commerce, SEO y velocidad web.",
+    descEn: "Guides on pricing, e-commerce, SEO and web speed (Spanish).",
+  },
+  {
+    href: "/#contact",
+    en: "/en/#contact",
+    label: "Contacto",
+    labelEn: "Contact",
+    desc: "Cuéntame tu proyecto y te respondo en menos de 24 h.",
+    descEn: "Tell me about your project, I reply within 24 h.",
+  },
+];
+---
+
+<Layout
+  title="Página no encontrada | Kevin Gómez"
+  description="La página que buscas no existe o fue movida."
+  path="/404/"
+  alternates={{}}
+  noindex
+>
+  <Cursor />
+  <Nav />
+
+  <main id="main-content" class="bg-black min-h-[100svh] flex items-center pt-28 md:pt-36 pb-24">
+    <div class="w-full max-w-[1400px] mx-auto px-6 lg:px-[60px]">
+      <p
+        class="font-display font-bold text-lime leading-none tracking-tightest select-none mb-6"
+        style="font-size: clamp(5rem, 18vw, 14rem);"
+        aria-hidden="true"
+      >
+        404
+      </p>
+
+      <h1
+        class="font-display font-bold text-white tracking-tight leading-tight mb-4"
+        style="font-size: clamp(1.8rem, 4vw, 3rem);"
+        data-en="This page doesn't exist"
+      >
+        Esta página no existe
+      </h1>
+      <p
+        class="text-text/70 text-[17px] md:text-[19px] leading-relaxed max-w-[620px] mb-10"
+        data-en="The link may be broken or the page was moved. These are good places to continue:"
+      >
+        Puede que el enlace esté roto o que la página se haya movido. Estos son buenos lugares para seguir:
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-12 max-w-[1000px]">
+        {
+          links.map((l) => (
+            <a
+              href={l.href}
+              data-en-href={l.en}
+              class="group block p-6 bg-surface border border-border no-underline transition-all duration-300 hover:border-lime/40 hover:-translate-y-1 cursor-none"
+            >
+              <span
+                class="flex items-center justify-between text-white font-semibold text-[17px] mb-2 group-hover:text-lime transition-colors"
+              >
+                <span data-en={l.labelEn}>{l.label}</span>
+                <i class="ph ph-arrow-right" aria-hidden="true" />
+              </span>
+              <span class="block text-text/60 text-[14px] leading-relaxed" data-en={l.descEn}>
+                {l.desc}
+              </span>
+            </a>
+          ))
+        }
+      </div>
+
+      <a
+        href="/"
+        data-en-href="/en/"
+        class="inline-flex items-center gap-2 bg-lime text-black px-6 py-3 text-[13px] font-semibold uppercase tracking-tight no-underline transition-[box-shadow,transform] duration-300 hover:shadow-[0_0_28px_rgba(180,223,0,0.4)] hover:-translate-y-px cursor-none"
+      >
+        <span data-en="Back to home">Volver al inicio</span>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import { track } from "../lib/analytics";
+
+  if (location.pathname.startsWith("/en/") || location.pathname === "/en") {
+    document.documentElement.lang = "en";
+    document.title = "Page not found | Kevin Gómez";
+    document.querySelectorAll<HTMLElement>("main [data-en]").forEach((el) => {
+      el.textContent = el.dataset.en!;
+    });
+    document.querySelectorAll<HTMLAnchorElement>("main [data-en-href]").forEach((a) => {
+      a.href = a.dataset.enHref!;
+    });
+  }
+
+  track("page_not_found", {
+    path: location.pathname + location.search,
+    referrer: document.referrer || "(direct)",
+  });
+</script>
