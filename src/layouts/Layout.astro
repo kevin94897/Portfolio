@@ -4,6 +4,8 @@
 //  Kevin Gómez Lázaro · Full Stack Developer · Lima, Perú
 // ═══════════════════════════════════════════════════════════
 import "../styles/global.css";
+import CookieConsent from "../components/CookieConsent.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
 
 export interface Props {
   title?: string;
@@ -183,12 +185,32 @@ const structuredData = {
             function gtag() {
               dataLayer.push(arguments);
             }
+            window.gtag = gtag;
+            // Consent Mode v2: analytics cookies stay off until the visitor
+            // accepts in the cookie notice (key shared with src/lib/consent.ts).
+            // Denied still sends cookieless pings, so GA4 can model the gap.
+            var analyticsState = "denied";
+            try {
+              var saved = JSON.parse(localStorage.getItem("kg-consent") || "null");
+              if (saved && saved.analytics) analyticsState = "granted";
+            } catch (e) {}
+            gtag("consent", "default", {
+              analytics_storage: analyticsState,
+              ad_storage: "denied",
+              ad_user_data: "denied",
+              ad_personalization: "denied",
+              wait_for_update: 500,
+            });
             gtag("js", new Date());
             gtag("config", GA_ID);
             if (CLARITY_ID) {
               window.clarity = window.clarity || function () {
                 (window.clarity.q = window.clarity.q || []).push(arguments);
               };
+              window.clarity("consentv2", {
+                ad_Storage: "denied",
+                analytics_Storage: analyticsState,
+              });
             }
             // gtag.js (~180 KB) and Clarity are fetched after the first
             // interaction, or 4 s after load at the latest, so they stay off the
@@ -335,6 +357,9 @@ const structuredData = {
     >
 
     <slot />
+
+    <WhatsAppButton />
+    <CookieConsent />
 
     <!-- GA4 / Clarity event layer (no-op outside production) -->
     <script>

@@ -102,6 +102,13 @@ const contactHref = Astro.url.pathname === homePath ? "#contact" : `${homePath}#
       <span class="text-[10px] uppercase text-muted">
         &copy;{year} Kevin Gómez Lázaro — All Rights Reserved
       </span>
+      <button
+        type="button"
+        data-cookie-settings
+        class="text-[10px] uppercase text-muted underline underline-offset-2 transition-colors duration-200 hover:text-lime cursor-none"
+      >
+        {t("footer.cookies")}
+      </button>
       <span class="text-[10px] uppercase text-muted">
         Full Stack Developer — Lima, Perú
       </span>

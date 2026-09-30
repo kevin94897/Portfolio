@@ -1,0 +1,255 @@
+---
+// CookieConsent.astro — floating cookie notice with a settings view.
+// Shown until the visitor chooses; reopened by any [data-cookie-settings]
+// element (footer link). The choice drives GA4 Consent Mode v2 and Clarity.
+import { useTranslations } from "../i18n/utils";
+
+const locale = (Astro.currentLocale || "es") as "es" | "en";
+const t = useTranslations(locale);
+---
+
+<div
+  id="cookie-consent"
+  role="dialog"
+  aria-modal="false"
+  aria-label={t("cookie.aria")}
+  data-lenis-prevent
+  hidden
+>
+  <!-- Main view -->
+  <div data-view="main">
+    <p id="cookie-title" class="flex items-center gap-2 text-white font-semibold text-[15px] mb-2">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-lime" aria-hidden="true">
+        <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+        <path d="M8.5 8.5v.01M16 15.5v.01M12 12v.01M11 17v.01M7 14v.01" />
+      </svg>
+      {t("cookie.title")}
+    </p>
+    <p class="text-text/70 text-[13px] leading-relaxed mb-5">{t("cookie.text")}</p>
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" data-action="accept" class="cc-btn cc-btn-primary">{t("cookie.accept")}</button>
+      <button type="button" data-action="reject" class="cc-btn cc-btn-ghost">{t("cookie.reject")}</button>
+      <button type="button" data-action="settings" class="cc-link">{t("cookie.settings")}</button>
+    </div>
+  </div>
+
+  <!-- Settings view -->
+  <div data-view="settings" hidden>
+    <p class="text-white font-semibold text-[15px] mb-4">{t("cookie.settings")}</p>
+
+    <div class="cc-row">
+      <div>
+        <p class="text-white text-[13px] font-medium">{t("cookie.necessary")}</p>
+        <p class="text-text/60 text-[12px] leading-snug">{t("cookie.necessary_desc")}</p>
+      </div>
+      <span class="text-lime text-[11px] uppercase tracking-[0.1em] whitespace-nowrap">{t("cookie.always")}</span>
+    </div>
+
+    <label class="cc-row">
+      <span>
+        <span class="block text-white text-[13px] font-medium">{t("cookie.analytics")}</span>
+        <span class="block text-text/60 text-[12px] leading-snug">{t("cookie.analytics_desc")}</span>
+      </span>
+      <span class="cc-switch">
+        <input type="checkbox" id="cc-analytics" />
+        <span aria-hidden="true"></span>
+      </span>
+    </label>
+
+    <div class="flex flex-wrap items-center gap-2 mt-5">
+      <button type="button" data-action="save" class="cc-btn cc-btn-primary">{t("cookie.save")}</button>
+      <button type="button" data-action="back" class="cc-link">{t("cookie.back")}</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  #cookie-consent {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 8500;
+    max-width: 420px;
+    padding: 22px;
+    background: var(--surface2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+  #cookie-consent[hidden] {
+    display: none;
+  }
+  #cookie-consent.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (min-width: 640px) {
+    #cookie-consent {
+      left: 24px;
+      bottom: 24px;
+      right: auto;
+    }
+  }
+
+  .cc-btn {
+    padding: 10px 18px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition:
+      opacity 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+    cursor: none;
+  }
+  .cc-btn-primary {
+    background: var(--lime);
+    color: #000;
+  }
+  .cc-btn-primary:hover {
+    opacity: 0.88;
+  }
+  .cc-btn-ghost {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--text);
+  }
+  .cc-btn-ghost:hover {
+    border-color: var(--lime);
+    color: var(--lime);
+  }
+  .cc-link {
+    padding: 10px 6px;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: none;
+  }
+  .cc-link:hover {
+    color: var(--lime);
+  }
+
+  .cc-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  label.cc-row {
+    cursor: none;
+  }
+
+  .cc-switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    height: 22px;
+  }
+  .cc-switch input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: none;
+  }
+  .cc-switch span {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    transition: background 0.2s;
+    pointer-events: none;
+  }
+  .cc-switch span::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+  }
+  .cc-switch input:checked + span {
+    background: var(--lime);
+  }
+  .cc-switch input:checked + span::after {
+    transform: translateX(18px);
+    background: #000;
+  }
+  .cc-switch input:focus-visible + span {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #cookie-consent {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { readConsent, saveConsent } from "../lib/consent";
+  import { track } from "../lib/analytics";
+
+  const box = document.getElementById("cookie-consent")!;
+  const main = box.querySelector<HTMLElement>('[data-view="main"]')!;
+  const settings = box.querySelector<HTMLElement>('[data-view="settings"]')!;
+  const analyticsInput = box.querySelector<HTMLInputElement>("#cc-analytics")!;
+
+  function show(view: "main" | "settings", focus = true) {
+    main.hidden = view !== "main";
+    settings.hidden = view !== "settings";
+    analyticsInput.checked = readConsent()?.analytics ?? false;
+    box.hidden = false;
+    document.body.classList.add("consent-open");
+    requestAnimationFrame(() => box.classList.add("is-visible"));
+    if (focus) {
+      box.querySelector<HTMLElement>(`[data-view="${view}"] button`)?.focus({ preventScroll: true });
+    }
+  }
+
+  function hide() {
+    box.classList.remove("is-visible");
+    document.body.classList.remove("consent-open");
+    setTimeout(() => (box.hidden = true), 350);
+  }
+
+  function choose(analytics: boolean, choice: string) {
+    saveConsent({ analytics });
+    // Sent after the update, so it is only stored with cookies when granted.
+    track("cookie_consent", { choice });
+    hide();
+  }
+
+  box.addEventListener("click", (e) => {
+    const action = (e.target as Element).closest<HTMLElement>("[data-action]")?.dataset.action;
+    if (action === "accept") choose(true, "accept_all");
+    else if (action === "reject") choose(false, "reject_all");
+    else if (action === "save") choose(analyticsInput.checked, "custom");
+    else if (action === "settings") show("settings");
+    else if (action === "back") show("main");
+  });
+
+  document.addEventListener("click", (e) => {
+    if ((e.target as Element).closest("[data-cookie-settings]")) {
+      e.preventDefault();
+      show("settings");
+    }
+  });
+
+  // First visit: wait a moment so the notice doesn't fight the hero intro.
+  // Not focused: an unrequested notice shouldn't pull keyboard focus away.
+  if (!readConsent()) setTimeout(() => show("main", false), 2500);
+</script>

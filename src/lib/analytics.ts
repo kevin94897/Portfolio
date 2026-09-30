@@ -19,6 +19,7 @@
 //   read_progress      25/50/75/100 % of an article/case     {content_type, content_id, percent}
 //   read_complete      reached end with enough time spent    {content_type, content_id, seconds}
 //   form_start / form_error / generate_lead  contact form
+//   cookie_consent     choice in the cookie notice           {choice}
 
 type Params = Record<string, string | number | undefined>;
 
