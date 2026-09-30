@@ -216,6 +216,8 @@ const caseLabel = t("p.case");
             </div>
             <a
               id="proj-info-link"
+              data-track="project_link"
+              data-track-link-type="live"
               href="#"
               target="_blank"
               rel="noopener noreferrer"
@@ -227,6 +229,8 @@ const caseLabel = t("p.case");
             </a>
             <a
               id="proj-info-case"
+              data-track="project_link"
+              data-track-link-type="case_study"
               href="#"
               class="hidden md:inline-flex items-center gap-2 text-[13px] tracking-tight uppercase font-semibold
                      text-white no-underline border-b border-white/30 pb-[2px]
@@ -353,6 +357,8 @@ const caseLabel = t("p.case");
       </div>
       <a
         id="modal-link"
+        data-track="project_link"
+        data-track-link-type="live"
         href="#"
         target="_blank"
         rel="noopener noreferrer"
@@ -365,6 +371,8 @@ const caseLabel = t("p.case");
       </a>
       <a
         id="modal-case"
+        data-track="project_link"
+        data-track-link-type="case_study"
         href="#"
         class="inline-flex items-center gap-[8px] ml-2 px-6 py-[13px] border border-border text-white
                text-[11px] font-medium tracking-[0.1em] uppercase no-underline
@@ -634,6 +642,7 @@ const caseLabel = t("p.case");
 </style>
 
 <script>
+  import { track as trackEvent } from "../lib/analytics";
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   import EmblaCarousel, { type EmblaCarouselType } from "embla-carousel";
@@ -727,6 +736,7 @@ const caseLabel = t("p.case");
       infoDesc.textContent = p.desc;
       infoLink.href = p.url;
       infoCase.href = p.caseUrl;
+      infoLink.dataset.trackProject = infoCase.dataset.trackProject = p.name;
       buildStackBadges(infoStack, p.stack);
       fillBar.style.transform = `scaleX(${((idx + 1) / N).toFixed(3)})`;
       counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
@@ -956,6 +966,8 @@ const caseLabel = t("p.case");
     modalDesc.textContent = data.desc;
     modalLink.href = data.url;
     modalCase.href = data.caseUrl;
+    modalLink.dataset.trackProject = modalCase.dataset.trackProject = data.name;
+    trackEvent("project_open", { project: data.name, category: data.category });
     modalStack.innerHTML = "";
     (data.stack as string[]).forEach((t: string) => {
       const s = document.createElement("span");

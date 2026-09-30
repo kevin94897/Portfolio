@@ -102,7 +102,12 @@ const schema = [
 
       <div class="grid lg:grid-cols-[minmax(0,1fr)_260px] gap-12 xl:gap-20">
         <!-- Article -->
-        <article class="min-w-0 max-w-[720px]">
+        <article
+          class="min-w-0 max-w-[720px]"
+          data-read="article"
+          data-read-id={post.slug}
+          data-read-minutes={minutes}
+        >
           <div class="prose-kg">
             <Content />
           </div>

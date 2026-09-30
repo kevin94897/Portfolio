@@ -79,6 +79,8 @@ const home = (hash: string) => (onHome ? hash : `${homePath}${hash}`);
           >
             <a
               href={esHref}
+              data-track="language_switch"
+              data-track-to="es"
               aria-current={!isEn ? "page" : undefined}
               aria-label="Español"
               lang="es"
@@ -87,6 +89,8 @@ const home = (hash: string) => (onHome ? hash : `${homePath}${hash}`);
             >
             <a
               href={enHref}
+              data-track="language_switch"
+              data-track-to="en"
               aria-current={isEn ? "page" : undefined}
               aria-label="English"
               lang="en"

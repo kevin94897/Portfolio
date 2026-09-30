@@ -65,6 +65,8 @@ import Cursor from "../components/Cursor.astro";
      All deferred — run after page is interactive
      ═══════════════════════════════════════════════════════════ -->
 <script>
+  import { track } from "../lib/analytics";
+
   // El idioma ahora se determina nativamente por Astro y se expone en la etiqueta HTML
   const currentLang = document.documentElement.lang || "es";
 
@@ -461,12 +463,18 @@ import Cursor from "../components/Cursor.astro";
       }
     }
 
+    // ── Analytics: first interaction with the form ────────────
+    form.addEventListener("focusin", () => track("form_start", { form: "contact" }), {
+      once: true,
+    });
+
     // ── Form submit → /api/contact (Brevo API) ───────────────
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       if (!validateAll()) {
         const firstInvalid = form.querySelector(".is-invalid") as HTMLElement | null;
+        track("form_error", { form: "contact", reason: "validation", field: firstInvalid?.id });
         firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
@@ -489,6 +497,7 @@ import Cursor from "../components/Cursor.astro";
         const data = await res.json();
 
         if (res.ok && data.ok) {
+          track("generate_lead", { form: "contact", lang: currentLang });
           showToast(
             "success",
             currentLang === "en"
@@ -512,6 +521,7 @@ import Cursor from "../components/Cursor.astro";
             ? "Error sending message. Please try again."
             : "Error al enviar. Por favor intenta de nuevo.",
         );
+        track("form_error", { form: "contact", reason: "send_failed" });
         console.error("[contact form]", err);
       } finally {
         setLoading(false);

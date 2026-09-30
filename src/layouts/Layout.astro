@@ -336,6 +336,12 @@ const structuredData = {
 
     <slot />
 
+    <!-- GA4 / Clarity event layer (no-op outside production) -->
+    <script>
+      import { initTracking } from "../lib/analytics";
+      initTracking();
+    </script>
+
     <!-- GSAP title animations -->
     <script>
       import Lenis from "lenis";

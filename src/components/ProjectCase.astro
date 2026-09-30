@@ -150,7 +150,12 @@ const alternates = {
 
       <div class="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-12 xl:gap-20">
         <!-- Story -->
-        <div class="min-w-0 max-w-[760px] flex flex-col gap-12">
+        <div
+          class="min-w-0 max-w-[760px] flex flex-col gap-12"
+          data-read="case_study"
+          data-read-id={project.slug}
+          data-read-minutes="4"
+        >
           <section aria-labelledby="challenge">
             <h2 id="challenge" class="case-h2">{L.challenge}</h2>
             <p class="case-p">{cs.challenge}</p>
@@ -222,6 +227,9 @@ const alternates = {
           }
           <a
             href={project.url}
+            data-track="project_link"
+            data-track-link-type="live"
+            data-track-project={project.slug}
             target="_blank"
             rel="noopener"
             class="inline-flex items-center justify-center gap-2 bg-lime text-black px-5 py-3 text-[13px] font-semibold uppercase tracking-tight no-underline transition-opacity duration-200 hover:opacity-90"

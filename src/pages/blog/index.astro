@@ -76,10 +76,10 @@ const schema = [
 
       <!-- Category filter -->
       <div class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filtrar por categoría">
-        <button type="button" class="blog-filter is-active" data-cat="all" aria-pressed="true">Todos</button>
+        <button type="button" class="blog-filter is-active" data-cat="all" data-track="blog_filter" data-track-category="all" aria-pressed="true">Todos</button>
         {
           categories.map((c) => (
-            <button type="button" class="blog-filter" data-cat={c} aria-pressed="false">
+            <button type="button" class="blog-filter" data-cat={c} data-track="blog_filter" data-track-category={c} aria-pressed="false">
               {c}
             </button>
           ))
