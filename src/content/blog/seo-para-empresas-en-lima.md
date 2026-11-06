@@ -4,6 +4,8 @@ description: "SEO para empresas en Lima explicado sin humo: qué hacer para apar
 pubDate: 2026-09-29
 category: "SEO"
 tags: ["seo", "posicionamiento web", "google", "lima", "seo local"]
+image: "../../assets/blog/seo-para-empresas-en-lima.jpg"
+imageAlt: "Lupa sobre una lista de resultados de búsqueda con el primero destacado en verde, sobre un mapa costero con un marcador"
 ---
 
 Tienes una web, pagaste por ella, pero cuando buscas tu servicio en Google aparecen tus competidores y tú no. Y cada mes que pasa sin tráfico orgánico, la única forma de conseguir clientes online es pagar anuncios. El **SEO para empresas en Lima** existe justamente para romper esa dependencia.

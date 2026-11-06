@@ -18,9 +18,17 @@ export function breadcrumbSchema(items: { name: string; href: string }[]) {
   };
 }
 
-/** Published posts, newest first (ties keep a stable alphabetical order). */
+/**
+ * Published posts, newest first (ties keep a stable alphabetical order).
+ * A post with a future `pubDate` stays hidden until a build runs on or after
+ * that date, so posts can be scheduled by writing them ahead of time.
+ */
 export async function getPosts(): Promise<Post[]> {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const now = Date.now();
+  const posts = await getCollection(
+    "blog",
+    ({ data }) => !data.draft && data.pubDate.getTime() <= now,
+  );
   return posts.sort(
     (a, b) =>
       b.data.pubDate.getTime() - a.data.pubDate.getTime() ||

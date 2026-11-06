@@ -11,6 +11,8 @@ export interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Alt text for ogImage; required when passing a custom image. */
+  ogImageAlt?: string;
   /** Path of this page, e.g. "/blog/mi-post/". Defaults to the home page. */
   path?: string;
   /** Language versions of this page, by path. Omit a language it doesn't exist in. */
@@ -37,6 +39,9 @@ const {
     ? "Full Stack Developer with 8+ years of experience in Lima, Peru. Specialist in Next.js, React, NestJS, Headless WordPress, Laravel and E-Commerce. Projects for Entel, NERD, Well-Done. Available for freelance."
     : "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y E-Commerce. Proyectos para Entel, NERD, Well-Done. Disponible para freelance.",
   ogImage = `${siteURL}/og-image.jpg`,
+  ogImageAlt = isEn
+    ? "Kevin Gómez — Full Stack Developer Lima, Peru"
+    : "Kevin Gómez — Full Stack Developer Lima, Perú",
   path = isEn ? "/en/" : "/",
   alternates = { es: "/", en: "/en/" },
   ogType = "website",
@@ -56,10 +61,6 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID ?? "G-STGT1YLEVC";
 const CLARITY_ID = import.meta.env.PUBLIC_CLARITY_ID ?? "yqfz3wn5zh";
 const enableAnalytics = import.meta.env.PROD && Boolean(GA_ID);
 
-const keywords = isEn
-  ? "full stack developer lima peru, web developer peru, next.js developer peru, react developer lima, nestjs developer, headless wordpress, laravel developer peru, ecommerce developer, freelance developer peru, kevin gomez"
-  : "full stack developer lima peru, desarrollador web lima, next.js developer peru, react developer lima, nestjs developer, wordpress headless, laravel developer peru, ecommerce developer, desarrollador freelance lima, kevin gomez";
-
 // ─── JSON-LD Structured Data ───
 const structuredData = {
   "@context": "https://schema.org",
@@ -77,7 +78,8 @@ const structuredData = {
       // No `email` here: Contact.astro decodes it at runtime to keep it away
       // from scrapers, and a plain-text copy in JSON-LD would defeat that.
       telephone: "+51947841355",
-      image: ogImage,
+      // Fixed site image: ogImage changes per page (e.g. a blog post cover).
+      image: `${siteURL}/og-image.jpg`,
       address: {
         "@type": "PostalAddress",
         addressLocality: "Lima",
@@ -248,7 +250,6 @@ const structuredData = {
     <!-- ─── Primary SEO ─── -->
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
     <meta name="author" content="Kevin Gómez Lázaro" />
     <meta
       name="robots"
@@ -274,10 +275,7 @@ const structuredData = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="Kevin Gómez — Full Stack Developer Lima, Perú"
-    />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content={isEn ? "en_US" : "es_PE"} />
     {hasAlternate && <meta property="og:locale:alternate" content={isEn ? "es_PE" : "en_US"} />}
 
@@ -287,16 +285,11 @@ const structuredData = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta
-      name="twitter:image:alt"
-      content="Kevin Gómez — Full Stack Developer"
-    />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- ─── Geo / Local SEO ─── -->
     <meta name="geo.region" content="PE-LIM" />
     <meta name="geo.placename" content="Lima, Perú" />
-    <meta name="language" content={isEn ? "English" : "Spanish"} />
-    <meta name="revisit-after" content="7 days" />
 
     <!-- ─── hreflang — alternate language URLs ─── -->
     {hasAlternate && alternates.es && <link rel="alternate" hreflang="es" href={`${siteURL}${alternates.es}`} />}
@@ -315,6 +308,7 @@ const structuredData = {
 
     <!-- ─── Sitemap ─── -->
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Blog de Kevin Gómez" href={`${siteURL}/rss.xml`} />
 
     <!-- ─── Structured Data (JSON-LD) ─── -->
     <script
@@ -382,7 +376,14 @@ const structuredData = {
 
       gsap.registerPlugin(ScrollTrigger, SplitText);
 
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       // ── Lenis smooth scroll ─────────────────────────────────
+      // With reduced motion the wheel scrolls natively (no inertia) and
+      // anchor jumps are instant; Lenis still runs so ScrollTrigger and the
+      // lenis:stop/start events keep working.
       const BASE_LERP = 0.09; // interpolation — lower = smoother/slower
       const BASE_WHEEL = 0.85;
       // Near the bottom the scroll eases into a slower, smoother glide.
@@ -392,7 +393,7 @@ const structuredData = {
 
       const lenis = new Lenis({
         lerp: BASE_LERP,
-        smoothWheel: true,
+        smoothWheel: !prefersReduced,
         wheelMultiplier: BASE_WHEEL,
         touchMultiplier: 1.5,
         syncTouch: false, // mobile uses native scroll
@@ -429,9 +430,7 @@ const structuredData = {
         "#main-content > section[id]",
       );
       if (
-        snapSections.length > 1 &&
-        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ) {
+        snapSections.length > 1 && !prefersReduced) {
         import("lenis/snap").then(({ default: Snap }) => {
           const snap = new Snap(lenis, {
             type: "proximity",
@@ -461,7 +460,12 @@ const structuredData = {
         e.preventDefault();
         // Honour scroll-margin-top so headings clear the fixed nav.
         const offset = -(parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
-        lenis.scrollTo(target, { offset, duration: 1.2, easing: (t: number) => 1 - Math.pow(1 - t, 4) });
+        lenis.scrollTo(
+          target,
+          prefersReduced
+            ? { offset, immediate: true }
+            : { offset, duration: 1.2, easing: (t: number) => 1 - Math.pow(1 - t, 4) },
+        );
       });
 
       function wrapLines(lines: Element[]) {
@@ -477,10 +481,6 @@ const structuredData = {
           wrap.appendChild(line);
         });
       }
-
-      const prefersReduced = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
 
       // Below 1024px the hero entrance is pure CSS (global.css, "Mobile hero
       // entrance") so the name — the LCP element — paints without waiting

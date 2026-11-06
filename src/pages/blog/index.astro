@@ -5,6 +5,7 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import Cursor from "../../components/Cursor.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { Image } from "astro:assets";
 import {
   getPosts,
   postUrl,
@@ -15,7 +16,9 @@ import {
 } from "../../lib/blog";
 
 const posts = await getPosts();
-const [featured, ...rest] = posts;
+// The post flagged `featured` leads the page; otherwise the newest one.
+const featured = posts.find((p) => p.data.featured) ?? posts[0];
+const rest = posts.filter((p) => p !== featured);
 const categories = [...new Set(posts.map((p) => p.data.category))];
 
 const path = "/blog/";
@@ -92,8 +95,20 @@ const schema = [
           <a
             href={postUrl(featured)}
             data-cat={featured.data.category}
-            class="blog-card group block mb-5 p-7 md:p-12 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+            class="blog-card group block mb-5 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
           >
+            {featured.data.image && (
+              <div class="aspect-[1200/630] overflow-hidden border-b border-border">
+                <Image
+                  src={featured.data.image}
+                  alt={featured.data.imageAlt ?? ""}
+                  widths={[640, 960, 1400]}
+                  sizes="(min-width: 1400px) 1280px, 100vw"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+              </div>
+            )}
+            <div class="p-7 md:p-12">
             <p class="text-[11px] tracking-[0.2em] uppercase text-lime mb-4">
               Destacado · {featured.data.category}
             </p>
@@ -109,6 +124,7 @@ const schema = [
             <p class="text-[13px] text-muted">
               {formatDate(featured.data.pubDate)} · {readingTime(featured.body)} min de lectura
             </p>
+            </div>
           </a>
         )
       }
@@ -120,14 +136,28 @@ const schema = [
             <a
               href={postUrl(p)}
               data-cat={p.data.category}
-              class="blog-card group flex flex-col p-6 md:p-7 border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
+              class="blog-card group flex flex-col border border-border bg-surface no-underline transition-colors duration-300 hover:border-lime/40"
             >
+              {p.data.image && (
+                <div class="aspect-[1200/630] overflow-hidden border-b border-border">
+                  <Image
+                    src={p.data.image}
+                    alt={p.data.imageAlt ?? ""}
+                    widths={[400, 640, 800]}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    loading="lazy"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+              )}
+              <div class="flex flex-col flex-1 p-6 md:p-7">
               <p class="text-[10px] tracking-[0.2em] uppercase text-lime mb-4">{p.data.category}</p>
               <h2 class="text-white font-semibold text-[20px] leading-snug mb-3 group-hover:text-lime transition-colors duration-300">
                 {p.data.title}
               </h2>
               <p class="text-muted text-[15px] leading-relaxed line-clamp-3 mb-6">{p.data.description}</p>
               <p class="mt-auto text-[12px] text-muted">{readingTime(p.body)} min de lectura</p>
+              </div>
             </a>
           ))
         }

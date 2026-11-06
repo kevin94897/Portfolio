@@ -4,6 +4,8 @@ description: "WordPress vs Shopify vs desarrollo a medida: compara costos, contr
 pubDate: 2026-09-29
 category: "Estrategia"
 tags: ["wordpress", "shopify", "desarrollo a medida", "e-commerce", "plataformas web"]
+image: "../../assets/blog/wordpress-vs-shopify-vs-desarrollo-a-medida.jpg"
+imageAlt: "Tres pedestales con un cubo modular, una bolsa de compras y un bloque de vidrio con líneas de código"
 ---
 
 Casi todas las primeras reuniones con un cliente nuevo llegan a la misma pregunta: "¿Lo hacemos en WordPress, en Shopify o a medida?". Y casi siempre viene con una opinión ya formada por lo que le dijo un amigo, una agencia o un video de YouTube. El debate **WordPress vs Shopify** (y el desarrollo a medida como tercera vía) no tiene un ganador universal. Tiene una respuesta correcta para cada negocio.

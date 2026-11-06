@@ -4,6 +4,8 @@ description: "Qué es una landing page, qué secciones debe tener y cómo diseñ
 pubDate: 2026-09-29
 category: "Estrategia"
 tags: ["landing page", "conversión", "marketing digital", "diseño web"]
+image: "../../assets/blog/landing-page-que-convierte.jpg"
+imageAlt: "Página web vertical en forma de embudo: muchas esferas entran por arriba y salen unas pocas en verde lima por abajo"
 ---
 
 Estás pagando anuncios en Meta o Google, la gente hace clic… y nadie te escribe. En la mayoría de casos que reviso, el problema no está en el anuncio, sino en la página a la que llega el usuario. Una **landing page** mal planteada puede quemar tu presupuesto publicitario en semanas.

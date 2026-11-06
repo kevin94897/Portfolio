@@ -4,6 +4,8 @@ description: "Mejora la velocidad de carga de tu página web y aprueba los Core 
 pubDate: 2026-09-29
 category: "Rendimiento"
 tags: ["velocidad web", "core web vitals", "pagespeed", "rendimiento", "seo técnico"]
+image: "../../assets/blog/velocidad-web-core-web-vitals.jpg"
+imageAlt: "Velocímetro con la aguja en la zona verde de máximo rendimiento y una barra de carga que termina en un rayo"
 ---
 
 Un cliente entra desde Google en su celular, en plena combi o con datos móviles, y tu página se queda en blanco. Espera un par de segundos, toca "atrás" y abre la web de tu competencia. No te llamó, no te escribió y nunca sabrás que estuvo ahí. Así es como una mala **velocidad de carga de tu página web** te cuesta ventas en silencio.

@@ -1,8 +1,9 @@
-# robots.txt — kevin.grupo-gomez.com
+# robots.txt — kevin-gomez.dev
 # Full Stack Developer portfolio
 
 User-agent: *
 Allow: /
+# Form and lead-export endpoints: nothing to index
+Disallow: /api/
 
-# Sitemap
 Sitemap: https://kevin-gomez.dev/sitemap-index.xml

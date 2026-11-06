@@ -4,6 +4,8 @@ description: "¿Agencia de desarrollo web en Lima o desarrollador web freelance?
 pubDate: 2026-09-29
 category: "Estrategia"
 tags: ["freelance", "agencia de desarrollo web", "contratar desarrollador", "estrategia digital"]
+image: "../../assets/blog/freelance-vs-agencia-desarrollo-web.jpg"
+imageAlt: "Un escritorio individual con laptop frente a una oficina con varios escritorios, separados por una línea de luz verde"
 ---
 
 Tienes el presupuesto aprobado y la necesidad clara: una web nueva, una tienda virtual o un sistema a medida. Ahora viene la decisión que más nervios genera: ¿contratas una **agencia de desarrollo web en Lima** o a un **desarrollador web freelance**?

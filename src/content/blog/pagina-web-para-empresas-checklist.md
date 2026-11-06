@@ -4,6 +4,8 @@ description: "Checklist de 15 elementos que toda página web para empresas neces
 pubDate: 2026-09-29
 category: "Estrategia"
 tags: ["pagina web para empresas", "checklist", "estrategia digital", "conversion", "pymes"]
+image: "../../assets/blog/pagina-web-para-empresas-checklist.jpg"
+imageAlt: "Maqueta de sitio web corporativo separada en capas, con marcas de verificación verdes en cada sección"
 ---
 
 Tener una página web para empresas ya no es el problema. Casi todas las empresas en Perú tienen una. El problema es que muchas no generan ni un solo contacto al mes: se ven "bonitas", pero el visitante entra, no entiende qué ofrecen, no encuentra cómo cotizar y se va a la competencia.

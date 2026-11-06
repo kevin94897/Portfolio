@@ -3,7 +3,10 @@ title: "¿Cuánto cuesta una página web en Perú en 2026? Precios reales por ti
 description: "¿Cuánto cuesta una página web en Perú en 2026? Rangos referenciales en soles por tipo de proyecto, costos anuales y cómo evitar pagar de más al cotizar."
 pubDate: 2026-09-29
 category: "Precios"
+featured: true
 tags: ["precios", "desarrollo web", "presupuesto", "peru", "pymes"]
+image: "../../assets/blog/cuanto-cuesta-una-pagina-web-en-peru.jpg"
+imageAlt: "Ventana de navegador de vidrio con una etiqueta de precio colgando y tres columnas de monedas de distinta altura"
 ---
 
 Si estás buscando cuánto cuesta una página web en Perú, seguramente ya pediste dos o tres cotizaciones y te encontraste con algo desconcertante: una propuesta de S/ 900 y otra de S/ 12,000 para lo que, en apariencia, es "la misma web". No es que alguien te esté estafando necesariamente. Es que casi nunca se está cotizando lo mismo.

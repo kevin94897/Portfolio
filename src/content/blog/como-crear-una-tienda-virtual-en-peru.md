@@ -4,6 +4,8 @@ description: "Aprende cómo crear una tienda virtual en Perú paso a paso: plata
 pubDate: 2026-09-29
 category: "E-commerce"
 tags: ["tienda virtual", "ecommerce", "peru", "woocommerce", "shopify"]
+image: "../../assets/blog/como-crear-una-tienda-virtual-en-peru.jpg"
+imageAlt: "Tienda física en miniatura conectada a una laptop con una tienda online y cajas de envío sobre una cinta transportadora"
 ---
 
 Tienes un negocio que vende bien en tienda física, por Instagram o por WhatsApp, y sabes que necesitas vender online de verdad. El problema es que cada vez que buscas cómo **crear una tienda virtual en Perú** te encuentras con decenas de plataformas, términos técnicos y promesas de "tu tienda lista en 5 minutos" que no cuentan toda la historia.

@@ -1,83 +1,93 @@
 # Kevin Gómez Portfolio — Astro
 
-Portfolio profesional migrado a **Astro** con SEO técnico avanzado, animación de carga y container desktop.
+Portfolio profesional y blog de Kevin Gómez Lázaro, Full Stack Developer en Lima, Perú. Desplegado en **Cloudflare Workers** en https://kevin-gomez.dev.
 
 ## Stack
 
-- **Framework:** Astro 4.x (Static Generation)
-- **Styling:** CSS Variables + Tailwind CSS
-- **Interactions:** Bento Grid UI (Desktop) + Custom Vertical Slider (Mobile)
-- **Carousel:** Embla Carousel (Testimonials)
-- **Contact Form:** Brevo Iframe Integration
-- **Icons:** Phosphor Icons
-- **Fonts:** Syne + DM Mono + DM Sans (Google Fonts)
-- **SEO:** JSON-LD, Open Graph, Twitter Card, Canonical, Geo tags
-- **Sitemap:** @astrojs/sitemap (auto-generated)
+- **Framework:** Astro 4 (`output: "hybrid"`: páginas estáticas + endpoints en el Worker)
+- **Hosting:** Cloudflare Workers (`@astrojs/cloudflare`), config en `wrangler.jsonc`
+- **Estilos:** Tailwind CSS + variables CSS (`src/styles/global.css`)
+- **Animaciones:** GSAP (ScrollTrigger, SplitText) + Lenis smooth scroll
+- **Carruseles:** Embla Carousel
+- **Fuentes e iconos:** Inter y un subset de Phosphor, self-hosted en `public/fonts/`
+- **i18n:** español (`/`) e inglés (`/en/`); el blog es solo en español
+- **Formulario:** `/api/contact` → Brevo (email de aviso + lista) con respaldo en Cloudflare D1
+- **Analítica:** GA4 + Microsoft Clarity con Consent Mode v2
 
 ## Primeros pasos
 
 ```bash
-# Instalar dependencias
 npm install
-
-# Servidor de desarrollo
-npm run dev
-
-# Build de producción
-npm run build
-
-# Preview del build
-npm run preview
+npm run dev       # servidor de desarrollo
+npm run build     # build de producción
+npm run preview   # build + wrangler dev (Worker local, D1 local)
+npm run deploy    # build + wrangler deploy
 ```
+
+Variables y secretos:
+
+| Nombre | Dónde | Uso |
+|---|---|---|
+| `BREVO_API_KEY` | `.env` en local, secreto del Worker en producción | Envío del formulario |
+| `LEADS_PASSWORD` | `wrangler secret put LEADS_PASSWORD` (16+ caracteres) | Descarga de `/api/leads.csv` |
+| `PUBLIC_GA_ID`, `PUBLIC_CLARITY_ID` | Opcionales | Sobrescriben los IDs de analítica |
 
 ## Estructura
 
 ```
 src/
-├── layouts/
-│   └── Layout.astro          # Head SEO + JSON-LD + fuentes
-├── pages/
-│   └── index.astro           # Página principal + todos los scripts
+├── layouts/Layout.astro        # <head> SEO, JSON-LD, analítica, GSAP/Lenis
 ├── components/
-│   ├── LoadingScreen.astro   # Animación de carga
-│   ├── Nav.astro
-│   ├── Hero.astro
-│   ├── About.astro
-│   ├── Services.astro
-│   ├── Experience.astro
-│   ├── Projects.astro        # Embla carousel x11 proyectos
-│   ├── SkillsBars.astro
-│   ├── Testimonials.astro    # Embla carousel x4
-│   ├── Workflow.astro
-│   ├── Pricing.astro
-│   ├── Contact.astro
-│   └── Footer.astro
-└── styles/
-    └── global.css            # Design system + container
-public/
-├── robots.txt
-├── favicon.svg
-└── site.webmanifest
+│   ├── HomePage.astro          # One-page (secciones + scripts), usado por / y /en/
+│   ├── Nav, Hero, About, Services, Experience, Projects, SkillsBars,
+│   │   Testimonials, Workflow, Contact, Footer, ...
+│   └── ProjectCase.astro       # Plantilla de caso de estudio
+├── content/
+│   ├── config.ts               # Schema del blog
+│   └── blog/*.md               # Posts
+├── assets/
+│   ├── images/                 # Fotos y capturas de proyectos
+│   └── blog/                   # Portadas de los posts
+├── data/projects.ts            # Proyectos y casos de estudio
+├── i18n/                       # Traducciones
+├── lib/                        # blog, analytics, consent
+└── pages/
+    ├── index.astro, en/index.astro
+    ├── blog/index.astro, blog/[slug].astro
+    ├── proyectos/[slug].astro, en/projects/[slug].astro
+    ├── rss.xml.ts              # Feed del blog
+    └── api/
+        ├── contact.ts          # Formulario (anti-spam + D1 + Brevo)
+        └── leads.csv.ts        # Exportación de leads (Basic auth)
+migrations/                     # Esquema de la base D1 (portfolio-leads)
+public/                         # og-image, iconos, fuentes, PDFs, _headers
 ```
 
-## SEO implementado
+## Blog
 
-- ✅ Un solo `<h1>` en Hero
-- ✅ `<h2>` semántico por sección con keywords
-- ✅ Meta title / description optimizados para "full stack developer lima peru"
-- ✅ Open Graph + Twitter Card
-- ✅ Canonical URL
-- ✅ JSON-LD: Person + ProfessionalService + WebSite
-- ✅ Geo tags (Lima, Perú)
-- ✅ robots.txt + sitemap automático
-- ✅ `<time>` en fechas de experiencia
-- ✅ `aria-label`, `role`, `aria-live` en carruseles
-- ✅ Skip-to-content link
-- ✅ `rel="noopener noreferrer"` en links externos
+Frontmatter de un post (`src/content/blog/mi-post.md`):
 
-## Antes de hacer deploy
+```yaml
+---
+title: "Título del post"
+description: "Meta description, máximo 170 caracteres."
+pubDate: 2026-11-10
+updatedDate: 2026-12-01                    # opcional
+category: "SEO"                            # ver enum en content/config.ts
+tags: ["seo", "lima"]
+featured: false                            # true = destacado en /blog/ (solo uno)
+image: "../../assets/blog/mi-post.jpg"     # opcional, exportar a 1200×630
+imageAlt: "Descripción de la imagen"       # obligatorio si hay image
+---
+```
 
-1. Reemplaza `https://kevin-gomez.dev` en `astro.config.mjs` y `Layout.astro` con tu dominio real
-2. Agrega el archivo `public/KevinGomezLazaro_CV2026.pdf`
-3. Crea `public/og-image.jpg` (1200×630px) para Open Graph
-4. Agrega `public/icon-192.png` y `public/icon-512.png` para el web manifest
+La portada se usa en el post, en las tarjetas de `/blog/` y como `og:image`. Sin `image`, se usa `public/og-image.jpg`.
+
+## Formulario y leads
+
+1. `/api/contact` valida el Origin, aplica rate limit (5/min por IP), un honeypot y un tiempo mínimo de llenado.
+2. Guarda el lead en D1 (`LEADS_DB`) **antes** de llamar a Brevo, y registra en la fila si el email (`notify_status`) y la lista (`list_status`) funcionaron.
+3. Descarga todos los leads en CSV (compatible con Excel): `https://kevin-gomez.dev/api/leads.csv`, con cualquier usuario y la contraseña `LEADS_PASSWORD`.
+
+Cambios de esquema: agrega un archivo en `migrations/` y aplícalo con
+`npx wrangler d1 migrations apply portfolio-leads --remote`.

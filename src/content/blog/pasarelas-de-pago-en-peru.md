@@ -4,6 +4,8 @@ description: "Comparativa de pasarelas de pago en Perú: Culqi, Izipay, Niubiz y
 pubDate: 2026-09-29
 category: "E-commerce"
 tags: ["pasarelas de pago", "ecommerce", "peru", "culqi", "niubiz"]
+image: "../../assets/blog/pasarelas-de-pago-en-peru.jpg"
+imageAlt: "Cuatro terminales de pago en fila y una tarjeta flotando que ilumina uno de ellos"
 ---
 
 Tu tienda virtual está casi lista, pero falta lo más importante: cobrar. Y ahí aparece la duda que me plantean casi todos los clientes: ¿qué **pasarela de pago en Perú** conviene más? ¿Culqi, Izipay, Niubiz o Mercado Pago? Cada una promete ser la más fácil, la más segura o la más barata.

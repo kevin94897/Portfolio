@@ -4,6 +4,8 @@ description: "Guía de WhatsApp para empresas: cómo poner un botón de WhatsApp
 pubDate: 2026-09-29
 category: "Automatización"
 tags: ["whatsapp para empresas", "botón de whatsapp", "ga4", "captación de leads", "automatización"]
+image: "../../assets/blog/integrar-whatsapp-en-tu-pagina-web.jpg"
+imageAlt: "Botón de chat en una página web que envía burbujas de mensaje hacia un celular, con un pequeño gráfico de analítica"
 ---
 
 En Perú, cuando un cliente tiene una duda sobre un producto o un servicio, lo más probable es que prefiera escribir por WhatsApp antes que llenar un formulario o llamar. Por eso **WhatsApp para empresas** se ha vuelto un canal de ventas en sí mismo, y el **botón de WhatsApp en la web** es muchas veces el elemento que más contactos genera.

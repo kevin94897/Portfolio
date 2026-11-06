@@ -5,6 +5,7 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import Cursor from "../../components/Cursor.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { Image, getImage } from "astro:assets";
 import {
   getPosts,
   postUrl,
@@ -29,13 +30,18 @@ interface Props {
 }
 
 const { post, posts } = Astro.props;
-const { title, description, pubDate, updatedDate, category, tags } = post.data;
+const { title, description, pubDate, updatedDate, category, tags, image, imageAlt } = post.data;
 const { Content, headings } = await post.render();
 
 const path = postUrl(post);
 const minutes = readingTime(post.body);
 const toc = headings.filter((h) => h.depth === 2);
 const related = relatedPosts(post, posts, 3);
+
+// Social preview: the post cover as a 1200px JPEG, or the site-wide image.
+const ogImage = image
+  ? new URL((await getImage({ src: image, width: 1200, format: "jpg", quality: 82 })).src, SITE_URL).href
+  : `${SITE_URL}/og-image.jpg`;
 const relatedProjects = projects.filter((p) => p.blog.includes(post.slug)).slice(0, 3);
 
 const crumbs = [
@@ -54,7 +60,7 @@ const schema = [
     dateModified: (updatedDate ?? pubDate).toISOString(),
     inLanguage: "es-PE",
     mainEntityOfPage: `${SITE_URL}${path}`,
-    image: `${SITE_URL}/og-image.jpg`,
+    image: ogImage,
     articleSection: category,
     keywords: tags.join(", "),
     wordCount: post.body.split(/\s+/).length,
@@ -70,6 +76,8 @@ const schema = [
   description={description}
   path={path}
   alternates={{ es: path }}
+  ogImage={ogImage}
+  ogImageAlt={image ? imageAlt : undefined}
   ogType="article"
   publishedTime={pubDate.toISOString()}
   schema={schema}
@@ -97,8 +105,34 @@ const schema = [
           <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
           <span aria-hidden="true" class="hidden sm:inline text-white/20">·</span>
           <span>{minutes} min de lectura</span>
+          {
+            updatedDate && (
+              <>
+                <span aria-hidden="true" class="hidden sm:inline text-white/20">·</span>
+                <span>
+                  Actualizado el <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time>
+                </span>
+              </>
+            )
+          }
         </div>
       </header>
+
+      {
+        image && (
+          <figure class="mb-12 md:mb-16 border border-border bg-surface overflow-hidden">
+            <Image
+              src={image}
+              alt={imageAlt ?? ""}
+              widths={[640, 960, 1200]}
+              sizes="(min-width: 1280px) 1120px, 100vw"
+              loading="eager"
+              fetchpriority="high"
+              class="w-full h-auto"
+            />
+          </figure>
+        )
+      }
 
       <div class="grid lg:grid-cols-[minmax(0,1fr)_260px] gap-12 xl:gap-20">
         <!-- Article -->
