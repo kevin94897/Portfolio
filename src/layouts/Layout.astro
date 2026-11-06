@@ -74,7 +74,8 @@ const structuredData = {
       description:
         "Full Stack Developer con 8+ años de experiencia en Lima, Perú. Especialista en Next.js, React, NestJS, WordPress Headless, Laravel y soluciones e-commerce.",
       url: siteURL,
-      email: "kevin94897@gmail.com",
+      // No `email` here: Contact.astro decodes it at runtime to keep it away
+      // from scrapers, and a plain-text copy in JSON-LD would defeat that.
       telephone: "+51947841355",
       image: ogImage,
       address: {
@@ -418,6 +419,30 @@ const structuredData = {
       });
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
+
+      // ── Section scroll snapping ─────────────────────────────
+      // Native CSS scroll-snap fights Lenis, so use lenis/snap instead.
+      // "proximity" + small threshold: only snaps when a wheel gesture ends
+      // close to a section top, so tall sections (Projects track) stay free.
+      // Snap ignores touch events → mobile keeps native momentum scroll.
+      const snapSections = document.querySelectorAll<HTMLElement>(
+        "#main-content > section[id]",
+      );
+      if (
+        snapSections.length > 1 &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        import("lenis/snap").then(({ default: Snap }) => {
+          const snap = new Snap(lenis, {
+            type: "proximity",
+            distanceThreshold: "40%",
+            debounce: 300,
+            duration: 0.9,
+            easing: (t: number) => 1 - Math.pow(1 - t, 4),
+          });
+          snapSections.forEach((el) => snap.addElement(el, { align: ["start"] }));
+        });
+      }
 
       // Allow other components to pause/resume Lenis (e.g. scroll-hijack sections)
       document.addEventListener("lenis:stop", () => lenis.stop());

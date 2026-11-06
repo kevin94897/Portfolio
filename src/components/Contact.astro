@@ -1,6 +1,6 @@
 ---
 // Contact.astro — Contact form + social links + CV download card
-// With: real validation, Gmail SMTP send, honeypot anti-bot, toast feedback
+// With: real validation, Brevo send via /api/contact, honeypot + fill-time anti-bot, toast feedback
 import { useTranslations } from "../i18n/utils";
 
 const locale = (Astro.currentLocale || "es") as "es" | "en";
@@ -122,6 +122,11 @@ const t = useTranslations(locale);
         </div>
 
         <form id="contactForm" novalidate aria-label={t("contact.form_aria")}>
+          <!-- Honeypot: hidden from people, filled by bots → silently dropped by /api/contact -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[18px] gap-y-0">
             <div class="field-group mb-[14px] sm:mb-[18px]">
               <label
@@ -301,6 +306,13 @@ const t = useTranslations(locale);
   .spin {
     animation: spin 0.7s linear infinite;
     display: inline-block;
+  }
+  .hp-field {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 </style>
 

@@ -332,6 +332,8 @@ import Cursor from "../components/Cursor.astro";
    CONTACT FORM — real validation + SMTP send
   ────────────────────────────────────────────────────────── */
   (function initContactForm() {
+    // Sent as `elapsed` so the API can drop instant (scripted) submissions.
+    const formStartedAt = Date.now();
     const form = document.getElementById(
       "contactForm",
     ) as HTMLFormElement | null;
@@ -491,6 +493,8 @@ import Cursor from "../components/Cursor.astro";
             email: (document.getElementById("email") as HTMLInputElement).value.trim(),
             asunto: (document.getElementById("subject") as HTMLInputElement).value.trim(),
             message: (document.getElementById("message") as HTMLTextAreaElement).value.trim(),
+            website: (document.getElementById("website") as HTMLInputElement | null)?.value ?? "",
+            elapsed: Date.now() - formStartedAt,
           }),
         });
 

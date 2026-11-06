@@ -1,17 +1,37 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "kevingomezportfolio",
-  "compatibility_date": "2026-06-14",
-  "observability": {
-    "enabled": true
-  },
-  "main": "dist/_worker.js/index.js",
-  "compatibility_flags": [
-    "global_fetch_strictly_public",
-    "nodejs_compat"
-  ],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "dist"
-  }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "kevingomezportfolio",
+	"compatibility_date": "2026-06-14",
+	"observability": {
+		"enabled": true
+	},
+	"main": "dist/_worker.js/index.js",
+	"compatibility_flags": [
+		"global_fetch_strictly_public",
+		"nodejs_compat"
+	],
+	// Contact form: max 5 submissions per IP per minute (src/pages/api/contact.ts)
+	"ratelimits": [
+		{
+			"name": "CONTACT_LIMITER",
+			"namespace_id": "1001",
+			"simple": {
+				"limit": 5,
+				"period": 60
+			}
+		}
+	],
+	// Backup of every contact-form lead (migrations/). Export: /api/leads.csv
+	"d1_databases": [
+		{
+			"binding": "LEADS_DB",
+			"database_name": "portfolio-leads",
+			"database_id": "aa1823de-a164-4c61-83d7-21a76ccfbcc3",
+			"migrations_dir": "migrations"
+		}
+	],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "dist"
+	}
 }
