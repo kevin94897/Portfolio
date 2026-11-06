@@ -1,0 +1,71 @@
+# Publishes scheduled blog posts.
+#
+# Posts with a future `pubDate` are hidden until a build runs on or after that
+# date (src/lib/blog.ts). Every morning in Lima this workflow checks whether a
+# post is dated today and, if so, builds and deploys `main` to Cloudflare.
+# It can also be run by hand from the Actions tab ("Run workflow").
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   — token with Workers Scripts:Edit and D1:Edit
+#   CLOUDFLARE_ACCOUNT_ID  — Cloudflare account id
+# BREVO_API_KEY and LEADS_PASSWORD are NOT needed here: they live as Worker
+# secrets and are read at runtime.
+
+name: Scheduled deploy
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # 06:00 in Lima (UTC-5)
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Deploy even if no post is dated today"
+        type: boolean
+        default: true
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for posts dated today (Lima)
+        id: check
+        run: |
+          TODAY=$(TZ=America/Lima date +%F)
+          POSTS=$(grep -l "^pubDate: \"\?${TODAY}" src/content/blog/*.md || true)
+          echo "Today: $TODAY"
+          echo "Posts: ${POSTS:-none}"
+          if [ -n "$POSTS" ] || [ "${{ github.event_name }}" = "workflow_dispatch" -a "${{ inputs.force }}" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.deploy == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        if: steps.check.outputs.deploy == 'true'
+        run: npm ci
+
+      - name: Build
+        if: steps.check.outputs.deploy == 'true'
+        run: npm run build
+
+      - name: Deploy to Cloudflare Workers
+        if: steps.check.outputs.deploy == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy

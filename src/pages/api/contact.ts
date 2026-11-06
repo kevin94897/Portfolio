@@ -175,7 +175,16 @@ ${message ? `<p><strong>Mensaje:</strong></p><p>${esc(message).replace(/\n/g, "<
       headers,
       body: JSON.stringify({
         email,
-        attributes: { NOMBRE: nombre, APELLIDOS: apellidos, ASUNTO: asunto, MESSAGE: message },
+        attributes: {
+          // FIRSTNAME/LASTNAME are Brevo's built-in attributes, used by the
+          // automation templates ({{ contact.FIRSTNAME }}).
+          FIRSTNAME: nombre,
+          LASTNAME: apellidos,
+          NOMBRE: nombre,
+          APELLIDOS: apellidos,
+          ASUNTO: asunto,
+          MESSAGE: message,
+        },
         listIds: [LIST_ID],
         updateEnabled: true,
       }),
